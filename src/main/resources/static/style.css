@@ -1,0 +1,81 @@
+body {
+  background-color: white;
+  margin: 0;
+}
+
+header {
+  background-color: #333;
+}
+
+section {
+  align-content: center;
+}
+
+.nav ul {
+  overflow: hidden;
+  background-color: #333;
+  font-family: Arial;
+  list-style: none;
+  margin: 0;
+  padding: 20px 0 0 0;
+
+  text-align: center;
+}
+
+
+.nav a:not(.active) {
+  float: left;
+  color: white;
+  font-size: 16px;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.nav a:hover:not(.active) {
+  background-color: blueviolet;
+}
+
+.active {
+  float: left;
+  color: lightblue;
+  font-size: 16px;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+.hero-image {
+  position: relative;
+  background-image: url("https://homeandclosetvintage.com/cdn/shop/products/image_91cef95e-1114-4d00-8de1-8352108f16cb_720x.jpg?v=1674403751");
+  /*change url to mountain img*/
+  min-height: 60vh;
+  /* Add code here! */
+  /* Ensure good background image formating */
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  /* Begin Parallax effect! */
+  background-attachment: fixed;
+  text-align: center;
+}
+
+.hero-text {
+  position: absolute;
+  background-color: rgb(0,0,0,.5);
+  height: 100%;
+  width: 100%;
+  color: white;
+}
+.hero-text h1 {
+  position: relative;
+  /* margin: 50px;*/
+	font-size: 7em;
+  font-family:'Dancing Script', cursive;
+}
+
+.hero-text h2 {
+  position: relative;
+  margin: -50px;
+  font-size: 1.5em;
+  font-family: 'Abril Fatface', cursive;
+}

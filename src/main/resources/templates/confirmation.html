@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmation</title>
+    <link th:href="@{/styling.css}" rel="stylesheet"/>
+</head>
+<body>
+    <h1>You have listed the item!</h1>
+    <h2>Item Details:</h2>
+    <p> Name: <strong th:text="${name}"></strong></p>
+    <p> Description: <strong th:text="${description}"></strong></p>
+</body>
+</html>

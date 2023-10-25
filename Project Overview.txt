@@ -1,0 +1,88 @@
+Old World Auction – Vintage Items/Collectibles Auction Website
+Names: Chisimdi Agomoh, Kyle Brennecke, Brock Jones, Trey Miller, Akram Moustafa, Marcus Williams
+1. Introduction
+1.1 Purpose
+The purpose of this document is to build an auction website that specializes in auctioning vintage items and collectibles.
+1.2 Document Conventions
+This document uses the following conventions:
+DB	Database
+HTML	Hyper Text Markup Language
+CSS	Cascading Style Sheets
+1.3 Intended Audience and Reading Suggestions
+The intended audience of this website would be buyers and sellers that are interested in bidding or auctioning vintage items and collectibles. This website would provide them with a platform for auctioning these items. However, this is a hypothetical prototype website that will not be released to the public.
+1.4 Project Scope
+The purpose of the vintage item/collectible auction system is to provide a medium for buyers and sellers of vintage items and collectibles to auction and bid on these items. This website would work much like similar websites, such as eBay, but it would specialize in vintage items and collectibles.
+We will have a database that will support storing auctioned items and will update the current auction cost when a user bids on the item. We will have a login system that allows users to store their information, post auction items, and keep track of auction items that they have bid on.
+1.5 References
+- https://www.ebay.com/
+- https://krazytech.com/projects/sample-software-requirements-specificationsrs-report-airline-database
+2. Overall Description
+2.1 Product perspective
+An online auctioneer system would store the following information
+- Starting bid: This will be the first bid in which an item will be going for
+-Current bid: The current bid amount for the item
+- Bid time: The amount of time left to bid for the item
+- Item description: Includes the relative date in which the item was made, its rarity, its dimensions if necessary, etc. This information will also be used to keep track of product inventory
+- Customer login information: The details of every customer who uses the website.
+- Final bid amount: This would be the amount on which the item sold for
+2.4 Operating Environment
+- Database: MySQL/SQL Server Database
+- Client/Server system
+- Operating System: Windows
+- Application-tier Platform: Java
+3. System Features
+- Description and Priority
+The e-commerce website allows users to login and be able to bid on vintage items/collectibles at an auction. The website is high priority as the functionality of the website relies on the rarity of the items and the desire of those items by the consumer to be able to be bought.
+- Stimulus/Response Sequences
+•	Search a filterable gallery of items that are being auctioned.
+•	Clicking on an item brings up item information, additional photos, and pricing information.
+•	Input taken for bid amount and upon clicking the bid button there will be a success popup.
+•	Users can check auction statuses in profile information.
+•	When an auction ends, the status of the item is updated, and the user is notified if they won.
+- Functional Requirements
+-Distributed Database
+•	Run and store the data across distributed database management system.
+•	Communication process used for the items bidding process.
+•	Ability to communicate between multiple users across the platform for the bidding process.
+-Client/Server System
+The clients will ultimately interact with the backend server system by interacting with the web page. The web page requests will be sent to the application tier where our Java code will process the data and interact with the DB. Moving forward, we will have to learn how to implement these three tiers altogether in a working environment.
+
+4. External Interface Requirements
+4.1 User Interfaces
+Front-end: Webpage interface created using HTML, CSS, and JavaScript.
+Back-end: SQL or another DB language
+4.2 Hardware Interfaces
+- Windows 10/11
+- A browser that supports HTML and JavaScript
+4.3 Software Interfaces
+The following are the software used for the vintage item/collectible auction website
+Software Used	Description
+Operating System	We have chosen Windows 10/11 and/or a more recent version of Mac OS for its website support and user-friendliness
+Database	Having item descriptions, customer login information, starting and ending bid numbers
+Java Backend	We will have a backend logic layer that will be built using Java.
+4.4 Communication Interfaces
+This project supports any web browser that supports HTML, CSS, and JavaScript. Our web interface will be displayed through these web browsers as the way that users interact with our project.
+5 Nonfunctional Requirements
+5.1 Performance Requirements
+Entities 	- Auctioned items
+- Sellers
+- Buyers
+Attributes	- Seller Name
+- Buyer Name
+- Auction Date
+- Sold Date
+- Phone Number
+- Email
+- Seller Address
+- Buyer Address
+Relationships	- Sell
+- Buy
+5.2 Safety Requirements
+We will provide and follow safety requirements to avoid any major and minor failures in our systems by using Safety Instrumented Systems (SIS) in our program. SIS will allow the web designed application to verify both sellers and buyers using the required information. We will also maintain issues related to unexpected program failures by returning to the home page. We will also ask the user to re-enter their wrong/unmatched information.  
+5.3 Security Requirements
+We will have a highly safe website application as we will use MySQL or SQL Server as the main storage for the auction database. Using MySQL or SQL Server as our storage will allow our web-based app to keep track of items sold as well as keep track of items currently on auction. It will also allow us to develop specific relationships between auctioned items and buys with a high degree of security.  The web app-based platform will avoid having any redundant information.
+5.4 Software Quality Attributes
+Availability	Auctioned items should be available to sell on the specified date
+Correctness	The sold items should be removed from items on sale and should link to the buyer
+Maintainability	The web application must support regular updates to ensure compatibility with the latest web technologies, Bug fixes, and security patches.
+Usability	The Web application should be available on all computer-supporting operating systems, such as Windows 10 and Mac.
