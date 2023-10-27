@@ -1,6 +1,7 @@
 package com.example.cps410proto.modules.models;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,8 +14,12 @@ public class AuctionItem {
     private String name;
     private String description;
     private BigDecimal currentBid;
+    private byte[] image;
     private String color;
     private int manufacturedYear;
+    private LocalDateTime auctionStartTime;
+    private LocalDateTime auctionEndTime;
+    private boolean auctionComplete;
 
     public AuctionItem(String name, String description, BigDecimal currentBid, String color, int manufacturedYear) {
         this.name = name;
@@ -22,6 +27,59 @@ public class AuctionItem {
         this.currentBid = currentBid;
         this.color = color;
         this.manufacturedYear = manufacturedYear;
+    }
+
+    public AuctionItem(
+            String name,
+            String description,
+            BigDecimal currentBid,
+            byte[] image, String color,
+            int manufacturedYear,
+            LocalDateTime auctionStartTime,
+            LocalDateTime auctionEndTime,
+            boolean auctionComplete
+    ) {
+        this.name = name;
+        this.description = description;
+        this.currentBid = currentBid;
+        this.image = image;
+        this.color = color;
+        this.manufacturedYear = manufacturedYear;
+        this.auctionStartTime = auctionStartTime;
+        this.auctionEndTime = auctionEndTime;
+        this.auctionComplete = auctionComplete;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    public LocalDateTime getAuctionStartTime() {
+        return auctionStartTime;
+    }
+
+    public void setAuctionStartTime(LocalDateTime auctionStartTime) {
+        this.auctionStartTime = auctionStartTime;
+    }
+
+    public LocalDateTime getAuctionEndTime() {
+        return auctionEndTime;
+    }
+
+    public void setAuctionEndTime(LocalDateTime auctionEndTime) {
+        this.auctionEndTime = auctionEndTime;
+    }
+
+    public boolean isAuctionComplete() {
+        return auctionComplete;
+    }
+
+    public void setAuctionComplete(boolean auctionComplete) {
+        this.auctionComplete = auctionComplete;
     }
 
     public String getName() {
