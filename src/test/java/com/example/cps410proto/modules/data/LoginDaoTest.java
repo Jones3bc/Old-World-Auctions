@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Implements testing for the LoginDao class.
+ * Tests the {@link LoginDao} class.
  *
  * @author Brock Jones
  */
@@ -19,6 +19,12 @@ public class LoginDaoTest {
     @ValueSource(strings = {"password", "Password", "Password1", "password1!", "1Er!", "Password!", "1#PASSWORD"})
     public void invalidPasswordThrowsIllegalArgumentException(String password){
         User user = new User("validUsername", password); //"validUsername" is a valid username.
+        assertThrows(IllegalArgumentException.class, () -> loginDao.isLoginInfoValid(user));
+    }
+
+    @Test
+    public void nullPasswordThrowsIllegalArgumentException(){
+        User user = new User("validUsername", null);
         assertThrows(IllegalArgumentException.class, () -> loginDao.isLoginInfoValid(user));
     }
 
@@ -33,6 +39,12 @@ public class LoginDaoTest {
     @ValueSource(strings = {"user", "userna1", "USER", "USERNM3", "USERNAME!!!2", "username#", "!!!!7!!!!##"})
     public void invalidUsernameThrowsIllegalArgumentException(String username){
         User user = new User(username, "validPassword1!");
+        assertThrows(IllegalArgumentException.class, () -> loginDao.isLoginInfoValid(user));
+    }
+
+    @Test
+    public void nullUsernameThrowsIllegalArgumentException(){
+        User user = new User(null, "validPassword1!");
         assertThrows(IllegalArgumentException.class, () -> loginDao.isLoginInfoValid(user));
     }
 

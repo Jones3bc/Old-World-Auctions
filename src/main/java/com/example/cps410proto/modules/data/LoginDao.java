@@ -4,6 +4,7 @@ import com.example.cps410proto.modules.models.User;
 
 /**
  * Interacts with the database to store and retrieve user information.
+ * Also checks the validity of {@link User}s.
  *
  * @author Brock Jones
  */
@@ -20,7 +21,9 @@ public class LoginDao {
      * @return True if the user is valid. Should throw an {@link IllegalArgumentException} otherwise.
      */
     public boolean isLoginInfoValid(User user) throws IllegalArgumentException{
-        if(!(user.getUsername().matches("^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$"))){
+        if(user.getUsername() == null || user.getPassword() == null){
+            throw new IllegalArgumentException("The user's username or password is null.");
+        } else if(!(user.getUsername().matches("^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$"))){
             throw new IllegalArgumentException("The username is not formatted correctly. " +
                     "Must contain between 6-20 characters and only contain letters and numbers.");
         } else if(!(user.getPassword().matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,20}$"))){
