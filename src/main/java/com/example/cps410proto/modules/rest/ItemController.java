@@ -6,8 +6,6 @@ import org.springframework.stereotype.Controller;
 import com.example.cps410proto.modules.models.AuctionItem;
 import java.util.Map;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * Handles requests and responses having to do with auction items.
@@ -43,14 +41,14 @@ public class ItemController {
     /**
      * Interacts with ItemService class to remove item by the user
      */
-    @PostMapping("/removeItem")
+    @PostMapping
     public AuctionItem removeItem(@RequestBody AuctionItem item) {
         return itemService.removeItem(item);
     }
     /**
      * Handles the user request to get Item by name
      * */
-    @PostMapping("/getItem")
+    @PostMapping
     public AuctionItem getItemByName(@PathVariable String itemName) {
         return itemService.getItemByName(itemName);
 
@@ -58,7 +56,7 @@ public class ItemController {
     /**
      * Get the user request to show all items
      * */
-    @PostMapping("/getItems")
+    @PostMapping
     public Map<String, AuctionItem> getAllItems() {
         return itemService.getAllItems();
 
