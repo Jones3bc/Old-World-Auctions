@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import com.example.cps410proto.modules.models.AuctionItem;
 import java.util.Map;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * Handles requests and responses having to do with auction items.
@@ -29,10 +31,11 @@ public class ItemController {
     public String auctionPage(){
         return "auctionList";
     }
+
     /**
      * Interacts with ItemService class to add item by the user
      */
-    @PostMapping
+    @PostMapping("/addItem")
     public AuctionItem addItem(@RequestBody AuctionItem item) {
         return itemService.addItem(item);
     }
@@ -40,14 +43,14 @@ public class ItemController {
     /**
      * Interacts with ItemService class to remove item by the user
      */
-    @PostMapping
+    @PostMapping("/removeItem")
     public AuctionItem removeItem(@RequestBody AuctionItem item) {
         return itemService.removeItem(item);
     }
     /**
      * Handles the user request to get Item by name
      * */
-    @PostMapping
+    @PostMapping("/getItemByName")
     public AuctionItem getItemByName(@PathVariable String itemName) {
         return itemService.getItemByName(itemName);
 
@@ -55,11 +58,10 @@ public class ItemController {
     /**
      * Get the user request to show all items
      * */
-    @PostMapping
+    @PostMapping("/getItems")
     public Map<String, AuctionItem> getAllItems() {
         return itemService.getAllItems();
 
     }
 
 }
-
