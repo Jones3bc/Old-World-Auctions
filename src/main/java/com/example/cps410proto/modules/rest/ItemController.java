@@ -29,7 +29,6 @@ public class ItemController {
     public String auctionPage(){
         return "auctionList";
     }
-
     /**
      * Interacts with ItemService class to add item by the user
      */
