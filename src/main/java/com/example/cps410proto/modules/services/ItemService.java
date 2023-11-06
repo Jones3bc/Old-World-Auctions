@@ -1,5 +1,6 @@
-package com.example.cps410proto.modules.models;
+package com.example.cps410proto.modules.services;
 
+import com.example.cps410proto.modules.models.AuctionItem;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
