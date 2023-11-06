@@ -1,6 +1,6 @@
 package com.example.cps410proto.modules.rest;
 
-import com.example.cps410proto.modules.models.ItemService;
+import com.example.cps410proto.modules.services.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import com.example.cps410proto.modules.models.AuctionItem;
