@@ -1,22 +1,28 @@
 package com.example.cps410proto.modules.rest;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-
 import com.example.cps410proto.modules.models.User;
 import com.example.cps410proto.modules.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 /**
  * Handles all requests and responses having to do with accounts/account information.
  *
  * @author Brock Jones
  */
-@RestController
-@RequestMapping("/accounts")
+@RequestMapping("/")
+@Controller
 public class AccountController {
     private final AccountService accountService;
+
+    @GetMapping("/create")
+    public String auctionPage(){
+        return "Account";
+    }
 
     @Autowired
     public AccountController(AccountService accountService) {
@@ -33,7 +39,7 @@ public class AccountController {
         }
     }
 
-    @PutMapping("/changePassword/{username}")
+    @PostMapping("/change")
     public User changePassword(@PathVariable String username, @RequestParam String newPassword) {
         try {
             return accountService.changePassword(username, newPassword);
@@ -43,7 +49,7 @@ public class AccountController {
         }
     }
 
-    @DeleteMapping("/deleteAccount/{username}")
+    @PostMapping("/delete")
     public void deleteAccount(@PathVariable String username) {
         accountService.deleteAccount(username);
 
