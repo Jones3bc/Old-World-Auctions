@@ -1,5 +1,6 @@
 package com.example.cps410proto.modules.rest;
 
+import com.example.cps410proto.modules.data.LoginDao;
 import com.example.cps410proto.modules.models.AuctionItem;
 import com.example.cps410proto.modules.models.User;
 import org.springframework.stereotype.Controller;
@@ -65,6 +66,13 @@ public class LoginController {
     public String addItem(@ModelAttribute AuctionItem auctionItem, Model model){
         System.out.println(auctionItem);
         model.addAllAttributes(auctionItem.attributes());
+        return "confirmation";
+    }
+
+    @GetMapping("/test")
+    public String query(){
+        LoginDao loginDao = new LoginDao();
+        System.out.println(loginDao.retrieveUser());
         return "confirmation";
     }
 }

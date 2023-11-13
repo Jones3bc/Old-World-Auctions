@@ -2,6 +2,8 @@ package com.example.cps410proto.modules.data;
 
 import com.example.cps410proto.modules.models.User;
 
+import java.sql.*;
+
 /**
  * Interacts with the database to store and retrieve user information.
  * Also checks the validity of {@link User}s.
@@ -33,5 +35,30 @@ public class LoginDao {
         }
 
         return true;
+    }
+
+    public String retrieveUser(){
+        String sqlConnection = "jdbc:sqlite:/F:\\SqlLite\\usersdb.db";
+        String sql = "SELECT * from users;";
+
+        try {
+            Connection connection = DriverManager.getConnection(sqlConnection);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            StringBuilder returnString = new StringBuilder();
+            while(resultSet.next()){
+                returnString.append(resultSet.getString("name"));
+                returnString.append(" - ");
+                returnString.append(resultSet.getString("email"));
+            }
+
+            return returnString.toString();
+
+        } catch (SQLException ex){
+            System.out.println("Failed to establish and use SQL connection.");
+        }
+
+        return "Didn't work";
     }
 }
