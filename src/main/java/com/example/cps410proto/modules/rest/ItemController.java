@@ -1,13 +1,12 @@
 package com.example.cps410proto.modules.rest;
 
-import com.example.cps410proto.modules.services.ItemService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.cps410proto.modules.data.ItemDao;
 import org.springframework.stereotype.Controller;
 import com.example.cps410proto.modules.models.AuctionItem;
-import java.util.Map;
+import java.math.BigDecimal;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * Handles requests and responses having to do with auction items.
@@ -20,47 +19,196 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Controller
 public class ItemController {
 
-    @Autowired
-    private ItemService itemService;
-
     /**
      * Supplies the auctions-page page to the user in the browser.
+     *
      * @return The auctionList HTML page.
      */
     @GetMapping("/auctions-page")
-    public String auctionPage(){
+    public String auctionPage() {
         return "auctionList";
     }
 
     /**
-     * Interacts with ItemService class to add item by the user
+     * @param auctionItem The {@link AuctionItem} to add.
+     * @return The confirmation HTML page.
      */
-    @PostMapping("/addItem")
-    public AuctionItem addItem(@RequestBody AuctionItem item) {
-        return itemService.addItem(item);
+    @GetMapping("/GetItem")
+    public AuctionItem getItemByName(@ModelAttribute AuctionItem auctionItem) throws Exception {
+
+        ItemDao itemDao = new ItemDao();
+        if (itemDao.isAuctionItemValid(auctionItem)) {
+            return auctionItem;
+        } else {
+            throw new Exception("Item not Found");
+        }
     }
 
     /**
-     * Interacts with ItemService class to remove item by the user
+     * Updates the description of an auction item.
+     *
+     * @param auctionItem The {@link AuctionItem} to update.
+     * @param description The new description.
+     * @param model       The Spring MVC model.
+     * @return The confirmation HTML page or an error page if the update fails.
      */
-    @PostMapping("/removeItem")
-    public AuctionItem removeItem(@RequestBody AuctionItem item) {
-        return itemService.removeItem(item);
-    }
-    /**
-     * Handles the user request to get Item by name
-     * */
-    @PostMapping("/getItemByName")
-    public AuctionItem getItemByName(@PathVariable String itemName) {
-        return itemService.getItemByName(itemName);
+    @PostMapping("/changeDescription")
+    public String changeDescription(@ModelAttribute AuctionItem auctionItem, String description, Model model) {
+        try {
+            AuctionItem existingItem = this.getItemByName(auctionItem);
 
+            // Update the description
+            existingItem.setDescription(description);
+
+            // Add the updated item to the model
+            model.addAttribute("description", existingItem);
+
+            // Return the confirmation view
+            return "confirmation";
+        } catch (Exception e) {
+            // Handle the exception appropriately
+            model.addAttribute("error", "Failed to update description");
+            return "error";  // You should have an "error" Thymeleaf template for displaying error messages.
+        }
     }
+
     /**
-     * Get the user request to show all items
-     * */
-    @PostMapping("/getItems")
-    public Map<String, AuctionItem> getAllItems() {
-        return itemService.getAllItems();
+     * Updates the bidding of an auction item.
+     *
+     * @param auctionItem The {@link AuctionItem} to update.
+     * @param newBid The new bid.
+     * @param model       The Spring MVC model.
+     * @return The confirmation HTML page or an error page if the update fails.
+     */
+    @PostMapping("/makeBid")
+    public String makeBid(@ModelAttribute AuctionItem auctionItem, BigDecimal newBid, Model model) {
+        try {
+            AuctionItem existingItem = this.getItemByName(auctionItem);
+
+            // Check if the new bid is greater than the current bid
+            if (!(newBid.compareTo(existingItem.getCurrentBid()) > 0)) {
+                // Update the current bid
+                existingItem.setCurrentBid(newBid);
+
+                // Add the updated item to the model
+                model.addAttribute("currentBid", existingItem);
+
+                // Return the confirmation view
+                return "confirmation";
+            } else {
+                throw new Exception("The new bid must be greater than the current bid");
+            }
+        } catch (Exception e) {
+            // Handle the exception appropriately
+            model.addAttribute("error", "Failed to update bid");
+            return "error";  // You should have an "error" Thymeleaf template for displaying error messages.
+        }
+    }
+
+    /**
+     * Updates the manufacture year of an auction item.
+     *
+     * @param auctionItem The {@link AuctionItem} to update.
+     * @param newManufacturedYear The new newManufacturedYear.
+     * @param model       The Spring MVC model.
+     * @return The confirmation HTML page or an error page if the update fails.
+     */
+    @PostMapping("/changeManufacturedYear")
+    public String changeManufacturedYear(@ModelAttribute AuctionItem auctionItem, int newManufacturedYear, Model model) {
+        try {
+            AuctionItem existingItem = this.getItemByName(auctionItem);
+
+            // Update the manufactured year
+            existingItem.setManufacturedYear(newManufacturedYear);
+
+            // Add the updated item to the model
+            model.addAttribute("manufacturedYear", existingItem);
+
+            // Return the confirmation view
+            return "confirmation";
+        } catch (Exception e) {
+            // Handle the exception appropriately
+            model.addAttribute("error", "Failed to update manufactured year");
+            return "error";  // You should have an "error" Thymeleaf template for displaying error messages.
+        }
+    }
+
+    /**
+     * Updates the name of an auction item.
+     *
+     * @param auctionItem The {@link AuctionItem} to update.
+     * @param newName The new name.
+     * @param model       The Spring MVC model.
+     * @return The confirmation HTML page or an error page if the update fails.
+     */
+    @PostMapping("/changeName")
+    public String changeName(@ModelAttribute AuctionItem auctionItem, String newName, Model model) {
+        try {
+            AuctionItem existingItem = this.getItemByName(auctionItem);
+
+            // Update the name
+            existingItem.setName(newName);
+
+            // Add the updated item to the model
+            model.addAttribute("auctionItem", existingItem);
+
+            // Return the confirmation view
+            return "confirmation";
+        } catch (Exception e) {
+            // Handle the exception appropriately
+            model.addAttribute("error", "Failed to update name");
+            return "error";  // You should have an "error" Thymeleaf template for displaying error messages.
+        }
+    }
+
+    /**
+     * Completes the auction of the item.
+     *
+     * @param auctionItem The {@link AuctionItem} to update.
+     * @param model       The Spring MVC model.
+     * @return The confirmation HTML page or an error page if the update fails.
+     */
+    @PostMapping("/completeAuction")
+    public String completeAuction(@ModelAttribute AuctionItem auctionItem, Model model) {
+        try {
+           if(auctionItem.isAuctionComplete()){
+               model.addAttribute("name", auctionItem);
+               auctionItem.setAuctionComplete(true);
+           }
+           return "confirmation";
+        } catch (Exception e) {
+            // Handle the exception appropriately
+            model.addAttribute("error", "Failed to update name");
+            return "error";  // You should have an "error" Thymeleaf template for displaying error messages.
+        }
+    }
+
+   /**
+     * Sets a new color.
+     *
+     * @param auctionItem The {@link AuctionItem} to update.
+     * @param newColor The new color.
+     * @param model       The Spring MVC model.
+     * @return The confirmation HTML page or an error page if the update fails.
+     */
+    @PostMapping("/setColor")
+    public String setColor(@ModelAttribute AuctionItem auctionItem, String newColor, Model model) {
+        try {
+            AuctionItem existingItem = this.getItemByName(auctionItem);
+
+            // Update the color
+            existingItem.setColor(newColor);
+
+            // Add the updated item to the model
+            model.addAttribute("color", existingItem);
+
+            // Return the confirmation view
+            return "confirmation";
+        } catch (Exception e) {
+            // Handle the exception appropriately
+            return "error";  // You should have an "error" Thymeleaf template for displaying error messages.
+        }
     }
 
 }
+
