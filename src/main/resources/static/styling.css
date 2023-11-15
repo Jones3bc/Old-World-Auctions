@@ -1,9 +1,26 @@
 body {
-  background-color: powderblue;
+  background-color: whitesmoke;
 }
 h1 {
-  color: blue;
+  color: black;
+  text-align: center;
 }
+
+form {
+  display: table;
+  margin: auto;
+}
+
 p {
-  color: red;
+  display: table-row;
+}
+
+label {
+  display: table-cell;
+  padding: 20px;
+}
+
+input {
+  display: table-cell;
+  padding: 10px;
 }
