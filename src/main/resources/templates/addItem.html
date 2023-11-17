@@ -7,33 +7,58 @@
 </head>
 <body>
     <h1>Old World Auction</h1>
-    <form action="add" method="post">
+    <form id="itemAddForm" action="add" method="post">
         <p>
-            <label for="name">Name: </label>
+            <label for="name">Item Name: </label>
             <input id= "name" type="text" name="name"/> <br/>
+            <span class="required">*</span>
         </p>
 
         <p>
             <label for="description">Description: </label>
             <input id="description" type="text" name="description"/> <br/>
+            <span class="required">*</span>
         </p>
 
         <p>
             <label for="currentBid">Starting Bid: </label>
             <input id="currentBid" type="text" name="currentBid"/> <br/>
+            <span class="required">*</span>
+        </p>
+
+        <p>
+            <label for="image">Picture (JPG, PNG, JPEG)</label>
+            <input type="file" id="image" name="image">
+            <span></span>
         </p>
 
         <p>
             <label for="color">Color: </label>
             <input id="color" type="text" name="color"/> <br/>
+            <span></span>
         </p>
 
         <p>
             <label for="manufacturedYear">Manufactured Year: </label>
             <input id="manufacturedYear" type="text" name="manufacturedYear"/> <br/>
+            <span></span>
         </p>
 
-        <button type="submit">Submit!</button>
+        <p>
+            <label for="auctionStartTime">Auction Start Date/Time</label>
+            <input id="auctionStartTime" type="datetime-local" name="auctionStartTime">
+            <span class="required">*</span>
+        </p>
+
+        <p>
+            <label for="auctionEndTime">Auction End Date/Time</label>
+            <input id="auctionEndTime" type="datetime-local" name="auctionEndTime">
+            <span class="required">*</span>
+        </p>
+
     </form>
+    <div style="text-align: center;">
+        <button form="itemAddForm" type="submit">Submit!</button>
+    </div>
 </body>
 </html>

@@ -6,8 +6,6 @@ import org.thymeleaf.util.StringUtils;
 /**
  * Interacts with the database to retrieve and store account information.
  * Also validates {@link PaymentMethod}s.
- *
- * @author Brock Jones
  */
 public class AccountDao {
     /**

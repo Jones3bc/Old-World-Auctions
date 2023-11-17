@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 /**
  * Handles requests and responses having to do with logging in.
  * Supplies appropriate pages to the user and takes user input.
- *
- * @author Brock Jones
  */
 @RequestMapping("/")
 @Controller
@@ -26,12 +24,6 @@ public class LoginController {
      */
     public String index(){
         return "index";
-    }
-
-    //needs to be moved
-    @GetMapping("/addItem")
-    public String addItem(){
-        return "addItem";
     }
 
     /**
@@ -49,24 +41,9 @@ public class LoginController {
      * @return The home page on success. Error otherwise.
      */
     @PostMapping("/login")
-    public String logIn(@ModelAttribute User user){
+    public void logIn(@ModelAttribute User user){
         System.out.println(user.getUsername());
         System.out.println(user.getPassword());
-        return this.addItem();
-    }
-
-    /**
-     * Submits request to add an auction item.
-     *
-     * @param auctionItem The {@link AuctionItem} to add.
-     * @param model A {@link Model} used to transport data between HTML pages.
-     * @return The confirmation HTML page.
-     */
-    @PostMapping("/add")
-    public String addItem(@ModelAttribute AuctionItem auctionItem, Model model){
-        System.out.println(auctionItem);
-        model.addAllAttributes(auctionItem.attributes());
-        return "confirmation";
     }
 
     @GetMapping("/test")

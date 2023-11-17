@@ -9,8 +9,6 @@ import java.time.LocalDateTime;
 /**
  * Interacts with the database to retrieve and store auction items.
  * Also checks validity of {@link AuctionItem}s.
- *
- * @author Brock Jones
  */
 public class ItemDao {
     /**

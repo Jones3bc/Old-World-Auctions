@@ -2,8 +2,6 @@ package com.example.cps410proto.modules.models;
 
 /**
  * Represents a User.
- *
- * @author Brock Jones
  */
 public class User {
     private final String username;

@@ -2,8 +2,6 @@ package com.example.cps410proto.modules.models;
 
 /**
  * Represents a payment method.
- *
- * @author Brock Jones
  */
 public class PaymentMethod {
     private final int id;

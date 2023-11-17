@@ -1,5 +1,6 @@
 body {
   background-color: whitesmoke;
+  font-family: 'Arial', sans-serif;
 }
 h1 {
   color: black;
@@ -23,4 +24,13 @@ label {
 input {
   display: table-cell;
   padding: 10px;
+}
+
+span {
+  display: table-cell;
+}
+
+.required {
+    padding-left: 10px;
+    color: red;
 }

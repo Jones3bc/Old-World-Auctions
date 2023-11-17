@@ -23,7 +23,7 @@ public class ItemDaoTest {
         AuctionItem auctionItem
                 = new AuctionItem(null, "Description", new BigDecimal("23.45"),
                 new byte[5], "Blue", 2003, LocalDateTime.now().minusDays(5),
-                LocalDateTime.now().plusDays(5), false);
+                LocalDateTime.now().plusDays(5));
 
         assertThrows(IllegalArgumentException.class, () -> itemDao.isAuctionItemValid(auctionItem));
     }
@@ -34,7 +34,7 @@ public class ItemDaoTest {
         AuctionItem auctionItem
                 = new AuctionItem(name, "Description", new BigDecimal("23.45"),
                 new byte[5], "Blue", 2003, LocalDateTime.now().minusDays(5),
-                LocalDateTime.now().plusDays(5), false);
+                LocalDateTime.now().plusDays(5));
 
         assertThrows(IllegalArgumentException.class, () -> itemDao.isAuctionItemValid(auctionItem));
     }
@@ -45,7 +45,7 @@ public class ItemDaoTest {
         AuctionItem auctionItem
                 = new AuctionItem(name, "Description", new BigDecimal("23.45"),
                 new byte[5], "Blue", 2003, LocalDateTime.now().minusDays(5),
-                LocalDateTime.now().plusDays(5), false);
+                LocalDateTime.now().plusDays(5));
 
         assertTrue(itemDao.isAuctionItemValid(auctionItem));
     }
@@ -55,7 +55,7 @@ public class ItemDaoTest {
         AuctionItem auctionItem
                 = new AuctionItem("Blue La-Z-Boy Chair", null, new BigDecimal("23.45"),
                 new byte[5], "Blue", 2003, LocalDateTime.now().minusDays(5),
-                LocalDateTime.now().plusDays(5), false);
+                LocalDateTime.now().plusDays(5));
 
         assertThrows(IllegalArgumentException.class, () -> itemDao.isAuctionItemValid(auctionItem));
     }
@@ -66,7 +66,7 @@ public class ItemDaoTest {
         AuctionItem auctionItem
                 = new AuctionItem("Blue La-Z-Boy Chair", description, new BigDecimal("23.45"),
                 new byte[5], "Blue", 2003, LocalDateTime.now().minusDays(5),
-                LocalDateTime.now().plusDays(5), false);
+                LocalDateTime.now().plusDays(5));
 
         assertThrows(IllegalArgumentException.class, () -> itemDao.isAuctionItemValid(auctionItem));
     }
@@ -77,7 +77,7 @@ public class ItemDaoTest {
         AuctionItem auctionItem
                 = new AuctionItem("Blue La-Z-Boy Chair", description, new BigDecimal("23.45"),
                 new byte[5], "Blue", 2003, LocalDateTime.now().minusDays(5),
-                LocalDateTime.now().plusDays(5), false);
+                LocalDateTime.now().plusDays(5));
 
         assertTrue(itemDao.isAuctionItemValid(auctionItem));
     }
@@ -87,7 +87,7 @@ public class ItemDaoTest {
         AuctionItem auctionItem
                 = new AuctionItem("Blue La-Z-Boy Chair", "Arm Chair. Like new.", new BigDecimal("23.45"),
                 new byte[5], null, 2003, LocalDateTime.now().minusDays(5),
-                LocalDateTime.now().plusDays(5), false);
+                LocalDateTime.now().plusDays(5));
 
         assertThrows(IllegalArgumentException.class, () -> itemDao.isAuctionItemValid(auctionItem));
     }
@@ -98,7 +98,7 @@ public class ItemDaoTest {
         AuctionItem auctionItem
                 = new AuctionItem("Blue La-Z-Boy Chair", "Description", new BigDecimal("23.45"),
                 new byte[5], color, 1993, LocalDateTime.now().minusDays(5),
-                LocalDateTime.now().plusDays(5), true);
+                LocalDateTime.now().plusDays(5));
 
         assertThrows(IllegalArgumentException.class, () -> itemDao.isAuctionItemValid(auctionItem));
     }
@@ -109,7 +109,7 @@ public class ItemDaoTest {
         AuctionItem auctionItem
                 = new AuctionItem("Chair", "Description", new BigDecimal("23.45"),
                 new byte[5], color, 2003, LocalDateTime.now().minusDays(5),
-                LocalDateTime.now().plusDays(5), false);
+                LocalDateTime.now().plusDays(5));
 
         assertTrue(itemDao.isAuctionItemValid(auctionItem));
     }
@@ -119,7 +119,7 @@ public class ItemDaoTest {
         AuctionItem auctionItem
                 = new AuctionItem("Chair", "Description", null,
                 new byte[5], "Blue", 2013, LocalDateTime.now().minusDays(5),
-                LocalDateTime.now().plusDays(5), false);
+                LocalDateTime.now().plusDays(5));
 
         assertThrows(IllegalArgumentException.class, () -> itemDao.isAuctionItemValid(auctionItem));
     }
@@ -130,7 +130,7 @@ public class ItemDaoTest {
         AuctionItem auctionItem
                 = new AuctionItem("Blue La-Z-Boy Chair", "Description", new BigDecimal(bid),
                 new byte[5], "Green", 1993, LocalDateTime.now().minusDays(5),
-                LocalDateTime.now().plusDays(5), true);
+                LocalDateTime.now().plusDays(5));
 
         assertThrows(IllegalArgumentException.class, () -> itemDao.isAuctionItemValid(auctionItem));
     }
@@ -141,7 +141,7 @@ public class ItemDaoTest {
         AuctionItem auctionItem
                 = new AuctionItem("Chair", "Description", new BigDecimal(bid),
                 new byte[5], "Gold", 2003, LocalDateTime.now().minusDays(5),
-                LocalDateTime.now().plusDays(5), false);
+                LocalDateTime.now().plusDays(5));
 
         assertTrue(itemDao.isAuctionItemValid(auctionItem));
     }
@@ -152,7 +152,7 @@ public class ItemDaoTest {
         AuctionItem auctionItem
                 = new AuctionItem("Blue La-Z-Boy Chair", "Description", new BigDecimal("3.45"),
                 new byte[5], "Green", year, LocalDateTime.now().minusDays(5),
-                LocalDateTime.now().plusDays(5), true);
+                LocalDateTime.now().plusDays(5));
 
         assertThrows(IllegalArgumentException.class, () -> itemDao.isAuctionItemValid(auctionItem));
     }
@@ -163,7 +163,7 @@ public class ItemDaoTest {
         AuctionItem auctionItem
                 = new AuctionItem("Chair", "Description", new BigDecimal("8.34"),
                 new byte[5], "Gold", year, LocalDateTime.now().minusDays(5),
-                LocalDateTime.now().plusDays(5), false);
+                LocalDateTime.now().plusDays(5));
 
         assertTrue(itemDao.isAuctionItemValid(auctionItem));
     }
@@ -173,7 +173,7 @@ public class ItemDaoTest {
         AuctionItem auctionItem
                 = new AuctionItem("Blue La-Z-Boy Chair", "Description", new BigDecimal("3.45"),
                 new byte[5], "Green", 1956, null,
-                LocalDateTime.now().plusDays(5), true);
+                LocalDateTime.now().plusDays(5));
 
         assertThrows(IllegalArgumentException.class, () -> itemDao.isAuctionItemValid(auctionItem));
     }
@@ -183,7 +183,7 @@ public class ItemDaoTest {
         AuctionItem auctionItem
                 = new AuctionItem("Blue La-Z-Boy Chair", "Description", new BigDecimal("3.45"),
                 new byte[5], "Green", 1956, LocalDateTime.now().minusDays(5),
-                null, true);
+                null);
 
         assertThrows(IllegalArgumentException.class, () -> itemDao.isAuctionItemValid(auctionItem));
     }

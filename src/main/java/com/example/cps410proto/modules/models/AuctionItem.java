@@ -2,6 +2,7 @@ package com.example.cps410proto.modules.models;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,23 +22,15 @@ public class AuctionItem {
     private LocalDateTime auctionEndTime;
     private boolean auctionComplete;
 
-    public AuctionItem(String name, String description, BigDecimal currentBid, String color, int manufacturedYear) {
-        this.name = name;
-        this.description = description;
-        this.currentBid = currentBid;
-        this.color = color;
-        this.manufacturedYear = manufacturedYear;
-    }
-
     public AuctionItem(
             String name,
             String description,
             BigDecimal currentBid,
-            byte[] image, String color,
+            byte[] image,
+            String color,
             int manufacturedYear,
             LocalDateTime auctionStartTime,
-            LocalDateTime auctionEndTime,
-            boolean auctionComplete
+            LocalDateTime auctionEndTime
     ) {
         this.name = name;
         this.description = description;
@@ -47,7 +40,7 @@ public class AuctionItem {
         this.manufacturedYear = manufacturedYear;
         this.auctionStartTime = auctionStartTime;
         this.auctionEndTime = auctionEndTime;
-        this.auctionComplete = auctionComplete;
+        this.auctionComplete = false;
     }
 
     public byte[] getImage() {
@@ -128,8 +121,12 @@ public class AuctionItem {
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", currentBid=" + currentBid +
+                ", image=" + Arrays.toString(image) +
                 ", color='" + color + '\'' +
                 ", manufacturedYear=" + manufacturedYear +
+                ", auctionStartTime=" + auctionStartTime +
+                ", auctionEndTime=" + auctionEndTime +
+                ", auctionComplete=" + auctionComplete +
                 '}';
     }
 

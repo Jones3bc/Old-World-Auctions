@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 /**
  * Handles requests and responses having to do with auction items.
  * Supplies appropriate pages to the user and takes user input.
- *
- * @author Brock Jones
  */
-
 @RequestMapping("/")
 @Controller
 public class ItemController {
@@ -27,6 +24,30 @@ public class ItemController {
     @GetMapping("/auctions-page")
     public String auctionPage() {
         return "auctionList";
+    }
+
+    /**
+     * Supplies the page to add an item to the user in the browser.
+     *
+     * @return The addItem HTML page.
+     */
+    @GetMapping("/addItem")
+    public String addItem(){
+        return "addItem";
+    }
+
+    /**
+     * Submits request to add an auction item.
+     *
+     * @param auctionItem The {@link AuctionItem} to add.
+     * @param model A {@link Model} used to transport data between HTML pages.
+     * @return The confirmation HTML page.
+     */
+    @PostMapping("/add")
+    public String addItem(@ModelAttribute AuctionItem auctionItem, Model model){
+        System.out.println(auctionItem);
+        model.addAllAttributes(auctionItem.attributes());
+        return "confirmation";
     }
 
     /**
