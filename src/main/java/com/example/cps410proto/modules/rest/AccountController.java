@@ -37,19 +37,4 @@ public class AccountController {
         }
     }
 
-    @PostMapping("/change")
-    public User changePassword(@PathVariable String username, @RequestParam String newPassword) {
-        try {
-            return accountService.changePassword(username, newPassword);
-        } catch (Exception e) {
-            // Handle the exception, e.g., return an error response
-            return null;
-        }
-    }
-
-    @PostMapping("/delete")
-    public void deleteAccount(@PathVariable String username) {
-        accountService.deleteAccount(username);
-
-    }
 }

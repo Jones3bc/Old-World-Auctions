@@ -36,6 +36,29 @@ public class LoginDao {
 
         return true;
     }
+    /**
+     * Inserts a new user into the database.
+     *
+     * @param user The {@link User} to insert into the database.
+     * @throws SQLException if there is an issue with the SQL operation.
+     */
+    public void insertUser(User user) throws SQLException {
+        String sqlConnection = "jdbc:sqlite:/F:\\SqlLite\\usersdb.db";
+        String sql = "INSERT INTO users (name, password) VALUES (?, ?);";
+
+        try (Connection connection = DriverManager.getConnection(sqlConnection);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, user.getUsername());
+            preparedStatement.setString(2, user.getPassword());
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException ex) {
+            System.out.println("Failed to establish and use SQL connection.");
+            throw ex;
+        }
+    }
 
     public String retrieveUser(){
         String sqlConnection = "jdbc:sqlite:/F:\\SqlLite\\usersdb.db";
