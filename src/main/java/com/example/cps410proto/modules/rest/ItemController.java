@@ -1,9 +1,12 @@
 package com.example.cps410proto.modules.rest;
 
 import com.example.cps410proto.modules.data.ItemDao;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Controller;
 import com.example.cps410proto.modules.models.AuctionItem;
 import java.math.BigDecimal;
+import java.util.List;
+
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +39,10 @@ public class ItemController {
         return "addItem";
     }
 
+    public List<AuctionItem> getAllItems() {
+        ItemDao itemDao = new ItemDao();
+       return itemDao.getAllItems();
+    }
     /**
      * Submits request to add an auction item.
      *
