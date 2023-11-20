@@ -1,16 +1,33 @@
 package com.example.cps410proto.modules.data;
 
 import com.example.cps410proto.modules.models.AuctionItem;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.thymeleaf.util.StringUtils;
-
 import java.math.BigDecimal;
+import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Interacts with the database to retrieve and store auction items.
  * Also checks validity of {@link AuctionItem}s.
  */
 public class ItemDao {
+
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public ItemDao() {
+    }
+
+    @Autowired
+    public ItemDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
     /**
      * Checks the validity of a given {@link AuctionItem}.
      *
@@ -36,4 +53,39 @@ public class ItemDao {
 
         return true;
     }
+
+    public List<AuctionItem> getAllItems() {
+        String sqlConnection = "jdbc:sqlite:/F:\\SqlLite\\usersdb.db";
+        String sql = "SELECT * FROM ITEM_INFO";
+
+        try {
+            Connection connection = DriverManager.getConnection(sqlConnection);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            List<AuctionItem> auctionItems = new ArrayList<>();
+
+            while (resultSet.next()) {
+                AuctionItem auctionItem = new AuctionItem(
+                        resultSet.getString("name"),
+                        resultSet.getString("description"),
+                        resultSet.getBigDecimal("currentBid"),
+                        resultSet.getBytes("image"),
+                        resultSet.getString("color"),
+                        resultSet.getInt("manufacturedYear"),
+                        LocalDateTime.parse(resultSet.getString("auctionStartTime")),
+                        LocalDateTime.parse(resultSet.getString("auctionEndTime"))
+                        // Add other properties based on your schema...
+                );
+
+                auctionItems.add(auctionItem);
+            }
+
+            return auctionItems;
+        } catch (SQLException ex) {
+            System.out.println("Failed to establish and use SQL connection.");
+            return new ArrayList<>(); // Return an empty list or handle the exception as needed.
+        }
+    }
+
 }
