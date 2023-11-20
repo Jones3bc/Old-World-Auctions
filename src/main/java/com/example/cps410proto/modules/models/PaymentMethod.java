@@ -10,14 +10,16 @@ public class PaymentMethod {
     private final int expirationMonth;
     private final int expirationYear;
     private final int cvv;
+    private final String userUsername;
 
-    public PaymentMethod(int id, boolean credit, String cardNumber, int expirationMonth, int expirationYear, int cvv) {
+    public PaymentMethod(int id, boolean credit, String cardNumber, int expirationMonth, int expirationYear, int cvv, String userUsername) {
         this.id = id;
         this.credit = credit;
         this.cardNumber = cardNumber;
         this.expirationMonth = expirationMonth;
         this.expirationYear = expirationYear;
         this.cvv = cvv;
+        this.userUsername = userUsername;
     }
 
     public int getId() {
@@ -43,4 +45,6 @@ public class PaymentMethod {
     public int getCvv() {
         return cvv;
     }
+
+    public String getUserUsername() { return userUsername; }
 }
