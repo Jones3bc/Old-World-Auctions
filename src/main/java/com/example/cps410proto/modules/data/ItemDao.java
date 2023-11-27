@@ -74,9 +74,11 @@ public class ItemDao {
                         resultSet.getString("color"),
                         resultSet.getInt("manufacturedYear"),
                         LocalDateTime.parse(resultSet.getString("auctionStartTime")),
-                        LocalDateTime.parse(resultSet.getString("auctionEndTime"))
+                        LocalDateTime.parse(resultSet.getString("auctionEndTime")),
+                        resultSet.getString("sellerUser")
                         // Add other properties based on your schema...
                 );
+                auctionItem.setBidderId(resultSet.getString("bidderUser"));
 
                 auctionItems.add(auctionItem);
             }

@@ -21,6 +21,8 @@ public class AuctionItem {
     private LocalDateTime auctionStartTime;
     private LocalDateTime auctionEndTime;
     private boolean auctionComplete;
+    private String sellerUser;
+    private String bidderUser;
 
     public AuctionItem(
             String name,
@@ -30,7 +32,8 @@ public class AuctionItem {
             String color,
             int manufacturedYear,
             LocalDateTime auctionStartTime,
-            LocalDateTime auctionEndTime
+            LocalDateTime auctionEndTime,
+            String sellerUsername
     ) {
         this.name = name;
         this.description = description;
@@ -41,6 +44,8 @@ public class AuctionItem {
         this.auctionStartTime = auctionStartTime;
         this.auctionEndTime = auctionEndTime;
         this.auctionComplete = false;
+        this.sellerUser = sellerUsername;
+        this.bidderUser = null;
     }
 
     public byte[] getImage() {
@@ -73,6 +78,22 @@ public class AuctionItem {
 
     public void setAuctionComplete(boolean auctionComplete) {
         this.auctionComplete = auctionComplete;
+    }
+
+    public String getSellerId() {
+        return sellerUser;
+    }
+
+    public void setSellerId(String sellerId) {
+        this.sellerUser = sellerId;
+    }
+
+    public String getBidderId() {
+        return bidderUser;
+    }
+
+    public void setBidderId(String bidderId) {
+        this.bidderUser = bidderId;
     }
 
     public String getName() {
