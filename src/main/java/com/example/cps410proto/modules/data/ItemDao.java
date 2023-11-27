@@ -55,7 +55,8 @@ public class ItemDao {
     }
 
     public List<AuctionItem> getAllItems() {
-        String sqlConnection = "jdbc:sqlite:/F:\\SqlLite\\usersdb.db";
+        //Should it be like that?
+        String sqlConnection = "jdbc:sqlite:resources/oldWorldAuctionDb.db";
         String sql = "SELECT * FROM ITEM_INFO";
 
         try {

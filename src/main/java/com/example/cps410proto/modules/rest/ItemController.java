@@ -237,6 +237,11 @@ public class ItemController {
             return "error";  // You should have an "error" Thymeleaf template for displaying error messages.
         }
     }
+    @GetMapping("/GetAll")
+    public List<AuctionItem> GetAllItems(@ModelAttribute AuctionItem auctionItem) throws Exception {
+        ItemDao itemDao = new ItemDao();
+        return itemDao.getAllItems();
+    }
 
 }
 
