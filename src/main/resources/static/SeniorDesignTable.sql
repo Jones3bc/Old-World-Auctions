@@ -1,13 +1,12 @@
 set echo on
-create table USER_INFO(
-	userID varchar2(15)NOT NULL,
-	password varchar2(20) NOT NULL,
-	constraint LOG_pk primary key (userID)
+create table USERS(
+	username varchar(30) PRIMARY KEY,
+	password varchar(30) NOT NULL
 );
 
 commit;
 --desc is used to show the table and all of its contents
-desc USER_INFO
+desc USERS;
 
 --Commented out section for the account info
 --create table ACC_INFO(
@@ -19,18 +18,34 @@ desc USER_INFO
 --commit; 
 --desc ACC_INFO
 
-create table Auction_item(
-	item_name varchar2(40),
-	item_condition varchar2(30),
-	item_price number,
-	item_color varchar2(15),
-	manufactured_yr number (4),
-	aucStartTime date;
-	aucEndTime date;
-	constraint ITEM_INFO_pk primary key (item_name)
+create table AUCTION_ITEMS(
+	name varchar(40),
+	description varchar(30),
+	currentBid varchar(30),
+	image blob,
+    color varchar(15),
+	manufacturedYear number,
+	aucStartTime datetime,
+	aucEndTime datetime,
+	sellerUser varchar(30),
+	bidderUser varchar(30),
+	FOREIGN KEY(sellerUser) REFERENCES USERS(username),
+	FOREIGN KEY(bidderUser) REFERENCES USERS(username)
 );
 
 commit;
-desc ITEM_INFO
+desc AUCTION_ITEMS;
+
+--credit 0 or 1 for boolean
+create table PAYMENT_METHODS(
+    id varchar(10),
+    credit integer,
+    cardNumber varchar(30),
+    expirationMonth number,
+    expirationYear number,
+    cvv number,
+    userUsername varchar(30),
+    FOREIGN KEY (userUsername) REFERENCES USERS(username)
+);
 
 purge recyclebin;
