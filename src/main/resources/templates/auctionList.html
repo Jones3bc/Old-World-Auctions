@@ -4,6 +4,37 @@
     <meta charset="UTF-8">
     <title>Old World Auction</title>
     <link th:href="@{/auctionList.css}" rel="stylesheet"/>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script th:inline="javascript">
+        var items = /*[[${items}]]*/ [];
+    </script>
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function() {
+                   fetch("/allItemsJson")
+                       .then(response => response.json())
+                       .then(data => {
+
+                           displayAuctionItems(data);
+                       })
+
+               });
+
+               function displayAuctionItems(items) {
+
+                   const auctionListDiv = document.getElementById("auctionList");
+                   const ul = document.createElement("ul");
+
+                   items.forEach(item => {
+                       const li = document.createElement("li");
+                       li.textContent = `${item.name} - ${item.description} - Current Bid: ${item.currentBid} - Color: ${item.color}`;
+                       ul.appendChild(li);
+                   });
+
+                   auctionListDiv.appendChild(ul);
+               }
+
+    </script>
 </head>
 <body>
 <header>
@@ -15,6 +46,7 @@
     </div>
 </header>
 <section>
+    <div id="auctionList"></div>
     <div class="gallery">
 
     </div>
@@ -71,8 +103,6 @@
         </div>
     </div>
 </section>
-
-<script src = "/static/AuctionList.js"></script>
 
 <!--  <script src="https://replit.com/public/js/replit-badge-v2.js" theme="light" position="bottom-right"></script>-->
 </body>

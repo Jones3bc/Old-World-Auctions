@@ -39,11 +39,19 @@ public class ItemController {
         return "addItem";
     }
 
+
     @GetMapping("/allItems")
     public String getAllItems() {
         ItemDao itemDao = new ItemDao();
         System.out.println(itemDao.getAllItems());
-       return "auctionList";
+        return "auctionList";
+    }
+    @GetMapping("/allItemsJson")
+    @ResponseBody
+    public List<AuctionItem> getAllItemsJson() {
+        ItemDao itemDao = new ItemDao();
+        System.out.println(itemDao.getAllItems());
+        return itemDao.getAllItems();
     }
     /**
      * Submits request to add an auction item.
@@ -239,11 +247,7 @@ public class ItemController {
             return "error";  // You should have an "error" Thymeleaf template for displaying error messages.
         }
     }
-    @GetMapping("/GetAll")
-    public List<AuctionItem> GetAllItems(@ModelAttribute AuctionItem auctionItem) throws Exception {
-        ItemDao itemDao = new ItemDao();
-        return itemDao.getAllItems();
-    }
+
 
 }
 

@@ -61,7 +61,7 @@ public class ItemDao {
     }
 
     public List<AuctionItem> getAllItems() {
-        //Should it be like that?
+
         String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
         String sql = "SELECT * FROM AUCTION_ITEMS";
 
