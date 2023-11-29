@@ -54,10 +54,16 @@ public class ItemDao {
         return true;
     }
 
+    private String reformattedDate(String date){
+        String[] sections = date.split(" ");
+        System.out.println(sections[0]);
+        return sections[0] + "T" + sections[1];
+    }
+
     public List<AuctionItem> getAllItems() {
         //Should it be like that?
-        String sqlConnection = "jdbc:sqlite:resources/oldWorldAuctionDb.db";
-        String sql = "SELECT * FROM ITEM_INFO";
+        String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
+        String sql = "SELECT * FROM AUCTION_ITEMS";
 
         try {
             Connection connection = DriverManager.getConnection(sqlConnection);
@@ -74,8 +80,8 @@ public class ItemDao {
                         resultSet.getBytes("image"),
                         resultSet.getString("color"),
                         resultSet.getInt("manufacturedYear"),
-                        LocalDateTime.parse(resultSet.getString("auctionStartTime")),
-                        LocalDateTime.parse(resultSet.getString("auctionEndTime")),
+                        LocalDateTime.parse(this.reformattedDate(resultSet.getString("aucStartTime"))),
+                        LocalDateTime.parse(this.reformattedDate(resultSet.getString("aucEndTime"))),
                         resultSet.getString("sellerUser")
                         // Add other properties based on your schema...
                 );
@@ -86,7 +92,7 @@ public class ItemDao {
 
             return auctionItems;
         } catch (SQLException ex) {
-            System.out.println("Failed to establish and use SQL connection.");
+            System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
             return new ArrayList<>(); // Return an empty list or handle the exception as needed.
         }
     }

@@ -39,9 +39,11 @@ public class ItemController {
         return "addItem";
     }
 
-    public List<AuctionItem> getAllItems() {
+    @GetMapping("/allItems")
+    public String getAllItems() {
         ItemDao itemDao = new ItemDao();
-       return itemDao.getAllItems();
+        System.out.println(itemDao.getAllItems());
+       return "auctionList";
     }
     /**
      * Submits request to add an auction item.

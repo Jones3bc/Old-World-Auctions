@@ -148,6 +148,8 @@ public class AuctionItem {
                 ", auctionStartTime=" + auctionStartTime +
                 ", auctionEndTime=" + auctionEndTime +
                 ", auctionComplete=" + auctionComplete +
+                ", sellerUser='" + sellerUser + '\'' +
+                ", bidderUser='" + bidderUser + '\'' +
                 '}';
     }
 
