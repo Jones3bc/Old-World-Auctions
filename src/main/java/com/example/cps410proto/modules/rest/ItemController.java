@@ -64,6 +64,8 @@ public class ItemController {
     public String addItem(@ModelAttribute AuctionItem auctionItem, Model model){
         System.out.println(auctionItem);
         model.addAllAttributes(auctionItem.attributes());
+        ItemDao itemDao = new ItemDao();
+        itemDao.addAuctionitem(auctionItem);
         return "confirmation";
     }
 

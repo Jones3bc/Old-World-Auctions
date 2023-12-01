@@ -2,7 +2,6 @@ package com.example.cps410proto.modules.data;
 
 import com.example.cps410proto.modules.models.AuctionItem;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.thymeleaf.util.StringUtils;
 import java.math.BigDecimal;
@@ -54,10 +53,46 @@ public class ItemDao {
         return true;
     }
 
-    private String reformattedDate(String date){
+    private String javaReformattedDate(String date){
         String[] sections = date.split(" ");
-        System.out.println(sections[0]);
         return sections[0] + "T" + sections[1];
+    }
+
+    private String sqlFormattedDate(String date) {
+        String[] sections = date.split("T");
+        return sections[0] + " " + sections[1];
+    }
+
+    public boolean addAuctionitem(AuctionItem auctionItem){
+        String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
+        String sql = "INSERT INTO AUCTION_ITEMS VALUES(?,?,?,?,?,?,?,?,?,?)";
+
+        try {
+            Connection connection = DriverManager.getConnection(sqlConnection);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, auctionItem.getName());
+            preparedStatement.setString(2, auctionItem.getDescription());
+            preparedStatement.setBigDecimal(3, auctionItem.getCurrentBid());
+            preparedStatement.setBytes(4, auctionItem.getImage());
+            preparedStatement.setString(5, auctionItem.getColor());
+            preparedStatement.setInt(6, auctionItem.getManufacturedYear());
+            preparedStatement.setString(7, this.sqlFormattedDate(auctionItem.getAuctionStartTime().toString()));
+            preparedStatement.setString(8, this.sqlFormattedDate(auctionItem.getAuctionEndTime().toString()));
+            preparedStatement.setString(9, auctionItem.getSellerId());
+            preparedStatement.setString(10, null);
+
+            int result = preparedStatement.executeUpdate();
+
+            if(result > 0) {
+                return true;
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
+            return false;
+        }
+
+        return false;
     }
 
     public List<AuctionItem> getAllItems() {
@@ -80,8 +115,8 @@ public class ItemDao {
                         resultSet.getBytes("image"),
                         resultSet.getString("color"),
                         resultSet.getInt("manufacturedYear"),
-                        LocalDateTime.parse(this.reformattedDate(resultSet.getString("aucStartTime"))),
-                        LocalDateTime.parse(this.reformattedDate(resultSet.getString("aucEndTime"))),
+                        LocalDateTime.parse(this.javaReformattedDate(resultSet.getString("aucStartTime"))),
+                        LocalDateTime.parse(this.javaReformattedDate(resultSet.getString("aucEndTime"))),
                         resultSet.getString("sellerUser")
                         // Add other properties based on your schema...
                 );
