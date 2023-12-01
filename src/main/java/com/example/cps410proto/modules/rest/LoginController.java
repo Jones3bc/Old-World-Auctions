@@ -36,6 +36,15 @@ public class LoginController {
     }
 
     /**
+     * Supplies the register page to the user in the browser.
+     * @return The register HTML page.
+     */
+    @GetMapping("/register-page")
+    public String registrationPage(){
+        return "registration";
+    }
+
+    /**
      * Submits login request. Should send user to home page on login success. Display error to the user otherwise.
      * @param user An {@link User} that holds the user's login information.
      * @return The home page on success. Error otherwise.
@@ -44,6 +53,11 @@ public class LoginController {
     public void logIn(@ModelAttribute User user){
         System.out.println(user.getUsername());
         System.out.println(user.getPassword());
+    }
+
+    @PostMapping("/register")
+    public boolean register(@ModelAttribute User user){
+        return true;
     }
 
     @GetMapping("/test")
