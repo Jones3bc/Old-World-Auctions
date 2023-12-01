@@ -9,29 +9,38 @@
         var items = /*[[${items}]]*/ [];
     </script>
     <script>
-
         document.addEventListener("DOMContentLoaded", function() {
                    fetch("/allItemsJson")
                        .then(response => response.json())
                        .then(data => {
-
                            displayAuctionItems(data);
                        })
-
+                       .catch(error => {
+                           console.error('Error fetching data:', error);
+                       });
                });
 
                function displayAuctionItems(items) {
-
-                   const auctionListDiv = document.getElementById("auctionList");
-                   const ul = document.createElement("ul");
+                   const auctionListDiv = document.getElementById("gallery");
+                   auctionListDiv.innerHTML = ''; // Clear previous content
 
                    items.forEach(item => {
-                       const li = document.createElement("li");
-                       li.textContent = `${item.name} - ${item.description} - Current Bid: ${item.currentBid} - Color: ${item.color}`;
-                       ul.appendChild(li);
-                   });
+                       const contentDiv = document.createElement("div");
+                       contentDiv.classList.add("content");
 
-                   auctionListDiv.appendChild(ul);
+                       contentDiv.innerHTML = `
+                           <h3>${item.name}</h3>
+<!--                           if(item.image == null){-->
+<!--                                <img src="${item.image}" alt="${item.name}">-->
+<!--                           }-->
+                           <p>$${item.currentBid}</p>
+                           <h6>${item.description}</h6>
+                           <button class="buy-1">Buy Now</button>
+                           <button class="save" onclick="location.href='index.html'">Save</button>
+                       `;
+
+                       auctionListDiv.appendChild(contentDiv);
+                   });
                }
 
     </script>
@@ -46,7 +55,9 @@
     </div>
 </header>
 <section>
-    <div id="auctionList"></div>
+    <div id="gallery">
+
+    </div>
     <div class="gallery">
 
     </div>
