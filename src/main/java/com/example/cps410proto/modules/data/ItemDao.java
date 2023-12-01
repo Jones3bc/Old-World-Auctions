@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 /**
@@ -112,7 +113,7 @@ public class ItemDao {
                         resultSet.getString("name"),
                         resultSet.getString("description"),
                         resultSet.getBigDecimal("currentBid"),
-                        resultSet.getBytes("image"),
+                        Base64.getEncoder().encode(resultSet.getBytes("image")),
                         resultSet.getString("color"),
                         resultSet.getInt("manufacturedYear"),
                         LocalDateTime.parse(this.javaReformattedDate(resultSet.getString("aucStartTime"))),
