@@ -24,20 +24,27 @@
                    const auctionListDiv = document.getElementById("gallery");
                    auctionListDiv.innerHTML = ''; // Clear previous content
 
+               const byteArray = [69, 120, 97, 109, 112, 108, 101, 46, 106, 112, 103];
+                const uint8Array = new Uint8Array(byteArray);
+                const blob = new Blob([uint8Array]);
+                const dataUrl = URL.createObjectURL(blob);
+                const imgTag = `<img src="${dataUrl}" alt="Image">`;
+                console.log(imgTag);
+
+
+                console.log(imgTag);
                    items.forEach(item => {
                        const contentDiv = document.createElement("div");
                        contentDiv.classList.add("content");
+                        const imageByte = btoa(item.image);
 
                        contentDiv.innerHTML = `
                            <h3>${item.name}</h3>
-<!--                           if(item.image == null){-->
-<!--                                <img src="${item.image}" alt="${item.name}">-->
-<!--                           }-->
-                           <p>$${item.currentBid}</p>
+                             <p>$${item.currentBid}</p>
                            <h6>${item.description}</h6>
                            <button class="buy-1">Buy Now</button>
                            <button class="save" onclick="location.href='index.html'">Save</button>
-                       `;
+                           `;
 
                        auctionListDiv.appendChild(contentDiv);
                    });

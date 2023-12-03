@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  * Supplies appropriate pages to the user and takes user input.
  */
 @RequestMapping("/")
+@CrossOrigin(origins = "http://your-frontend-domain.com")
 @Controller
 public class ItemController {
 
