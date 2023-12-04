@@ -1,8 +1,12 @@
 package com.example.cps410proto.modules.data;
 
 import com.example.cps410proto.modules.models.User;
+import org.springframework.stereotype.Service;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Interacts with the database to store and retrieve user information.
@@ -10,6 +14,7 @@ import java.sql.*;
  *
  * @author Brock Jones
  */
+@Service
 public class LoginDao {
 
     /**
@@ -36,15 +41,15 @@ public class LoginDao {
 
         return true;
     }
+
     /**
      * Inserts a new user into the database.
      *
      * @param user The {@link User} to insert into the database.
-     * @throws SQLException if there is an issue with the SQL operation.
      */
-    public void insertUser(User user) throws SQLException {
-        String sqlConnection = "jdbc:sqlite:/F:\\SqlLite\\usersdb.db";
-        String sql = "INSERT INTO users (name, password) VALUES (?, ?);";
+    public void insertUser(User user) {
+        String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
+        String sql = "INSERT INTO USERS VALUES (?, ?);";
 
         try (Connection connection = DriverManager.getConnection(sqlConnection);
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -55,33 +60,35 @@ public class LoginDao {
             preparedStatement.executeUpdate();
 
         } catch (SQLException ex) {
-            System.out.println("Failed to establish and use SQL connection.");
-            throw ex;
+            System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
         }
     }
 
-    public String retrieveUser(){
-        String sqlConnection = "jdbc:sqlite:/F:\\SqlLite\\usersdb.db";
-        String sql = "SELECT * from users;";
+    /**
+     * Retrieves all users from the database
+     *
+     * @return A {@link List} of {@link User}s.
+     */
+    public List<User> retrieveUsers(){
+        String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
+        String sql = "SELECT * from USERS;";
 
         try {
             Connection connection = DriverManager.getConnection(sqlConnection);
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            StringBuilder returnString = new StringBuilder();
+            List<User> userList = new ArrayList<>();
             while(resultSet.next()){
-                returnString.append(resultSet.getString("name"));
-                returnString.append(" - ");
-                returnString.append(resultSet.getString("email"));
+                userList.add(new User(resultSet.getString("username"), resultSet.getString("password")));
             }
 
-            return returnString.toString();
+            return userList;
 
         } catch (SQLException ex){
-            System.out.println("Failed to establish and use SQL connection.");
+            System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
         }
 
-        return "Didn't work";
+        return Collections.emptyList();
     }
 }
