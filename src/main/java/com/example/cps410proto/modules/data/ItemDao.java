@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 /**
@@ -54,17 +53,36 @@ public class ItemDao {
         return true;
     }
 
+    /**
+     * Takes a SQL formatted date and converts it into a Java formatted date.
+     * All in String representation.
+     *
+     * @param date {@link String} representation of the date to convert.
+     * @return {@link String} representation of the formatted date.
+     */
     private String javaReformattedDate(String date){
         String[] sections = date.split(" ");
         return sections[0] + "T" + sections[1];
     }
 
+    /**
+     * Takes a Java formatted date and converts it into a SQL formatted date.
+     * All in String representation.
+     *
+     * @param date {@link String} representation of the date to convert.
+     * @return {@link String} representation of the formatted date.
+     */
     private String sqlFormattedDate(String date) {
         String[] sections = date.split("T");
         return sections[0] + " " + sections[1];
     }
 
-    public boolean addAuctionitem(AuctionItem auctionItem){
+    /**
+     * Adds an {@link AuctionItem} to the database.
+     *
+     * @param auctionItem The {@link AuctionItem} to add.
+     */
+    public void addAuctionItem(AuctionItem auctionItem){
         String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
         String sql = "INSERT INTO AUCTION_ITEMS VALUES(?,?,?,?,?,?,?,?,?,?)";
 
@@ -82,20 +100,18 @@ public class ItemDao {
             preparedStatement.setString(9, auctionItem.getSellerId());
             preparedStatement.setString(10, null);
 
-            int result = preparedStatement.executeUpdate();
-
-            if(result > 0) {
-                return true;
-            }
+            preparedStatement.executeUpdate();
 
         } catch (SQLException ex) {
             System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
-            return false;
         }
-
-        return false;
     }
 
+    /**
+     * Retrieves all auction items from the database.
+     *
+     * @return A {@link List} of {@link AuctionItem}s.
+     */
     public List<AuctionItem> getAllItems() {
 
         String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";

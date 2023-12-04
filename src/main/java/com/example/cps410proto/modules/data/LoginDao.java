@@ -11,8 +11,6 @@ import java.util.List;
 /**
  * Interacts with the database to store and retrieve user information.
  * Also checks the validity of {@link User}s.
- *
- * @author Brock Jones
  */
 @Service
 public class LoginDao {

@@ -1,7 +1,6 @@
 package com.example.cps410proto.modules.rest;
 
 import com.example.cps410proto.modules.data.ItemDao;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Controller;
 import com.example.cps410proto.modules.models.AuctionItem;
 import java.math.BigDecimal;
@@ -66,7 +65,7 @@ public class ItemController {
         System.out.println(auctionItem);
         model.addAllAttributes(auctionItem.attributes());
         ItemDao itemDao = new ItemDao();
-        itemDao.addAuctionitem(auctionItem);
+        itemDao.addAuctionItem(auctionItem);
         return "confirmation";
     }
 
