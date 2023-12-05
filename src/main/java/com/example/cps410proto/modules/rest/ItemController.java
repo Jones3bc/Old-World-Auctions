@@ -39,6 +39,10 @@ public class ItemController {
         return "addItem";
     }
 
+    @GetMapping("/getItem")
+    public String getItem(){
+        return "getItem";
+    }
 
     @GetMapping("/allItems")
     public String getAllItems() {
