@@ -11,53 +11,45 @@
     </script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-                   fetch("/allItemsJson")
-                       .then(response => response.json())
-                       .then(data => {
-                           displayAuctionItems(data);
-                       })
-                       .catch(error => {
-                           console.error('Error fetching data:', error);
-                       });
-               });
-
-               function displayAuctionItems(items) {
-                   const auctionListDiv = document.getElementById("gallery");
-                   auctionListDiv.innerHTML = ''; // Clear previous content
-
-               const byteArray = [69, 120, 97, 109, 112, 108, 101, 46, 106, 112, 103];
-                const uint8Array = new Uint8Array(byteArray);
-                const blob = new Blob([uint8Array]);
-                const dataUrl = URL.createObjectURL(blob);
-                const imgTag = `<img src="${dataUrl}" alt="Image">`;
-                console.log(imgTag);
-
-
-                console.log(imgTag);
-                   items.forEach(item => {
-                       const contentDiv = document.createElement("div");
-                       contentDiv.classList.add("content");
-                        const imageByte = btoa(item.image);
-
-                       contentDiv.innerHTML = `
-                           <h3>${item.name}</h3>
-                             <p>$${item.currentBid}</p>
-                           <h6>${item.description}</h6>
-                           <button class="buy-1">Buy Now</button>
-                           <button class="save" onclick="location.href='/getItem'">Save</button>
-                           `;
-
-                       auctionListDiv.appendChild(contentDiv);
-                   const buyButtons = document.querySelectorAll('.buy-1');
-                    buyButtons.forEach(function(buyButton) {
-                    buyButton.addEventListener('click', function() {
-
-                        window.location.href = '/getItem' ;
-            });
+            fetch("/allItemsJson")
+                .then(response => response.json())
+                .then(data => {
+                    displayAuctionItems(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
         });
-                   });
-               }
 
+        function displayAuctionItems(items) {
+            const auctionListDiv = document.getElementById("gallery");
+            auctionListDiv.innerHTML = ''; // Clear previous content
+
+            items.forEach(item => {
+                const contentDiv = document.createElement("div");
+                contentDiv.classList.add("content");
+                const imageByte = btoa(item.image);
+
+                contentDiv.innerHTML = `
+                    <h3>${item.name}</h3>
+                    <p>$${item.currentBid}</p>
+                    <h6>${item.description}</h6>
+                    <button class="buy-1" onclick="buyNow('${item.name}')">Buy Now</button>
+                    <button class="save" onclick="saveItem('${item.name}')">Save</button>
+                `;
+
+                auctionListDiv.appendChild(contentDiv);
+            });
+        }
+
+        function buyNow(itemName) {
+            window.location.href = '/getItem?name=' + encodeURIComponent(itemName);
+        }
+
+        function saveItem(itemName) {
+            // Implement your save logic if needed
+            console.log('Save item: ' + itemName);
+        }
     </script>
 </head>
 <body>
@@ -70,42 +62,7 @@
     </div>
 </header>
 <section>
-    <div id="gallery">
-
-    </div>
-    <div class="gallery">
-
-    </div>
-    <!--    <div class = "gallery">-->
-    <!--        <div class = "content">-->
-    <!--            <h3>Wide Crystal Chandelier</h3>-->
-    <!--            <image src = Capture.PNG></image>-->
-    <!--            <p>$4235</p>-->
-    <!--            <h6>Schonbek Renaissance 24 Light 36" Wide Crystal Chandelier</h6>-->
-    <!--            <button class = "buy-1">Buy Now</button>-->
-    <!--            <button class = "save" a href="index.html"> Save</button>-->
-    <!--        </div>-->
-    <!--        <div class = "content">-->
-    <!--            <h3>Cheyenne Chesterfield Leather Sofa</h3>-->
-    <!--            <image src = sofa.png></image>-->
-    <!--            <p>$2100</p>-->
-    <!--            <h6>Cheyenne Chesterfield Leather Sofa</h6>-->
-    <!--            <button class = "buy-1"> Buy Now</button>-->
-    <!--            <button class = "save"> Save</button>-->
-    <!--        </div>-->
-    <!--        <div class = "content">-->
-    <!--            <h3>Cheyenne Chesterfield Leather Sofa</h3>-->
-    <!--            <image src = sofa.png></image>-->
-    <!--            <p>$2100</p>-->
-    <!--            <h6>Cheyenne Chesterfield Leather Sofa</h6>-->
-    <!--            <button class = "buy-1"> Buy Now</button>-->
-    <!--            <button class = "save"> Save</button>-->
-    <!--        </div>-->
-    <!--    </div>-->
-
+    <div id="gallery"></div>
 </section>
-
-<!--  <script src="https://replit.com/public/js/replit-badge-v2.js" theme="light" position="bottom-right"></script>-->
 </body>
-
 </html>

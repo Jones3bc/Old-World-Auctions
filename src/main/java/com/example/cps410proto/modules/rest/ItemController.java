@@ -40,8 +40,22 @@ public class ItemController {
     }
 
     @GetMapping("/getItem")
-    public String getItem(){
-        return "getItem";
+    public String getItemByName(@RequestParam String name, Model model) {
+        ItemDao itemDao = new ItemDao();
+        try {
+            AuctionItem auctionItem = itemDao.findItemByName(name);
+            System.out.println(itemDao.findItemByName("itemName"));
+
+            if (auctionItem != null) {
+                model.addAttribute("item", auctionItem);
+                return "getItem"; // Assuming "getItem" is the Thymeleaf template for displaying item details
+            } else {
+                throw new Exception("Item not found");
+            }
+        } catch (Exception e) {
+            // Handle the exception (e.g., log it) and return an error page or redirect
+            return "error"; // Assuming "error" is a Thymeleaf template for displaying errors
+        }
     }
 
     @GetMapping("/allItems")

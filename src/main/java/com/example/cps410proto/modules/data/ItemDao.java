@@ -60,7 +60,7 @@ public class ItemDao {
      * @param date {@link String} representation of the date to convert.
      * @return {@link String} representation of the formatted date.
      */
-    private String javaReformattedDate(String date){
+    private String javaReformattedDate(String date) {
         String[] sections = date.split(" ");
         return sections[0] + "T" + sections[1];
     }
@@ -82,7 +82,7 @@ public class ItemDao {
      *
      * @param auctionItem The {@link AuctionItem} to add.
      */
-    public void addAuctionItem(AuctionItem auctionItem){
+    public void addAuctionItem(AuctionItem auctionItem) {
         String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
         String sql = "INSERT INTO AUCTION_ITEMS VALUES(?,?,?,?,?,?,?,?,?,?)";
 
@@ -149,4 +149,36 @@ public class ItemDao {
         }
     }
 
+    public AuctionItem findItemByName(String name) {
+        String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
+        String sql = "SELECT * FROM AUCTION_ITEMS WHERE name = ?";
+
+        try (Connection connection = DriverManager.getConnection(sqlConnection);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, name);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return new AuctionItem(
+                        resultSet.getString("name"),
+                        resultSet.getString("description"),
+                        resultSet.getBigDecimal("currentBid"),
+                        resultSet.getBytes("image"),
+                        resultSet.getString("color"),
+                        resultSet.getInt("manufacturedYear"),
+                        LocalDateTime.parse(this.javaReformattedDate(resultSet.getString("aucStartTime"))),
+                        LocalDateTime.parse(this.javaReformattedDate(resultSet.getString("aucEndTime"))),
+                        resultSet.getString("sellerUser")
+                        // Add other properties based on your schema...
+                );
+            } else {
+                return null; // Item not found
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
+            return null; // Return null or handle the exception as needed.
+        }
+    }
 }
