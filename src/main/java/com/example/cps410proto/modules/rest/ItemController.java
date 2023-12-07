@@ -40,11 +40,13 @@ public class ItemController {
     }
 
     @GetMapping("/getItem")
-    public String getItemByName(@RequestParam String name, Model model) {
+    public String getItemByName(
+            @RequestParam String name,
+            Model model
+    ) {
         ItemDao itemDao = new ItemDao();
         try {
             AuctionItem auctionItem = itemDao.findItemByName(name);
-            System.out.println(itemDao.findItemByName("itemName"));
 
             if (auctionItem != null) {
                 model.addAttribute("item", auctionItem);
@@ -57,6 +59,7 @@ public class ItemController {
             return "error"; // Assuming "error" is a Thymeleaf template for displaying errors
         }
     }
+
 
     @GetMapping("/allItems")
     public String getAllItems() {
@@ -92,7 +95,7 @@ public class ItemController {
      * @return The confirmation HTML page.
      */
     @GetMapping("/GetItem")
-    public AuctionItem getItemByName(@ModelAttribute AuctionItem auctionItem) throws Exception {
+    public AuctionItem getItemByName(AuctionItem auctionItem) throws Exception {
 
         ItemDao itemDao = new ItemDao();
         if (itemDao.isAuctionItemValid(auctionItem)) {

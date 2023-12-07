@@ -16,7 +16,18 @@
 </header>
 <section>
     <div id="item-details">
-        <h3 th:text="${item.name}"></h3>
+        <h3 th:text="'Name: ' + ${item.name}"></h3>
+        <h3 th:text="'Description: ' + ${item.description}"></h3>
+        <h3 th:text="'Current Bid: $' + ${item.currentBid}"></h3>
+         <h3 th:text="'Color: ' + ${item.color}"></h3>
+        <h3 th:text="'Manufactured Year: ' + ${item.manufacturedYear}"></h3>
+<!--        <h3 th:text="'Auction Start Time: ' + ${#dates.format(item.auctionStartTime, 'yyyy-MM-dd HH:mm')}"></h3>-->
+<!--        <h3 th:text="'Auction End Time: ' + ${#dates.format(item.auctionEndTime, 'yyyy-MM-dd HH:mm')}"></h3>-->
+        <h3 th:if="${item.auctionComplete}">Auction Status: Complete</h3>
+        <h3 th:unless="${item.auctionComplete}">Auction Status: Incomplete</h3>
+<!--        <h3 th:text="'Seller: ' + ${item.sellerUser != null ? item.sellerUser : 'N/A'}"></h3>-->
+<!--        <h3 th:text="'Bidder: ' + ${item.bidderUser != null ? item.bidderUser : 'N/A'}"></h3>-->
+
 
     </div>
 </section>

@@ -42,14 +42,15 @@
             });
         }
 
-        function buyNow(itemName) {
-            window.location.href = '/getItem?name=' + encodeURIComponent(itemName);
-        }
 
-        function saveItem(itemName) {
-            // Implement your save logic if needed
-            console.log('Save item: ' + itemName);
-        }
+function buyNow(itemName) {
+    const url = `/getItem?name=${encodeURIComponent(itemName)}`;
+    window.location.href = url;
+}
+
+
+
+
     </script>
 </head>
 <body>
