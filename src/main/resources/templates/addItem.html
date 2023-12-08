@@ -4,9 +4,21 @@
     <meta charset="UTF-8">
     <title>Old World Auction</title>
     <link th:href="@{/styling.css}" rel="stylesheet"/>
+    <link th:href="@{/common.css}" rel="stylesheet"/>
 </head>
 <body>
-    <a href="/">Home</a>
+<header>
+    <div class="nav">
+        <ul>
+            <a href="/">Home</a>
+            <a href="/auctions-page">Auctions</a>
+            <a href="/register-page">Register</a>
+            <a href="/login-page">Login</a>
+            <a class="active">Create</a>
+            <a href="#contact">Contact</a>
+        </ul>
+    </div>
+</header>
     <h1>Add Auction Item</h1>
     <form id="itemAddForm" action="/add" method="post">
         <p>

@@ -244,7 +244,7 @@ public class ItemController {
         }
     }
 
-   /**
+    /**
      * Sets a new color.
      *
      * @param auctionItem The {@link AuctionItem} to update.
@@ -272,5 +272,11 @@ public class ItemController {
     }
 
 
+    @GetMapping("/deleteItem")
+    public void deleteItem(@RequestParam String name) {
+        ItemDao itemDao = new ItemDao();
+
+        itemDao.deleteItem(name);
+    }
 }
 

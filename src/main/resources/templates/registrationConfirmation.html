@@ -1,11 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+<style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+    }
+
+    h1 {
+      text-align: center;
+      padding-top: 10%;
+    }
+</style>
+<link th:href="@{/common.css}" rel="stylesheet"/>
 <body>
+<header>
+    <div class="nav">
+        <ul>
+            <a href="/">Home</a>
+            <a href="/auctions-page">Auctions</a>
+            <a href="/register-page">Register</a>
+            <a href="/login-page">Login</a>
+            <a href="/addItem">Create</a>
+            <a href="#contact">Contact</a>
+        </ul>
+    </div>
+</header>
     <h1>You have registered your account to Old World Auction!</h1>
-    <a href="/">Home</a>
 </body>
 </html>

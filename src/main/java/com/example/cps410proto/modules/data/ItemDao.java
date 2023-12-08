@@ -135,7 +135,6 @@ public class ItemDao {
                         LocalDateTime.parse(this.javaReformattedDate(resultSet.getString("aucStartTime"))),
                         LocalDateTime.parse(this.javaReformattedDate(resultSet.getString("aucEndTime"))),
                         resultSet.getString("sellerUser")
-                        // Add other properties based on your schema...
                 );
                 auctionItem.setBidderId(resultSet.getString("bidderUser"));
 
@@ -145,7 +144,7 @@ public class ItemDao {
             return auctionItems;
         } catch (SQLException ex) {
             System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
-            return new ArrayList<>(); // Return an empty list or handle the exception as needed.
+            return new ArrayList<>();
         }
     }
 
@@ -179,6 +178,26 @@ public class ItemDao {
         } catch (SQLException ex) {
             System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
             return null; // Return null or handle the exception as needed.
+        }
+    }
+
+    /**
+     * Deletes an item from the database
+     *
+     * @param name The name of the item to delete.
+     */
+    public void deleteItem(String name) {
+        String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
+        String sql = "DELETE FROM AUCTION_ITEMS WHERE name = ?";
+
+        try (Connection connection = DriverManager.getConnection(sqlConnection);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, name);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException ex) {
+            System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
         }
     }
 }

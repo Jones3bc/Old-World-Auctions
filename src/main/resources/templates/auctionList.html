@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Old World Auction</title>
     <link th:href="@{/auctionList.css}" rel="stylesheet"/>
+    <link th:href="@{/common.css}" rel="stylesheet"/>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://js.stripe.com/v3/"></script>
     <script th:inline="javascript">
@@ -56,13 +57,18 @@ function buyNow(itemName) {
 <body>
 <header>
     <div class="nav">
-        <ul>
+        <ul class="headerNav">
             <a href="/">Home</a>
-            <h1> Auction Items</h1>
+            <a class="active">Auctions</a>
+            <a href="/register-page">Register</a>
+            <a href="/login-page">Login</a>
+            <a href="/addItem">Create</a>
+            <a href="#contact">Contact</a>
         </ul>
     </div>
 </header>
 <section>
+    <h1> Auction Items</h1>
     <div id="gallery"></div>
 </section>
 </body>

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Handles requests and responses having to do with logging in.
+ * Handles requests and responses having to do with logging in and our home page.
  * Supplies appropriate pages to the user and takes user input.
  */
 @RequestMapping("/")

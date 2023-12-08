@@ -1,0 +1,31 @@
+.nav ul {
+  overflow: hidden;
+  background-color: #333;
+  font-family: Arial;
+  list-style: none;
+  margin: 0;
+  padding: 20px 0 0 0;
+  text-align: center;
+}
+
+.nav a:not(.active) {
+  float: left;
+  color: white;
+  font-size: 16px;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.nav a:hover:not(.active) {
+  background-color: blueviolet;
+}
+
+.active {
+  float: left;
+  color: lightblue;
+  font-size: 16px;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}

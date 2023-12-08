@@ -4,11 +4,28 @@
     <meta charset="UTF-8">
     <title>Confirmation</title>
     <link th:href="@{/styling.css}" rel="stylesheet"/>
+    <link th:href="@{/common.css}" rel="stylesheet"/>
 </head>
 <body>
+<header>
+    <div class="nav">
+        <ul>
+            <a class="active">Home</a>
+            <a href="/auctions-page">Auctions</a>
+            <a href="/register-page">Register</a>
+            <a href="/login-page">Login</a>
+            <a href="/addItem">Create</a>
+            <a href="#contact">Contact</a>
+            <span style="float:right; color: white" th:text="${welcome}"></span>
+        </ul>
+    </div>
+</header>
     <h1>You have listed the item!</h1>
     <h2>Item Details:</h2>
     <p> Name: <strong th:text="${name}"></strong></p>
     <p> Description: <strong th:text="${description}"></strong></p>
+    <p> Starting Bid: <strong th:text="${currentBid}"></strong></p>
+    <p> Color: <strong th:text="${color}"></strong></p>
+    <p> Manufactured Year: <strong th:text="${manufacturedYear}"></strong></p>
 </body>
 </html>

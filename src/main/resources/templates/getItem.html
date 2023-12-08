@@ -1,6 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <script src="https://js.stripe.com/v3/"></script>
+<link th:href="@{/common.css}" rel="stylesheet"/>
+<style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+    }
+
+    #item-details {
+      padding-left: 40%;
+    }
+
+    h1 {
+      text-align: center;
+    }
+</style>
 <head>
     <meta charset="UTF-8">
     <title>Item Details</title>
@@ -10,19 +26,24 @@
     <div class="nav">
         <ul>
             <a href="/">Home</a>
-            <h1>Item Details</h1>
+            <a href="/auctions-page">Auctions</a>
+            <a href="/register-page">Register</a>
+            <a href="/login-page">Login</a>
+            <a href="/addItem">Create</a>
+            <a href="#contact">Contact</a>
         </ul>
     </div>
 </header>
 <section>
+    <h1>Item Details</h1>
     <div id="item-details">
         <h3 th:text="'Name: ' + ${item.name}"></h3>
         <h3 th:text="'Description: ' + ${item.description}"></h3>
         <h3 th:text="'Current Bid: $' + ${item.currentBid}"></h3>
-         <h3 th:text="'Color: ' + ${item.color}"></h3>
+        <h3 th:text="'Color: ' + ${item.color}"></h3>
         <h3 th:text="'Manufactured Year: ' + ${item.manufacturedYear}"></h3>
-<!--        <h3 th:text="'Auction Start Time: ' + ${#dates.format(item.auctionStartTime, 'yyyy-MM-dd HH:mm')}"></h3>-->
-<!--        <h3 th:text="'Auction End Time: ' + ${#dates.format(item.auctionEndTime, 'yyyy-MM-dd HH:mm')}"></h3>-->
+        <h3 th:text="'Auction Start Time: ' + ${item.auctionStartTime}"></h3>
+        <h3 th:text="'Auction End Time: ' + ${item.auctionEndTime}"></h3>
         <h3 th:if="${item.auctionComplete}">Auction Status: Complete</h3>
         <h3 th:unless="${item.auctionComplete}">Auction Status: Incomplete</h3>
 <!--        <h3 th:text="'Seller: ' + ${item.sellerUser != null ? item.sellerUser : 'N/A'}"></h3>-->
