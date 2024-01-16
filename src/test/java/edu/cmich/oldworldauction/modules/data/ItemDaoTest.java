@@ -1,6 +1,6 @@
-package com.example.cps410proto.modules.data;
+package edu.cmich.oldworldauction.modules.data;
 
-import com.example.cps410proto.modules.models.AuctionItem;
+import edu.cmich.oldworldauction.modules.models.AuctionItem;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;

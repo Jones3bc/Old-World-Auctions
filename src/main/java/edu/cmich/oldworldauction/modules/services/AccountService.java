@@ -1,10 +1,8 @@
-package com.example.cps410proto.modules.services;
+package edu.cmich.oldworldauction.modules.services;
 
-import com.example.cps410proto.modules.data.LoginDao;
-import com.example.cps410proto.modules.models.User;
+import edu.cmich.oldworldauction.modules.data.LoginDao;
+import edu.cmich.oldworldauction.modules.models.User;
 import org.springframework.stereotype.Service;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class AccountService {

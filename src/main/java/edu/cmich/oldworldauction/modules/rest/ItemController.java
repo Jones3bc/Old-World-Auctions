@@ -1,8 +1,8 @@
-package com.example.cps410proto.modules.rest;
+package edu.cmich.oldworldauction.modules.rest;
 
-import com.example.cps410proto.modules.data.ItemDao;
+import edu.cmich.oldworldauction.modules.data.ItemDao;
 import org.springframework.stereotype.Controller;
-import com.example.cps410proto.modules.models.AuctionItem;
+import edu.cmich.oldworldauction.modules.models.AuctionItem;
 import java.math.BigDecimal;
 import java.util.List;
 

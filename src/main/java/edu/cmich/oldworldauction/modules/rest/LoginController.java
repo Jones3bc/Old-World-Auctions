@@ -1,8 +1,7 @@
-package com.example.cps410proto.modules.rest;
+package edu.cmich.oldworldauction.modules.rest;
 
-import com.example.cps410proto.modules.data.LoginDao;
-import com.example.cps410proto.modules.models.AuctionItem;
-import com.example.cps410proto.modules.models.User;
+import edu.cmich.oldworldauction.modules.data.LoginDao;
+import edu.cmich.oldworldauction.modules.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

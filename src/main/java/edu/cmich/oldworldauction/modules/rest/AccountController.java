@@ -1,10 +1,9 @@
-package com.example.cps410proto.modules.rest;
+package edu.cmich.oldworldauction.modules.rest;
 
+import edu.cmich.oldworldauction.modules.services.AccountService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import com.example.cps410proto.modules.models.User;
-import com.example.cps410proto.modules.services.AccountService;
+import edu.cmich.oldworldauction.modules.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;

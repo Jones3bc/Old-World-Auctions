@@ -1,6 +1,6 @@
-package com.example.cps410proto.modules.data;
+package edu.cmich.oldworldauction.modules.data;
 
-import com.example.cps410proto.modules.models.PaymentMethod;
+import edu.cmich.oldworldauction.modules.models.PaymentMethod;
 import org.thymeleaf.util.StringUtils;
 
 import java.sql.*;

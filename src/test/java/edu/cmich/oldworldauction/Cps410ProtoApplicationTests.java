@@ -1,4 +1,4 @@
-package com.example.cps410proto;
+package edu.cmich.oldworldauction;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package com.example.cps410proto.modules.models;
+package edu.cmich.oldworldauction.modules.models;
 
 /**
  * Represents a payment method.

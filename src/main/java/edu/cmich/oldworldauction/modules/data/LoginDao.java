@@ -1,6 +1,6 @@
-package com.example.cps410proto.modules.data;
+package edu.cmich.oldworldauction.modules.data;
 
-import com.example.cps410proto.modules.models.User;
+import edu.cmich.oldworldauction.modules.models.User;
 import org.springframework.stereotype.Service;
 
 import java.sql.*;

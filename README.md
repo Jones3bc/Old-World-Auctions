@@ -4,8 +4,8 @@ CPS 410 Project Group
 ## How to run Java Application
 1. Clone the repo.
 2. Open code in Intellij Community Edition.
-3. Navigate to src/main/java/com.example.cps410proto
-4. Run the Cps410ProtoApplication.Java file.
+3. Navigate to src/main/java/edu.cmich.oldworldauction
+4. Run the OldWorldAuctionApplication.java file.
 5. Wait for console to say "Started Cps410ProtoApplication in x.xxx seconds"
 6. Go to localhost:8080 in your browser.
 7. Our home page should show up.

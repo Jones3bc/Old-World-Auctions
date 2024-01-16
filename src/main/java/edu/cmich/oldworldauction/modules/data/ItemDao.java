@@ -1,6 +1,6 @@
-package com.example.cps410proto.modules.data;
+package edu.cmich.oldworldauction.modules.data;
 
-import com.example.cps410proto.modules.models.AuctionItem;
+import edu.cmich.oldworldauction.modules.models.AuctionItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.thymeleaf.util.StringUtils;
