@@ -9,12 +9,11 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Interacts with the database to store and retrieve user information.
+ * Interacts with the database to store and retrieve {@link User} information.
  * Also checks the validity of {@link User}s.
  */
 @Service
 public class LoginDao {
-
     /**
      * Checks the validity of a given {@link User}. A user is valid if its username and password are valid.
      * A username should be between 8-20 characters and only contain letters and numbers.

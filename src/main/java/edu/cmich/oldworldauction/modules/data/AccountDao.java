@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Interacts with the database to retrieve and store account information.
+ * Interacts with the database to retrieve, update, and store {@link PaymentMethod}s.
  * Also validates {@link PaymentMethod}s.
  */
 public class AccountDao {

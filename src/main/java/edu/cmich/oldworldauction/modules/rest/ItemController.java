@@ -1,6 +1,7 @@
 package edu.cmich.oldworldauction.modules.rest;
 
 import edu.cmich.oldworldauction.modules.data.ItemDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import edu.cmich.oldworldauction.modules.models.AuctionItem;
 import java.math.BigDecimal;
@@ -11,13 +12,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
 
 /**
- * Handles requests and responses having to do with auction items.
+ * Handles requests and responses having to do with {@link AuctionItem}s.
  * Supplies appropriate pages to the user and takes user input.
  */
 @RequestMapping("/")
-@CrossOrigin(origins = "http://your-frontend-domain.com")
 @Controller
 public class ItemController {
+
+    @Autowired
+    ItemDao itemDao;
 
     /**
      * Supplies the auctions-page page to the user in the browser.
@@ -44,9 +47,8 @@ public class ItemController {
             @RequestParam String name,
             Model model
     ) {
-        ItemDao itemDao = new ItemDao();
         try {
-            AuctionItem auctionItem = itemDao.findItemByName(name);
+            AuctionItem auctionItem = this.itemDao.findItemByName(name);
 
             if (auctionItem != null) {
                 model.addAttribute("item", auctionItem);
@@ -60,20 +62,17 @@ public class ItemController {
         }
     }
 
-
-    @GetMapping("/allItems")
-    public String getAllItems() {
-        ItemDao itemDao = new ItemDao();
-        System.out.println(itemDao.getAllItems());
-        return "auctionList";
-    }
+    /**
+     * Returns all {@link AuctionItem}s in the Old World Auctions DB.
+     *
+     * @return A {@link List} containing the {@link AuctionItem}s.
+     */
     @GetMapping("/allItemsJson")
     @ResponseBody
     public List<AuctionItem> getAllItemsJson() {
-        ItemDao itemDao = new ItemDao();
-        System.out.println(itemDao.getAllItems());
-        return itemDao.getAllItems();
+        return this.itemDao.getAllItems();
     }
+
     /**
      * Submits request to add an auction item.
      *
@@ -83,22 +82,20 @@ public class ItemController {
      */
     @PostMapping("/add")
     public String addItem(@ModelAttribute AuctionItem auctionItem, Model model){
-        System.out.println(auctionItem);
         model.addAllAttributes(auctionItem.attributes());
-        ItemDao itemDao = new ItemDao();
-        itemDao.addAuctionItem(auctionItem);
+        this.itemDao.addAuctionItem(auctionItem);
         return "confirmation";
     }
 
     /**
+     * Retrieves an {@link AuctionItem} given its name.
+     *
      * @param auctionItem The {@link AuctionItem} to add.
      * @return The confirmation HTML page.
      */
     @GetMapping("/GetItem")
     public AuctionItem getItemByName(AuctionItem auctionItem) throws Exception {
-
-        ItemDao itemDao = new ItemDao();
-        if (itemDao.isAuctionItemValid(auctionItem)) {
+        if (this.itemDao.isAuctionItemValid(auctionItem)) {
             return auctionItem;
         } else {
             throw new Exception("Item not Found");
@@ -271,12 +268,19 @@ public class ItemController {
         }
     }
 
+    @PostMapping("/updateItem/{originalName}")
+    public void updateItem(@ModelAttribute AuctionItem auctionItem, @PathVariable String originalName) {
+        this.itemDao.updateItem(auctionItem, originalName);
+    }
+
+    @PostMapping("/updateBid/{name}")
+    public void updateBid(@PathVariable String name, @RequestParam String bidderUser, @RequestParam BigDecimal bidAmount) {
+        this.itemDao.updateBid(name, bidderUser, bidAmount);
+    }
 
     @GetMapping("/deleteItem")
     public void deleteItem(@RequestParam String name) {
-        ItemDao itemDao = new ItemDao();
-
-        itemDao.deleteItem(name);
+        this.itemDao.deleteItem(name);
     }
 }
 

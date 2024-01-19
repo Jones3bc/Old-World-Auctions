@@ -1,8 +1,6 @@
 package edu.cmich.oldworldauction.modules.data;
 
 import edu.cmich.oldworldauction.modules.models.AuctionItem;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.thymeleaf.util.StringUtils;
 import java.math.BigDecimal;
 import java.sql.*;
@@ -11,22 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Interacts with the database to retrieve and store auction items.
+ * Interacts with the database to retrieve, store, and {@link AuctionItem}s.
  * Also checks validity of {@link AuctionItem}s.
  */
 public class ItemDao {
-
-    private JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public ItemDao() {
-    }
-
-    @Autowired
-    public ItemDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
     /**
      * Checks the validity of a given {@link AuctionItem}.
      *
@@ -148,6 +134,12 @@ public class ItemDao {
         }
     }
 
+    /**
+     * Retrieves an {@link AuctionItem} given its name.
+     *
+     * @param name The name of the auction item.
+     * @return The retrieved {@link AuctionItem}
+     */
     public AuctionItem findItemByName(String name) {
         String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
         String sql = "SELECT * FROM AUCTION_ITEMS WHERE name = ?";
@@ -169,7 +161,6 @@ public class ItemDao {
                         LocalDateTime.parse(this.javaReformattedDate(resultSet.getString("aucStartTime"))),
                         LocalDateTime.parse(this.javaReformattedDate(resultSet.getString("aucEndTime"))),
                         resultSet.getString("sellerUser")
-                        // Add other properties based on your schema...
                 );
             } else {
                 return null; // Item not found
@@ -182,7 +173,81 @@ public class ItemDao {
     }
 
     /**
-     * Deletes an item from the database
+     * Updates an {@link AuctionItem}. Requires original auction name to make update on correct item.
+     *
+     * @param auctionItem The updated {@link AuctionItem}.
+     * @param originalName The original name of the {@link AuctionItem}.
+     */
+    public void updateItem(AuctionItem auctionItem, String originalName) {
+        String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
+        String sql = """
+                UPDATE AUCTION_ITEMS
+                SET name = ?,
+                    description = ?,
+                    currentBid = ?,
+                    image = ?,
+                    color = ?,
+                    manufacturedYear = ?,
+                    aucStartTime = ?,
+                    aucEndTime = ?,
+                    sellerUser = ?,
+                    bidderUser = ?
+                WHERE name = ?;             \s
+                """.trim();
+
+        try (Connection connection = DriverManager.getConnection(sqlConnection);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, auctionItem.getName());
+            preparedStatement.setString(2, auctionItem.getDescription());
+            preparedStatement.setBigDecimal(3, auctionItem.getCurrentBid());
+            preparedStatement.setBytes(4, auctionItem.getImage());
+            preparedStatement.setString(5, auctionItem.getColor());
+            preparedStatement.setInt(6, auctionItem.getManufacturedYear());
+            preparedStatement.setString(7, this.sqlFormattedDate(auctionItem.getAuctionStartTime().toString()));
+            preparedStatement.setString(8, this.sqlFormattedDate(auctionItem.getAuctionEndTime().toString()));
+            preparedStatement.setString(9, auctionItem.getSellerId());
+            preparedStatement.setString(10, auctionItem.getBidderId());
+            preparedStatement.setString(11, originalName);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException ex) {
+            System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
+        }
+    }
+
+    /**
+     * Updates the bid amount and the user who bid for an {@link AuctionItem}.
+     *
+     * @param itemName The name of the {@link AuctionItem}.
+     * @param bidderUser The user who bid on the {@link AuctionItem}.
+     * @param bidAmount The new bid amount for the {@link AuctionItem}.
+     */
+    public void updateBid(String itemName, String bidderUser, BigDecimal bidAmount) {
+        String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
+        String sql = """
+                UPDATE AUCTION_ITEMS
+                SET currentBid = ?,
+                    bidderUser = ?
+                WHERE name = ?;             \s
+                """.trim();
+
+        try (Connection connection = DriverManager.getConnection(sqlConnection);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setBigDecimal(1, bidAmount);
+            preparedStatement.setString(2, bidderUser);
+            preparedStatement.setString(3, itemName);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException ex) {
+            System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
+        }
+    }
+
+    /**
+     * Deletes an item from the database. For Administrative purposes.
      *
      * @param name The name of the item to delete.
      */
