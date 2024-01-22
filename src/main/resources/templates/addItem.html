@@ -23,19 +23,19 @@
     <form id="itemAddForm" action="/add" method="post">
         <p>
             <label for="name">Item Name: </label>
-            <input id= "name" type="text" name="name"/> <br/>
+            <input id= "name" type="text" name="name" required/> <br/>
             <span class="required">*</span>
         </p>
 
         <p>
             <label for="description">Description: </label>
-            <input id="description" type="text" name="description"/> <br/>
+            <input id="description" type="text" name="description" required/> <br/>
             <span class="required">*</span>
         </p>
 
         <p>
             <label for="currentBid">Starting Bid: </label>
-            <input id="currentBid" type="text" name="currentBid"/> <br/>
+            <input id="currentBid" type="text" name="currentBid" required pattern="[0-9]{1,5}\.[0-9]{2}"/> <br/>
             <span class="required">*</span>
         </p>
 
@@ -53,19 +53,19 @@
 
         <p>
             <label for="manufacturedYear">Manufactured Year: </label>
-            <input id="manufacturedYear" type="text" name="manufacturedYear"/> <br/>
+            <input id="manufacturedYear" type="number" name="manufacturedYear" pattern="[1-2]{1}[0-9]{4}"/> <br/>
             <span></span>
         </p>
 
         <p>
             <label for="auctionStartTime">Auction Start Date/Time</label>
-            <input id="auctionStartTime" type="datetime-local" name="auctionStartTime">
+            <input id="auctionStartTime" type="datetime-local" name="auctionStartTime" required>
             <span class="required">*</span>
         </p>
 
         <p>
             <label for="auctionEndTime">Auction End Date/Time</label>
-            <input id="auctionEndTime" type="datetime-local" name="auctionEndTime">
+            <input id="auctionEndTime" type="datetime-local" name="auctionEndTime" required>
             <span class="required">*</span>
         </p>
 

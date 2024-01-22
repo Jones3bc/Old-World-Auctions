@@ -1,6 +1,7 @@
 package edu.cmich.oldworldauction.modules.data;
 
 import edu.cmich.oldworldauction.modules.models.AuctionItem;
+import org.springframework.stereotype.Service;
 import org.thymeleaf.util.StringUtils;
 import java.math.BigDecimal;
 import java.sql.*;
@@ -12,6 +13,7 @@ import java.util.List;
  * Interacts with the database to retrieve, store, and {@link AuctionItem}s.
  * Also checks validity of {@link AuctionItem}s.
  */
+@Service
 public class ItemDao {
     /**
      * Checks the validity of a given {@link AuctionItem}.
