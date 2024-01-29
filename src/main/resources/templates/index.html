@@ -12,6 +12,31 @@
     <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&display=swap" rel="stylesheet">
     <title>Home</title>
     <link th:href="@{/style.css}" rel="stylesheet"/>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch("/loggedUser")
+                .then(response => response.json())
+                .then(data => {
+                    displayUser(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        });
+
+        function displayUser(user){
+            const userSpan = document.getElementById("user");
+            userSpan.innerHTML = "";
+            if(user.username != "") {
+                userSpan.innerHTML = "Welcome, " + user.username;
+            } else {
+                let loginButton = document.createElement("a");
+                loginButton.setAttribute("href", "/login-page");
+                loginButton.textContent = "Login";
+                userSpan.appendChild(loginButton);
+            }
+        }
+    </script>
 </head>
 
 <body>
@@ -24,7 +49,7 @@
             <a href="/login-page">Login</a>
             <a href="/addItem">Create</a>
             <a href="#contact">Contact</a>
-            <span style="float:right; color: white" th:text="${welcome}"></span>
+            <span id="user" style="float:right; color: white"></span>
         </ul>
     </div>
 </header>

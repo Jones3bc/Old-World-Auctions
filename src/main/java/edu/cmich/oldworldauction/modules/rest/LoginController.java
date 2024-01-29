@@ -5,10 +5,7 @@ import edu.cmich.oldworldauction.modules.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +19,7 @@ import java.util.Map;
 @Controller
 public class LoginController {
 
+    private String loggedInUser = "";
     @Autowired
     LoginDao loginDao;
 
@@ -32,6 +30,13 @@ public class LoginController {
      */
     public String index(){
         return "index";
+    }
+
+    private record Username(String username){}
+    @ResponseBody
+    @GetMapping("/loggedUser")
+    public Username getLoggedUser(){
+        return new Username(this.loggedInUser);
     }
 
     /**
@@ -64,11 +69,8 @@ public class LoginController {
 
         for(User retrievedUser : currentUsers) {
             if(retrievedUser.getUsername().equals(user.getUsername()) && retrievedUser.getPassword().equals(user.getPassword())) {
-                Map<String, String> attributes = new HashMap<>();
-                attributes.put("username", user.getUsername());
-                attributes.put("password", user.getPassword());
-                attributes.put("welcome", "Welcome, " + user.getUsername());
-                model.addAllAttributes(attributes);
+                this.loggedInUser = user.getUsername();
+                break;
             }
         }
 

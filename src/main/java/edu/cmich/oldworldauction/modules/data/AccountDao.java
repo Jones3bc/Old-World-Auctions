@@ -1,6 +1,7 @@
 package edu.cmich.oldworldauction.modules.data;
 
 import edu.cmich.oldworldauction.modules.models.PaymentMethod;
+import org.springframework.stereotype.Service;
 import org.thymeleaf.util.StringUtils;
 
 import java.sql.*;
@@ -11,6 +12,7 @@ import java.util.List;
  * Interacts with the database to retrieve, update, and store {@link PaymentMethod}s.
  * Also validates {@link PaymentMethod}s.
  */
+@Service
 public class AccountDao {
     /**
      * Checks the validity of a given {@link PaymentMethod}.
