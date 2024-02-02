@@ -12,7 +12,8 @@ section {
 }
 
 .nav ul {
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
   background-color: #333;
   font-family: Arial;
   list-style: none;
