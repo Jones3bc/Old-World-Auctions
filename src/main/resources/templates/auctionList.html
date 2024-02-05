@@ -5,8 +5,41 @@
     <title>Old World Auction</title>
     <link th:href="@{/auctionList.css}" rel="stylesheet"/>
     <link th:href="@{/common.css}" rel="stylesheet"/>
+    <link th:href="@{/login.css}" rel="stylesheet"/>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch("/loggedUser")
+                .then(response => response.json())
+                .then(data => {
+                    displayUser(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        });
+
+        function displayUser(user){
+            const userDiv = document.getElementById("user");
+            userDiv.innerHTML = "";
+            if(user.username != "") {
+                userDiv.innerHTML = `
+                  <button class="dropbtn">Welcome, ` + user.username + `</button>
+                  <div class="dropdown-content">
+                    <a href="#">Manage Account</a>
+                    <a href="#">Manage Items</a>
+                    <a href="/logout">Log Out</a>
+                  </div>
+                `;
+            } else {
+                let loginButton = document.createElement("a");
+                loginButton.setAttribute("href", "/login-page");
+                loginButton.textContent = "Login";
+                userDiv.appendChild(loginButton);
+            }
+        }
+    </script>
     <script th:inline="javascript">
         var items = /*[[${items}]]*/ [];
     </script>
@@ -68,10 +101,10 @@
         <ul class="headerNav">
             <a href="/">Home</a>
             <a class="active">Auctions</a>
-            <a href="/register-page">Register111</a>
-            <a href="/login-page">Login</a>
+            <a href="/register-page">Register</a>
             <a href="/addItem">Create</a>
             <a href="#contact">Contact</a>
+            <div id="user" class="dropdown" style="float:right; color: white"></div>
         </ul>
     </div>
 </header>

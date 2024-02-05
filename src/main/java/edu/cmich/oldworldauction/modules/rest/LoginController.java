@@ -20,6 +20,7 @@ import java.util.Map;
 public class LoginController {
 
     private String loggedInUser = "";
+
     @Autowired
     LoginDao loginDao;
 
@@ -28,47 +29,52 @@ public class LoginController {
      *
      * @return The home/index HTML page.
      */
-    public String index(){
+    public String index() {
         return "index";
     }
 
-    private record Username(String username){}
+    private record Username(String username) {
+    }
+
     @ResponseBody
     @GetMapping("/loggedUser")
-    public Username getLoggedUser(){
+    public Username getLoggedUser() {
         return new Username(this.loggedInUser);
     }
 
     /**
      * Supplies the login page to the user in the browser.
+     *
      * @return The login HTML page.
      */
     @GetMapping("/login-page")
-    public String logInPage(){
+    public String logInPage() {
         return "logIn";
     }
 
     /**
      * Supplies the register page to the user in the browser.
+     *
      * @return The register HTML page.
      */
     @GetMapping("/register-page")
-    public String registrationPage(){
+    public String registrationPage() {
         return "registration";
     }
 
     /**
      * Submits login request. Should send user to home page on login success. Display error to the user otherwise.
+     *
      * @param user An {@link User} that holds the user's login information.
      * @return The home page on success. Error otherwise.
      */
     @PostMapping("/login")
-    public String logIn(@ModelAttribute User user, Model model){
+    public String logIn(@ModelAttribute User user, Model model) {
         List<User> currentUsers = loginDao.retrieveUsers();
         System.out.println(currentUsers);
 
-        for(User retrievedUser : currentUsers) {
-            if(retrievedUser.getUsername().equals(user.getUsername()) && retrievedUser.getPassword().equals(user.getPassword())) {
+        for (User retrievedUser : currentUsers) {
+            if (retrievedUser.getUsername().equals(user.getUsername()) && retrievedUser.getPassword().equals(user.getPassword())) {
                 this.loggedInUser = user.getUsername();
                 break;
             }
@@ -77,8 +83,15 @@ public class LoginController {
         return "index";
     }
 
+    @GetMapping("/logout")
+    public String logout() {
+        this.loggedInUser = "";
+
+        return "index";
+    }
+
     @PostMapping("/registration")
-    public String register(@ModelAttribute User user){
+    public String register(@ModelAttribute User user) {
         loginDao.insertUser(user);
 
         return "registrationConfirmation";
