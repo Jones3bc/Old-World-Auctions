@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Old World Auction</title>
-    <link th:href="@{/auctionList.css}" rel="stylesheet"/>
-    <link th:href="@{/common.css}" rel="stylesheet"/>
-    <link th:href="@{/login.css}" rel="stylesheet"/>
+    <link href="/auctionList.css" rel="stylesheet"/>
+    <link href="/common.css" rel="stylesheet"/>
+    <link href="/login.css" rel="stylesheet"/>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://js.stripe.com/v3/"></script>
     <script>
@@ -18,14 +18,24 @@
                 .catch(error => {
                     console.error('Error fetching data:', error);
                 });
+
+            fetch("/allItemsJson")
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Retrieved items:', data);
+                    displayAuctionItems(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching items:', error);
+                });
         });
 
         function displayUser(user){
             const userDiv = document.getElementById("user");
             userDiv.innerHTML = "";
-            if(user.username != "") {
+            if(user.username !== "") {
                 userDiv.innerHTML = `
-                  <button class="dropbtn">Welcome, ` + user.username + `</button>
+                  <button class="dropbtn">Welcome, ${user.username}</button>
                   <div class="dropdown-content">
                     <a href="#">Manage Account</a>
                     <a href="#">Manage Items</a>
@@ -39,60 +49,48 @@
                 userDiv.appendChild(loginButton);
             }
         }
-    </script>
-    <script th:inline="javascript">
-        var items = /*[[${items}]]*/ [];
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-     fetch("/allItemsJson")
-         .then(response => response.json())
-         .then(data => {
-             console.log('Retrieved items:', data);
-             displayAuctionItems(data);
-         })
-         .catch(error => {
-             console.error('Error fetching data:', error);
-         });
- });
 
- function displayAuctionItems(items) {
-     const auctionListDiv = document.getElementById("gallery");
-     auctionListDiv.innerHTML = ''; // Clear previous content
+    function displayAuctionItems(items) {
+    const auctionListDiv = document.getElementById("gallery");
+    auctionListDiv.innerHTML = ''; // Clear previous content
 
-     items.forEach(item => {
-         const contentDiv = document.createElement("div");
-         contentDiv.classList.add("content");
+    items.forEach(item => {
+        const contentDiv = document.createElement("div");
+        contentDiv.classList.add("content");
 
-         // Convert base64-encoded image data to an actual image
-         const imageData = atob(item.image);
-         const imageDataUrl = `data:image/jpeg;base64,${item.image}`;
+        if (item.image !== null) {
+            // Convert Base64-encoded image data to an actual image
+            const imageData = atob(item.image);
+            const imageDataUrl = `data:image/jpeg;base64,${imageData}`;
 
-         const imageElement = document.createElement("img");
-         imageElement.src = imageDataUrl;
+            const imageElement = document.createElement("img");
+            imageElement.src = imageDataUrl;
+  console.log("Decoded image data:", imageData);
+            contentDiv.appendChild(imageElement);
+        } else {
+            // Handle case where image data is null
+            const noImageElement = document.createElement("p");
+            noImageElement.textContent = "No image available";
+            contentDiv.appendChild(noImageElement);
+        }
 
-         contentDiv.appendChild(imageElement);
+        contentDiv.innerHTML += `
+            <h3>${item.name}</h3>
+            <p>$${item.currentBid}</p>
+            <h6>${item.description}</h6>
+            <button class="buy-1" onclick="buyNow('${item.name}')">Buy Now</button>
+            <button class="save" onclick="saveItem('${item.name}')">Save</button>
+        `;
 
-         // Log the decoded image data to the console
-         console.log('Decoded Image Data:', imageData);
+        auctionListDiv.appendChild(contentDiv);
+    });
+}
 
-         contentDiv.innerHTML += `
-             <h3>${item.name}</h3>
-             <p>$${item.currentBid}</p>
-             <h6>${item.description}</h6>
-             <button class="buy-1" onclick="buyNow('${item.name}')">Buy Now</button>
-             <button class="save" onclick="saveItem('${item.name}')">Save</button>
-         `;
 
-         auctionListDiv.appendChild(contentDiv);
-     });
- }
-
- function buyNow(itemName) {
-     const url = `/getItem?name=${encodeURIComponent(itemName)}`;
-     window.location.href = url;
- }
-
+        function buyNow(itemName) {
+            const url = `/getItem?name=${encodeURIComponent(itemName)}`;
+            window.location.href = url;
+        }
     </script>
 </head>
 <body>
