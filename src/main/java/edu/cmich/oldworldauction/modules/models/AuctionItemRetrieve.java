@@ -1,17 +1,13 @@
 package edu.cmich.oldworldauction.modules.models;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Represents an auction item.
- *
- * @author Brock Jones
- */
-public class AuctionItem {
+public class AuctionItemRetrieve {
     private String name;
     private String description;
     private BigDecimal currentBid;
@@ -24,7 +20,7 @@ public class AuctionItem {
     private String sellerUser;
     private String bidderUser;
 
-    public AuctionItem(
+    public AuctionItemRetrieve(
             String name,
             String description,
             BigDecimal currentBid,
@@ -142,7 +138,7 @@ public class AuctionItem {
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", currentBid=" + currentBid +
-                ", image=" + Arrays.toString(image) +
+                ", image=" + image +
                 ", color='" + color + '\'' +
                 ", manufacturedYear=" + manufacturedYear +
                 ", auctionStartTime=" + auctionStartTime +
@@ -163,5 +159,4 @@ public class AuctionItem {
 
         return attributes;
     }
-
 }

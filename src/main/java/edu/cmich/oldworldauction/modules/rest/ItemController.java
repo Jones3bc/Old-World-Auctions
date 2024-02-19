@@ -1,9 +1,10 @@
 package edu.cmich.oldworldauction.modules.rest;
 
 import edu.cmich.oldworldauction.modules.data.ItemDao;
+import edu.cmich.oldworldauction.modules.models.AuctionItemRetrieve;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import edu.cmich.oldworldauction.modules.models.AuctionItem;
+import edu.cmich.oldworldauction.modules.models.AuctionItemInsert;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
 
 /**
- * Handles requests and responses having to do with {@link AuctionItem}s.
+ * Handles requests and responses having to do with {@link AuctionItemInsert}s.
  * Supplies appropriate pages to the user and takes user input.
  */
 @RequestMapping("/")
@@ -48,10 +49,10 @@ public class ItemController {
             Model model
     ) {
         try {
-            AuctionItem auctionItem = this.itemDao.findItemByName(name);
+            AuctionItemRetrieve auctionItemRetrieve = this.itemDao.findItemByName(name);
 
-            if (auctionItem != null) {
-                model.addAttribute("item", auctionItem);
+            if (auctionItemRetrieve != null) {
+                model.addAttribute("item", auctionItemRetrieve);
                 return "getItem"; // Assuming "getItem" is the Thymeleaf template for displaying item details
             } else {
                 throw new Exception("Item not found");
@@ -63,40 +64,40 @@ public class ItemController {
     }
 
     /**
-     * Returns all {@link AuctionItem}s in the Old World Auctions DB.
+     * Returns all {@link AuctionItemInsert}s in the Old World Auctions DB.
      *
-     * @return A {@link List} containing the {@link AuctionItem}s.
+     * @return A {@link List} containing the {@link AuctionItemInsert}s.
      */
     @GetMapping("/allItemsJson")
     @ResponseBody
-    public List<AuctionItem> getAllItemsJson() {
+    public List<AuctionItemRetrieve> getAllItemsJson() {
         return this.itemDao.getAllItems();
     }
 
     /**
      * Submits request to add an auction item.
      *
-     * @param auctionItem The {@link AuctionItem} to add.
+     * @param auctionItemInsert The {@link AuctionItemInsert} to add.
      * @param model A {@link Model} used to transport data between HTML pages.
      * @return The confirmation HTML page.
      */
     @PostMapping("/add")
-    public String addItem(@ModelAttribute AuctionItem auctionItem, Model model){
-        model.addAllAttributes(auctionItem.attributes());
-        this.itemDao.addAuctionItem(auctionItem);
+    public String addItem(@ModelAttribute AuctionItemInsert auctionItemInsert, Model model){
+        model.addAllAttributes(auctionItemInsert.attributes());
+        this.itemDao.addAuctionItem(auctionItemInsert);
         return "confirmation";
     }
 
     /**
-     * Retrieves an {@link AuctionItem} given its name.
+     * Retrieves an {@link AuctionItemInsert} given its name.
      *
-     * @param auctionItem The {@link AuctionItem} to add.
+     * @param auctionItemInsert The {@link AuctionItemInsert} to add.
      * @return The confirmation HTML page.
      */
     @GetMapping("/GetItem")
-    public AuctionItem getItemByName(AuctionItem auctionItem) throws Exception {
-        if (this.itemDao.isAuctionItemValid(auctionItem)) {
-            return auctionItem;
+    public AuctionItemInsert getItemByName(AuctionItemInsert auctionItemInsert) throws Exception {
+        if (this.itemDao.isAuctionItemValid(auctionItemInsert)) {
+            return auctionItemInsert;
         } else {
             throw new Exception("Item not Found");
         }
@@ -105,15 +106,15 @@ public class ItemController {
     /**
      * Updates the description of an auction item.
      *
-     * @param auctionItem The {@link AuctionItem} to update.
+     * @param auctionItemInsert The {@link AuctionItemInsert} to update.
      * @param description The new description.
      * @param model       The Spring MVC model.
      * @return The confirmation HTML page or an error page if the update fails.
      */
     @PostMapping("/changeDescription")
-    public String changeDescription(@ModelAttribute AuctionItem auctionItem, String description, Model model) {
+    public String changeDescription(@ModelAttribute AuctionItemInsert auctionItemInsert, String description, Model model) {
         try {
-            AuctionItem existingItem = this.getItemByName(auctionItem);
+            AuctionItemInsert existingItem = this.getItemByName(auctionItemInsert);
 
             // Update the description
             existingItem.setDescription(description);
@@ -133,15 +134,15 @@ public class ItemController {
     /**
      * Updates the bidding of an auction item.
      *
-     * @param auctionItem The {@link AuctionItem} to update.
+     * @param auctionItemInsert The {@link AuctionItemInsert} to update.
      * @param newBid The new bid.
      * @param model       The Spring MVC model.
      * @return The confirmation HTML page or an error page if the update fails.
      */
     @PostMapping("/makeBid")
-    public String makeBid(@ModelAttribute AuctionItem auctionItem, BigDecimal newBid, Model model) {
+    public String makeBid(@ModelAttribute AuctionItemInsert auctionItemInsert, BigDecimal newBid, Model model) {
         try {
-            AuctionItem existingItem = this.getItemByName(auctionItem);
+            AuctionItemInsert existingItem = this.getItemByName(auctionItemInsert);
 
             // Check if the new bid is greater than the current bid
             if (!(newBid.compareTo(existingItem.getCurrentBid()) > 0)) {
@@ -166,15 +167,15 @@ public class ItemController {
     /**
      * Updates the manufacture year of an auction item.
      *
-     * @param auctionItem The {@link AuctionItem} to update.
+     * @param auctionItemInsert The {@link AuctionItemInsert} to update.
      * @param newManufacturedYear The new newManufacturedYear.
      * @param model       The Spring MVC model.
      * @return The confirmation HTML page or an error page if the update fails.
      */
     @PostMapping("/changeManufacturedYear")
-    public String changeManufacturedYear(@ModelAttribute AuctionItem auctionItem, int newManufacturedYear, Model model) {
+    public String changeManufacturedYear(@ModelAttribute AuctionItemInsert auctionItemInsert, int newManufacturedYear, Model model) {
         try {
-            AuctionItem existingItem = this.getItemByName(auctionItem);
+            AuctionItemInsert existingItem = this.getItemByName(auctionItemInsert);
 
             // Update the manufactured year
             existingItem.setManufacturedYear(newManufacturedYear);
@@ -194,15 +195,15 @@ public class ItemController {
     /**
      * Updates the name of an auction item.
      *
-     * @param auctionItem The {@link AuctionItem} to update.
+     * @param auctionItemInsert The {@link AuctionItemInsert} to update.
      * @param newName The new name.
      * @param model       The Spring MVC model.
      * @return The confirmation HTML page or an error page if the update fails.
      */
     @PostMapping("/changeName")
-    public String changeName(@ModelAttribute AuctionItem auctionItem, String newName, Model model) {
+    public String changeName(@ModelAttribute AuctionItemInsert auctionItemInsert, String newName, Model model) {
         try {
-            AuctionItem existingItem = this.getItemByName(auctionItem);
+            AuctionItemInsert existingItem = this.getItemByName(auctionItemInsert);
 
             // Update the name
             existingItem.setName(newName);
@@ -222,16 +223,16 @@ public class ItemController {
     /**
      * Completes the auction of the item.
      *
-     * @param auctionItem The {@link AuctionItem} to update.
+     * @param auctionItemInsert The {@link AuctionItemInsert} to update.
      * @param model       The Spring MVC model.
      * @return The confirmation HTML page or an error page if the update fails.
      */
     @PostMapping("/completeAuction")
-    public String completeAuction(@ModelAttribute AuctionItem auctionItem, Model model) {
+    public String completeAuction(@ModelAttribute AuctionItemInsert auctionItemInsert, Model model) {
         try {
-           if(auctionItem.isAuctionComplete()){
-               model.addAttribute("name", auctionItem);
-               auctionItem.setAuctionComplete(true);
+           if(auctionItemInsert.isAuctionComplete()){
+               model.addAttribute("name", auctionItemInsert);
+               auctionItemInsert.setAuctionComplete(true);
            }
            return "confirmation";
         } catch (Exception e) {
@@ -244,15 +245,15 @@ public class ItemController {
     /**
      * Sets a new color.
      *
-     * @param auctionItem The {@link AuctionItem} to update.
+     * @param auctionItemInsert The {@link AuctionItemInsert} to update.
      * @param newColor The new color.
      * @param model       The Spring MVC model.
      * @return The confirmation HTML page or an error page if the update fails.
      */
     @PostMapping("/setColor")
-    public String setColor(@ModelAttribute AuctionItem auctionItem, String newColor, Model model) {
+    public String setColor(@ModelAttribute AuctionItemInsert auctionItemInsert, String newColor, Model model) {
         try {
-            AuctionItem existingItem = this.getItemByName(auctionItem);
+            AuctionItemInsert existingItem = this.getItemByName(auctionItemInsert);
 
             // Update the color
             existingItem.setColor(newColor);
@@ -269,8 +270,8 @@ public class ItemController {
     }
 
     @PostMapping("/updateItem/{originalName}")
-    public void updateItem(@ModelAttribute AuctionItem auctionItem, @PathVariable String originalName) {
-        this.itemDao.updateItem(auctionItem, originalName);
+    public void updateItem(@ModelAttribute AuctionItemInsert auctionItemInsert, @PathVariable String originalName) {
+        this.itemDao.updateItem(auctionItemInsert, originalName);
     }
 
     @PostMapping("/updateBid/{name}")
@@ -279,8 +280,9 @@ public class ItemController {
     }
 
     @GetMapping("/deleteItem")
-    public void deleteItem(@RequestParam String name) {
+    public String deleteItem(@RequestParam String name) {
         this.itemDao.deleteItem(name);
+        return "index";
     }
 }
 

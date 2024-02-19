@@ -1,40 +1,44 @@
 package edu.cmich.oldworldauction.modules.data;
-
-import edu.cmich.oldworldauction.modules.models.AuctionItem;
+import edu.cmich.oldworldauction.modules.models.AuctionItemRetrieve;
+import edu.cmich.oldworldauction.modules.models.ImageMultipartFile;
+import edu.cmich.oldworldauction.modules.models.AuctionItemInsert;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.util.StringUtils;
+
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 /**
- * Interacts with the database to retrieve, store, and {@link AuctionItem}s.
- * Also checks validity of {@link AuctionItem}s.
+ * Interacts with the database to retrieve, store, and {@link AuctionItemInsert}s.
+ * Also checks validity of {@link AuctionItemInsert}s.
  */
 @Service
 public class ItemDao {
     /**
-     * Checks the validity of a given {@link AuctionItem}.
+     * Checks the validity of a given {@link AuctionItemInsert}.
      *
-     * @param auctionItem The {@link AuctionItem} to check for validity.
+     * @param auctionItemInsert The {@link AuctionItemInsert} to check for validity.
      * @return True if the item is valid. Should throw an {@link IllegalArgumentException} otherwise.
      * @throws IllegalArgumentException if the item is invalid.
      */
-    public boolean isAuctionItemValid(AuctionItem auctionItem) throws IllegalArgumentException {
-        BigDecimal currentBid = auctionItem.getCurrentBid();
-        int manufacturedYear = auctionItem.getManufacturedYear();
+    public boolean isAuctionItemValid(AuctionItemInsert auctionItemInsert) throws IllegalArgumentException {
+        BigDecimal currentBid = auctionItemInsert.getCurrentBid();
+        int manufacturedYear = auctionItemInsert.getManufacturedYear();
 
-        if (StringUtils.isEmptyOrWhitespace(auctionItem.getName())
-                || StringUtils.isEmptyOrWhitespace(auctionItem.getDescription())
-                || StringUtils.isEmptyOrWhitespace(auctionItem.getColor())) {
+        if (StringUtils.isEmptyOrWhitespace(auctionItemInsert.getName())
+                || StringUtils.isEmptyOrWhitespace(auctionItemInsert.getDescription())
+                || StringUtils.isEmptyOrWhitespace(auctionItemInsert.getColor())) {
             throw new IllegalArgumentException("Name, Description, and Color fields must be non-null and not be only whitespace.");
         } else if (currentBid == null || currentBid.compareTo(BigDecimal.ZERO) < 0 || currentBid.scale() != 2) {
             throw new IllegalArgumentException("Current Bid field is invalid. Must be non-null, > 0 and have 2 decimal place values.");
         } else if (manufacturedYear < 0 || manufacturedYear > LocalDateTime.now().getYear()) {
             throw new IllegalArgumentException("Manufactured year field must be > 0 and less than the current year.");
-        } else if (auctionItem.getAuctionStartTime() == null || auctionItem.getAuctionEndTime() == null) {
+        } else if (auctionItemInsert.getAuctionStartTime() == null || auctionItemInsert.getAuctionEndTime() == null) {
             throw new IllegalArgumentException("Auction start/end times cannot be null");
         }
 
@@ -66,31 +70,31 @@ public class ItemDao {
     }
 
     /**
-     * Adds an {@link AuctionItem} to the database.
+     * Adds an {@link AuctionItemInsert} to the database.
      *
-     * @param auctionItem The {@link AuctionItem} to add.
+     * @param auctionItemInsert The {@link AuctionItemInsert} to add.
      */
-    public void addAuctionItem(AuctionItem auctionItem) {
+    public void addAuctionItem(AuctionItemInsert auctionItemInsert) {
         String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
         String sql = "INSERT INTO AUCTION_ITEMS VALUES(?,?,?,?,?,?,?,?,?,?)";
 
         try {
             Connection connection = DriverManager.getConnection(sqlConnection);
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, auctionItem.getName());
-            preparedStatement.setString(2, auctionItem.getDescription());
-            preparedStatement.setBigDecimal(3, auctionItem.getCurrentBid());
-            preparedStatement.setBytes(4, auctionItem.getImage());
-            preparedStatement.setString(5, auctionItem.getColor());
-            preparedStatement.setInt(6, auctionItem.getManufacturedYear());
-            preparedStatement.setString(7, this.sqlFormattedDate(auctionItem.getAuctionStartTime().toString()));
-            preparedStatement.setString(8, this.sqlFormattedDate(auctionItem.getAuctionEndTime().toString()));
-            preparedStatement.setString(9, auctionItem.getSellerId());
+            preparedStatement.setString(1, auctionItemInsert.getName());
+            preparedStatement.setString(2, auctionItemInsert.getDescription());
+            preparedStatement.setBigDecimal(3, auctionItemInsert.getCurrentBid());
+            preparedStatement.setBytes(4, Base64.getEncoder().encode(auctionItemInsert.getImage().getBytes()));
+            preparedStatement.setString(5, auctionItemInsert.getColor());
+            preparedStatement.setInt(6, auctionItemInsert.getManufacturedYear());
+            preparedStatement.setString(7, this.sqlFormattedDate(auctionItemInsert.getAuctionStartTime().toString()));
+            preparedStatement.setString(8, this.sqlFormattedDate(auctionItemInsert.getAuctionEndTime().toString()));
+            preparedStatement.setString(9, auctionItemInsert.getSellerId());
             preparedStatement.setString(10, null);
 
             preparedStatement.executeUpdate();
 
-        } catch (SQLException ex) {
+        } catch (SQLException | IOException ex) {
             System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
         }
     }
@@ -98,9 +102,9 @@ public class ItemDao {
     /**
      * Retrieves all auction items from the database.
      *
-     * @return A {@link List} of {@link AuctionItem}s.
+     * @return A {@link List} of {@link AuctionItemRetrieve}s.
      */
-    public List<AuctionItem> getAllItems() {
+    public List<AuctionItemRetrieve> getAllItems() {
 
         String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
         String sql = "SELECT * FROM AUCTION_ITEMS";
@@ -110,10 +114,10 @@ public class ItemDao {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            List<AuctionItem> auctionItems = new ArrayList<>();
+            List<AuctionItemRetrieve> auctionItemInserts = new ArrayList<>();
 
             while (resultSet.next()) {
-                AuctionItem auctionItem = new AuctionItem(
+                AuctionItemRetrieve auctionItemRetrieve = new AuctionItemRetrieve(
                         resultSet.getString("name"),
                         resultSet.getString("description"),
                         resultSet.getBigDecimal("currentBid"),
@@ -124,12 +128,12 @@ public class ItemDao {
                         LocalDateTime.parse(this.javaReformattedDate(resultSet.getString("aucEndTime"))),
                         resultSet.getString("sellerUser")
                 );
-                auctionItem.setBidderId(resultSet.getString("bidderUser"));
+                auctionItemRetrieve.setBidderId(resultSet.getString("bidderUser"));
 
-                auctionItems.add(auctionItem);
+                auctionItemInserts.add(auctionItemRetrieve);
             }
 
-            return auctionItems;
+            return auctionItemInserts;
         } catch (SQLException ex) {
             System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
             return new ArrayList<>();
@@ -137,12 +141,12 @@ public class ItemDao {
     }
 
     /**
-     * Retrieves an {@link AuctionItem} given its name.
+     * Retrieves an {@link AuctionItemInsert} given its name.
      *
      * @param name The name of the auction item.
-     * @return The retrieved {@link AuctionItem}
+     * @return The retrieved {@link AuctionItemInsert}
      */
-    public AuctionItem findItemByName(String name) {
+    public AuctionItemRetrieve findItemByName(String name) {
         String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
         String sql = "SELECT * FROM AUCTION_ITEMS WHERE name = ?";
 
@@ -153,7 +157,7 @@ public class ItemDao {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                return new AuctionItem(
+                return new AuctionItemRetrieve(
                         resultSet.getString("name"),
                         resultSet.getString("description"),
                         resultSet.getBigDecimal("currentBid"),
@@ -175,12 +179,12 @@ public class ItemDao {
     }
 
     /**
-     * Updates an {@link AuctionItem}. Requires original auction name to make update on correct item.
+     * Updates an {@link AuctionItemInsert}. Requires original auction name to make update on correct item.
      *
-     * @param auctionItem The updated {@link AuctionItem}.
-     * @param originalName The original name of the {@link AuctionItem}.
+     * @param auctionItemInsert The updated {@link AuctionItemInsert}.
+     * @param originalName The original name of the {@link AuctionItemInsert}.
      */
-    public void updateItem(AuctionItem auctionItem, String originalName) {
+    public void updateItem(AuctionItemInsert auctionItemInsert, String originalName) {
         String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
         String sql = """
                 UPDATE AUCTION_ITEMS
@@ -200,31 +204,33 @@ public class ItemDao {
         try (Connection connection = DriverManager.getConnection(sqlConnection);
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, auctionItem.getName());
-            preparedStatement.setString(2, auctionItem.getDescription());
-            preparedStatement.setBigDecimal(3, auctionItem.getCurrentBid());
-            preparedStatement.setBytes(4, auctionItem.getImage());
-            preparedStatement.setString(5, auctionItem.getColor());
-            preparedStatement.setInt(6, auctionItem.getManufacturedYear());
-            preparedStatement.setString(7, this.sqlFormattedDate(auctionItem.getAuctionStartTime().toString()));
-            preparedStatement.setString(8, this.sqlFormattedDate(auctionItem.getAuctionEndTime().toString()));
-            preparedStatement.setString(9, auctionItem.getSellerId());
-            preparedStatement.setString(10, auctionItem.getBidderId());
+            preparedStatement.setString(1, auctionItemInsert.getName());
+            preparedStatement.setString(2, auctionItemInsert.getDescription());
+            preparedStatement.setBigDecimal(3, auctionItemInsert.getCurrentBid());
+            preparedStatement.setBytes(4, auctionItemInsert.getImage().getBytes());
+            preparedStatement.setString(5, auctionItemInsert.getColor());
+            preparedStatement.setInt(6, auctionItemInsert.getManufacturedYear());
+            preparedStatement.setString(7, this.sqlFormattedDate(auctionItemInsert.getAuctionStartTime().toString()));
+            preparedStatement.setString(8, this.sqlFormattedDate(auctionItemInsert.getAuctionEndTime().toString()));
+            preparedStatement.setString(9, auctionItemInsert.getSellerId());
+            preparedStatement.setString(10, auctionItemInsert.getBidderId());
             preparedStatement.setString(11, originalName);
 
             preparedStatement.executeUpdate();
 
         } catch (SQLException ex) {
             System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
     /**
-     * Updates the bid amount and the user who bid for an {@link AuctionItem}.
+     * Updates the bid amount and the user who bid for an {@link AuctionItemInsert}.
      *
-     * @param itemName The name of the {@link AuctionItem}.
-     * @param bidderUser The user who bid on the {@link AuctionItem}.
-     * @param bidAmount The new bid amount for the {@link AuctionItem}.
+     * @param itemName The name of the {@link AuctionItemInsert}.
+     * @param bidderUser The user who bid on the {@link AuctionItemInsert}.
+     * @param bidAmount The new bid amount for the {@link AuctionItemInsert}.
      */
     public void updateBid(String itemName, String bidderUser, BigDecimal bidAmount) {
         String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
