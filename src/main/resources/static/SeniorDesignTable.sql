@@ -1,7 +1,8 @@
 set echo on
 create table USERS(
 	username varchar(30) PRIMARY KEY,
-	password varchar(30) NOT NULL
+	password varchar(30) NOT NULL,
+    userID number
 );
 
 commit;
@@ -22,13 +23,12 @@ create table AUCTION_ITEMS(
 	name varchar(40),
 	description varchar(30),
 	currentBid varchar(30),
-	image blob,
-    color varchar(15),
-	manufacturedYear number,
+    	itemID number,
 	aucStartTime datetime,
 	aucEndTime datetime,
 	sellerUser varchar(30),
 	bidderUser varchar(30),
+    	image blob,
 	FOREIGN KEY(sellerUser) REFERENCES USERS(username),
 	FOREIGN KEY(bidderUser) REFERENCES USERS(username)
 );
