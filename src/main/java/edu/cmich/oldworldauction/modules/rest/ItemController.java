@@ -131,38 +131,6 @@ public class ItemController {
         }
     }
 
-    /**
-     * Updates the bidding of an auction item.
-     *
-     * @param auctionItemInsert The {@link AuctionItemInsert} to update.
-     * @param newBid The new bid.
-     * @param model       The Spring MVC model.
-     * @return The confirmation HTML page or an error page if the update fails.
-     */
-    @PostMapping("/makeBid")
-    public String makeBid(@ModelAttribute AuctionItemInsert auctionItemInsert, BigDecimal newBid, Model model) {
-        try {
-            AuctionItemInsert existingItem = this.getItemByName(auctionItemInsert);
-
-            // Check if the new bid is greater than the current bid
-            if (!(newBid.compareTo(existingItem.getCurrentBid()) > 0)) {
-                // Update the current bid
-                existingItem.setCurrentBid(newBid);
-
-                // Add the updated item to the model
-                model.addAttribute("currentBid", existingItem);
-
-                // Return the confirmation view
-                return "confirmation";
-            } else {
-                throw new Exception("The new bid must be greater than the current bid");
-            }
-        } catch (Exception e) {
-            // Handle the exception appropriately
-            model.addAttribute("error", "Failed to update bid");
-            return "error";  // You should have an "error" Thymeleaf template for displaying error messages.
-        }
-    }
 
     /**
      * Updates the manufacture year of an auction item.
@@ -274,9 +242,10 @@ public class ItemController {
         this.itemDao.updateItem(auctionItemInsert, originalName);
     }
 
-    @PostMapping("/updateBid/{name}")
-    public void updateBid(@PathVariable String name, @RequestParam String bidderUser, @RequestParam BigDecimal bidAmount) {
+    @PostMapping("/updateBid")
+    public String updateBid(@PathVariable String name, @RequestParam String bidderUser, @RequestParam BigDecimal bidAmount) {
         this.itemDao.updateBid(name, bidderUser, bidAmount);
+        return "redirect:/itemDetails/" + name;
     }
 
     @GetMapping("/deleteItem")
