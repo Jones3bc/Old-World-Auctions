@@ -131,35 +131,6 @@ public class ItemController {
         }
     }
 
-
-    /**
-     * Updates the manufacture year of an auction item.
-     *
-     * @param auctionItemInsert The {@link AuctionItemInsert} to update.
-     * @param newManufacturedYear The new newManufacturedYear.
-     * @param model       The Spring MVC model.
-     * @return The confirmation HTML page or an error page if the update fails.
-     */
-    @PostMapping("/changeManufacturedYear")
-    public String changeManufacturedYear(@ModelAttribute AuctionItemInsert auctionItemInsert, int newManufacturedYear, Model model) {
-        try {
-            AuctionItemInsert existingItem = this.getItemByName(auctionItemInsert);
-
-            // Update the manufactured year
-            existingItem.setManufacturedYear(newManufacturedYear);
-
-            // Add the updated item to the model
-            model.addAttribute("manufacturedYear", existingItem);
-
-            // Return the confirmation view
-            return "confirmation";
-        } catch (Exception e) {
-            // Handle the exception appropriately
-            model.addAttribute("error", "Failed to update manufactured year");
-            return "error";  // You should have an "error" Thymeleaf template for displaying error messages.
-        }
-    }
-
     /**
      * Updates the name of an auction item.
      *
@@ -206,33 +177,6 @@ public class ItemController {
         } catch (Exception e) {
             // Handle the exception appropriately
             model.addAttribute("error", "Failed to update name");
-            return "error";  // You should have an "error" Thymeleaf template for displaying error messages.
-        }
-    }
-
-    /**
-     * Sets a new color.
-     *
-     * @param auctionItemInsert The {@link AuctionItemInsert} to update.
-     * @param newColor The new color.
-     * @param model       The Spring MVC model.
-     * @return The confirmation HTML page or an error page if the update fails.
-     */
-    @PostMapping("/setColor")
-    public String setColor(@ModelAttribute AuctionItemInsert auctionItemInsert, String newColor, Model model) {
-        try {
-            AuctionItemInsert existingItem = this.getItemByName(auctionItemInsert);
-
-            // Update the color
-            existingItem.setColor(newColor);
-
-            // Add the updated item to the model
-            model.addAttribute("color", existingItem);
-
-            // Return the confirmation view
-            return "confirmation";
-        } catch (Exception e) {
-            // Handle the exception appropriately
             return "error";  // You should have an "error" Thymeleaf template for displaying error messages.
         }
     }

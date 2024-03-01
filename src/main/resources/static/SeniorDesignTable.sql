@@ -1,8 +1,8 @@
 set echo on
 create table USERS(
-	username varchar(30) PRIMARY KEY,
-	password varchar(30) NOT NULL,
-    	userID varchar(40)
+    userID varchar(40) PRIMARY KEY,
+	username varchar(30) UNIQUE,
+	password varchar(30) NOT NULL
 );
 
 commit;
@@ -10,17 +10,18 @@ commit;
 desc USERS;
 
 create table AUCTION_ITEMS(
+	itemID varchar(40),
 	name varchar(40),
+	category varchar(20),
 	description varchar(30),
 	currentBid varchar(30),
-   	 itemID varchar(40),
 	aucStartTime datetime,
 	aucEndTime datetime,
-	sellerUser varchar(30),
-	bidderUser varchar(30),
-   	 image blob,
-	FOREIGN KEY(sellerUser) REFERENCES USERS(userID),
-	FOREIGN KEY(bidderUser) REFERENCES USERS(userID)
+	sellerID varchar(30),
+	bidderID varchar(30),
+   	image blob,
+	FOREIGN KEY(sellerID) REFERENCES USERS(userID),
+	FOREIGN KEY(bidderID) REFERENCES USERS(userID)
 );
 
 commit;

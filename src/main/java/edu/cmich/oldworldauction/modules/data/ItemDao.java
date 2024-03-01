@@ -1,6 +1,5 @@
 package edu.cmich.oldworldauction.modules.data;
 import edu.cmich.oldworldauction.modules.models.AuctionItemRetrieve;
-import edu.cmich.oldworldauction.modules.models.ImageMultipartFile;
 import edu.cmich.oldworldauction.modules.models.AuctionItemInsert;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.util.StringUtils;
@@ -12,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Interacts with the database to retrieve, store, and {@link AuctionItemInsert}s.
@@ -28,16 +28,12 @@ public class ItemDao {
      */
     public boolean isAuctionItemValid(AuctionItemInsert auctionItemInsert) throws IllegalArgumentException {
         BigDecimal currentBid = auctionItemInsert.getCurrentBid();
-        int manufacturedYear = auctionItemInsert.getManufacturedYear();
 
         if (StringUtils.isEmptyOrWhitespace(auctionItemInsert.getName())
-                || StringUtils.isEmptyOrWhitespace(auctionItemInsert.getDescription())
-                || StringUtils.isEmptyOrWhitespace(auctionItemInsert.getColor())) {
+                || StringUtils.isEmptyOrWhitespace(auctionItemInsert.getDescription())) {
             throw new IllegalArgumentException("Name, Description, and Color fields must be non-null and not be only whitespace.");
         } else if (currentBid == null || currentBid.compareTo(BigDecimal.ZERO) < 0 || currentBid.scale() != 2) {
             throw new IllegalArgumentException("Current Bid field is invalid. Must be non-null, > 0 and have 2 decimal place values.");
-        } else if (manufacturedYear < 0 || manufacturedYear > LocalDateTime.now().getYear()) {
-            throw new IllegalArgumentException("Manufactured year field must be > 0 and less than the current year.");
         } else if (auctionItemInsert.getAuctionStartTime() == null || auctionItemInsert.getAuctionEndTime() == null) {
             throw new IllegalArgumentException("Auction start/end times cannot be null");
         }
@@ -81,16 +77,16 @@ public class ItemDao {
         try {
             Connection connection = DriverManager.getConnection(sqlConnection);
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, auctionItemInsert.getName());
-            preparedStatement.setString(2, auctionItemInsert.getDescription());
-            preparedStatement.setBigDecimal(3, auctionItemInsert.getCurrentBid());
-            preparedStatement.setBytes(4, Base64.getEncoder().encode(auctionItemInsert.getImage().getBytes()));
-            preparedStatement.setString(5, auctionItemInsert.getColor());
-            preparedStatement.setInt(6, auctionItemInsert.getManufacturedYear());
-            preparedStatement.setString(7, this.sqlFormattedDate(auctionItemInsert.getAuctionStartTime().toString()));
-            preparedStatement.setString(8, this.sqlFormattedDate(auctionItemInsert.getAuctionEndTime().toString()));
-            preparedStatement.setString(9, auctionItemInsert.getSellerId());
-            preparedStatement.setString(10, null);
+            preparedStatement.setString(1, UUID.randomUUID().toString());
+            preparedStatement.setString(2, auctionItemInsert.getName());
+            preparedStatement.setString(3, auctionItemInsert.getCategory());
+            preparedStatement.setString(4, auctionItemInsert.getDescription());
+            preparedStatement.setBigDecimal(5, auctionItemInsert.getCurrentBid());
+            preparedStatement.setString(6, this.sqlFormattedDate(auctionItemInsert.getAuctionStartTime().toString()));
+            preparedStatement.setString(7, this.sqlFormattedDate(auctionItemInsert.getAuctionEndTime().toString()));
+            preparedStatement.setString(8, auctionItemInsert.getSellerId());
+            preparedStatement.setString(9, null);
+            preparedStatement.setBytes(10, Base64.getEncoder().encode(auctionItemInsert.getImage().getBytes()));
 
             preparedStatement.executeUpdate();
 
@@ -118,19 +114,20 @@ public class ItemDao {
 
             while (resultSet.next()) {
                 AuctionItemRetrieve auctionItemRetrieve = new AuctionItemRetrieve(
+                        resultSet.getString("itemID"),
                         resultSet.getString("name"),
                         resultSet.getString("description"),
+                        resultSet.getString("category"),
                         resultSet.getBigDecimal("currentBid"),
                         resultSet.getBytes("image"),
-                        resultSet.getString("color"),
-                        resultSet.getInt("manufacturedYear"),
                         LocalDateTime.parse(this.javaReformattedDate(resultSet.getString("aucStartTime"))),
                         LocalDateTime.parse(this.javaReformattedDate(resultSet.getString("aucEndTime"))),
-                        resultSet.getString("sellerUser")
+                        resultSet.getString("sellerID"),
+                        resultSet.getString("bidderID")
                 );
-                auctionItemRetrieve.setBidderId(resultSet.getString("bidderUser"));
 
                 auctionItemInserts.add(auctionItemRetrieve);
+                System.out.println(auctionItemRetrieve);
             }
 
             return auctionItemInserts;
@@ -158,15 +155,16 @@ public class ItemDao {
 
             if (resultSet.next()) {
                 return new AuctionItemRetrieve(
+                        resultSet.getString("itemID"),
                         resultSet.getString("name"),
                         resultSet.getString("description"),
+                        resultSet.getString("category"),
                         resultSet.getBigDecimal("currentBid"),
                         resultSet.getBytes("image"),
-                        resultSet.getString("color"),
-                        resultSet.getInt("manufacturedYear"),
                         LocalDateTime.parse(this.javaReformattedDate(resultSet.getString("aucStartTime"))),
                         LocalDateTime.parse(this.javaReformattedDate(resultSet.getString("aucEndTime"))),
-                        resultSet.getString("sellerUser")
+                        resultSet.getString("sellerID"),
+                        resultSet.getString("bidderID")
                 );
             } else {
                 return null; // Item not found
@@ -189,15 +187,14 @@ public class ItemDao {
         String sql = """
                 UPDATE AUCTION_ITEMS
                 SET name = ?,
+                    category = ?
                     description = ?,
                     currentBid = ?,
                     image = ?,
-                    color = ?,
-                    manufacturedYear = ?,
                     aucStartTime = ?,
                     aucEndTime = ?,
-                    sellerUser = ?,
-                    bidderUser = ?
+                    sellerID = ?,
+                    bidderID = ?
                 WHERE name = ?;             \s
                 """.trim();
 
@@ -205,16 +202,15 @@ public class ItemDao {
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, auctionItemInsert.getName());
-            preparedStatement.setString(2, auctionItemInsert.getDescription());
-            preparedStatement.setBigDecimal(3, auctionItemInsert.getCurrentBid());
-            preparedStatement.setBytes(4, auctionItemInsert.getImage().getBytes());
-            preparedStatement.setString(5, auctionItemInsert.getColor());
-            preparedStatement.setInt(6, auctionItemInsert.getManufacturedYear());
-            preparedStatement.setString(7, this.sqlFormattedDate(auctionItemInsert.getAuctionStartTime().toString()));
-            preparedStatement.setString(8, this.sqlFormattedDate(auctionItemInsert.getAuctionEndTime().toString()));
-            preparedStatement.setString(9, auctionItemInsert.getSellerId());
-            preparedStatement.setString(10, auctionItemInsert.getBidderId());
-            preparedStatement.setString(11, originalName);
+            preparedStatement.setString(2, auctionItemInsert.getCategory());
+            preparedStatement.setString(3, auctionItemInsert.getDescription());
+            preparedStatement.setBigDecimal(4, auctionItemInsert.getCurrentBid());
+            preparedStatement.setBytes(5, auctionItemInsert.getImage().getBytes());
+            preparedStatement.setString(6, this.sqlFormattedDate(auctionItemInsert.getAuctionStartTime().toString()));
+            preparedStatement.setString(7, this.sqlFormattedDate(auctionItemInsert.getAuctionEndTime().toString()));
+            preparedStatement.setString(8, auctionItemInsert.getSellerId());
+            preparedStatement.setString(9, auctionItemInsert.getBidderId());
+            preparedStatement.setString(10, originalName);
 
             preparedStatement.executeUpdate();
 

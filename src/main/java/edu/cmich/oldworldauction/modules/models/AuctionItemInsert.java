@@ -14,39 +14,60 @@ import java.util.Map;
  */
 public class AuctionItemInsert {
     private String name;
+    private String category;
     private String description;
     private BigDecimal currentBid;
     private MultipartFile image;
-    private String color;
-    private int manufacturedYear;
     private LocalDateTime auctionStartTime;
     private LocalDateTime auctionEndTime;
     private boolean auctionComplete;
-    private String sellerUser;
-    private String bidderUser;
+    private String sellerID;
+    private String bidderID;
 
     public AuctionItemInsert(
             String name,
+            String category,
             String description,
             BigDecimal currentBid,
             MultipartFile image,
-            String color,
-            int manufacturedYear,
             LocalDateTime auctionStartTime,
             LocalDateTime auctionEndTime,
-            String sellerUsername
+            String sellerID
     ) {
         this.name = name;
+        this.category = category;
         this.description = description;
         this.currentBid = currentBid;
         this.image = image;
-        this.color = color;
-        this.manufacturedYear = manufacturedYear;
         this.auctionStartTime = auctionStartTime;
         this.auctionEndTime = auctionEndTime;
         this.auctionComplete = false;
-        this.sellerUser = sellerUsername;
-        this.bidderUser = null;
+        this.sellerID = sellerID;
+        this.bidderID = null;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getSellerID() {
+        return sellerID;
+    }
+
+    public void setSellerID(String sellerID) {
+        this.sellerID = sellerID;
+    }
+
+    public String getBidderID() {
+        return bidderID;
+    }
+
+    public void setBidderID(String bidderID) {
+        this.bidderID = bidderID;
     }
 
     public MultipartFile getImage() {
@@ -82,19 +103,19 @@ public class AuctionItemInsert {
     }
 
     public String getSellerId() {
-        return sellerUser;
+        return sellerID;
     }
 
     public void setSellerId(String sellerId) {
-        this.sellerUser = sellerId;
+        this.sellerID = sellerId;
     }
 
     public String getBidderId() {
-        return bidderUser;
+        return bidderID;
     }
 
     public void setBidderId(String bidderId) {
-        this.bidderUser = bidderId;
+        this.bidderID = bidderId;
     }
 
     public String getName() {
@@ -121,22 +142,6 @@ public class AuctionItemInsert {
         this.currentBid = currentBid;
     }
 
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public int getManufacturedYear() {
-        return manufacturedYear;
-    }
-
-    public void setManufacturedYear(int manufacturedYear) {
-        this.manufacturedYear = manufacturedYear;
-    }
-
     @Override
     public String toString() {
         return "AuctionItem{" +
@@ -144,23 +149,20 @@ public class AuctionItemInsert {
                 ", description='" + description + '\'' +
                 ", currentBid=" + currentBid +
                 ", image=" + image +
-                ", color='" + color + '\'' +
-                ", manufacturedYear=" + manufacturedYear +
                 ", auctionStartTime=" + auctionStartTime +
                 ", auctionEndTime=" + auctionEndTime +
                 ", auctionComplete=" + auctionComplete +
-                ", sellerUser='" + sellerUser + '\'' +
-                ", bidderUser='" + bidderUser + '\'' +
+                ", sellerUser='" + sellerID + '\'' +
+                ", bidderUser='" + bidderID + '\'' +
                 '}';
     }
 
     public Map<String, ?> attributes() {
         Map<String, String> attributes = new HashMap<>();
         attributes.put("name", name);
+        attributes.put("category", category);
         attributes.put("description", description);
         attributes.put("currentBid", currentBid.toString());
-        attributes.put("color", color);
-        attributes.put("manufacturedYear", String.valueOf(manufacturedYear));
 
         return attributes;
     }

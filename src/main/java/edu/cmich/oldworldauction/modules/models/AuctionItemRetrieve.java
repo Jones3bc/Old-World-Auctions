@@ -1,14 +1,15 @@
 package edu.cmich.oldworldauction.modules.models;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class AuctionItemRetrieve {
+    private String itemID;
     private String name;
+    private String category;
     private String description;
     private BigDecimal currentBid;
     private byte[] image;
@@ -17,31 +18,60 @@ public class AuctionItemRetrieve {
     private LocalDateTime auctionStartTime;
     private LocalDateTime auctionEndTime;
     private boolean auctionComplete;
-    private String sellerUser;
-    private String bidderUser;
+    private String sellerID;
+    private String bidderID;
 
     public AuctionItemRetrieve(
+            String itemID,
             String name,
             String description,
+            String category,
             BigDecimal currentBid,
             byte[] image,
-            String color,
-            int manufacturedYear,
             LocalDateTime auctionStartTime,
             LocalDateTime auctionEndTime,
-            String sellerUsername
+            String sellerID,
+            String bidderID
     ) {
+        this.itemID = itemID;
         this.name = name;
+        this.category = category;
         this.description = description;
         this.currentBid = currentBid;
         this.image = image;
-        this.color = color;
-        this.manufacturedYear = manufacturedYear;
         this.auctionStartTime = auctionStartTime;
         this.auctionEndTime = auctionEndTime;
         this.auctionComplete = false;
-        this.sellerUser = sellerUsername;
-        this.bidderUser = null;
+        this.sellerID = sellerID;
+        this.bidderID = bidderID;
+    }
+
+    public String getItemID() {
+        return itemID;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getSellerID() {
+        return sellerID;
+    }
+
+    public void setSellerID(String sellerID) {
+        this.sellerID = sellerID;
+    }
+
+    public String getBidderID() {
+        return bidderID;
+    }
+
+    public void setBidderID(String bidderID) {
+        this.bidderID = bidderID;
     }
 
     public byte[] getImage() {
@@ -77,19 +107,19 @@ public class AuctionItemRetrieve {
     }
 
     public String getSellerId() {
-        return sellerUser;
+        return sellerID;
     }
 
     public void setSellerId(String sellerId) {
-        this.sellerUser = sellerId;
+        this.sellerID = sellerId;
     }
 
     public String getBidderId() {
-        return bidderUser;
+        return bidderID;
     }
 
     public void setBidderId(String bidderId) {
-        this.bidderUser = bidderId;
+        this.bidderID = bidderId;
     }
 
     public String getName() {
@@ -134,8 +164,10 @@ public class AuctionItemRetrieve {
 
     @Override
     public String toString() {
-        return "AuctionItem{" +
-                "name='" + name + '\'' +
+        return "AuctionItemRetrieve{" +
+                "itemID='" + itemID + '\'' +
+                ", name='" + name + '\'' +
+                ", category='" + category + '\'' +
                 ", description='" + description + '\'' +
                 ", currentBid=" + currentBid +
                 ", image=" + image +
@@ -144,8 +176,8 @@ public class AuctionItemRetrieve {
                 ", auctionStartTime=" + auctionStartTime +
                 ", auctionEndTime=" + auctionEndTime +
                 ", auctionComplete=" + auctionComplete +
-                ", sellerUser='" + sellerUser + '\'' +
-                ", bidderUser='" + bidderUser + '\'' +
+                ", sellerID='" + sellerID + '\'' +
+                ", bidderID='" + bidderID + '\'' +
                 '}';
     }
 
