@@ -21,6 +21,8 @@ public class LoginController {
 
     private String loggedInUser = "";
 
+    private String loggedInUserID = "";
+
     @Autowired
     LoginDao loginDao;
 
@@ -33,14 +35,19 @@ public class LoginController {
         return "index";
     }
 
-    private record Username(String username) {
-    }
+    private record Username(String username) {}
+
+    private record UserId(String userId) {}
 
     @ResponseBody
     @GetMapping("/loggedUser")
     public Username getLoggedUser() {
         return new Username(this.loggedInUser);
     }
+
+    @ResponseBody
+    @GetMapping("/loggedUserID")
+    public UserId getLoggedUserID() { return new UserId(this.loggedInUserID); }
 
     /**
      * Supplies the login page to the user in the browser.
@@ -76,6 +83,7 @@ public class LoginController {
         for (User retrievedUser : currentUsers) {
             if (retrievedUser.getUsername().equals(user.getUsername()) && retrievedUser.getPassword().equals(user.getPassword())) {
                 this.loggedInUser = user.getUsername();
+                this.loggedInUserID = user.getUserID();
                 break;
             }
         }
@@ -86,6 +94,7 @@ public class LoginController {
     @GetMapping("/logout")
     public String logout() {
         this.loggedInUser = "";
+        this.loggedInUserID = "";
 
         return "index";
     }

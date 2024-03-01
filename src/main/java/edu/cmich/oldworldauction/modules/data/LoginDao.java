@@ -7,6 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Interacts with the database to store and retrieve {@link User} information.
@@ -46,13 +47,13 @@ public class LoginDao {
      */
     public void insertUser(User user) {
         String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
-        String sql = "INSERT INTO USERS VALUES (?, ?);";
+        String sql = "INSERT INTO USERS VALUES (?, ?, ?);";
 
         try (Connection connection = DriverManager.getConnection(sqlConnection);
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-            preparedStatement.setString(1, user.getUsername());
-            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.setString(1, UUID.randomUUID().toString());
+            preparedStatement.setString(2, user.getUsername());
+            preparedStatement.setString(3, user.getPassword());
 
             preparedStatement.executeUpdate();
 
@@ -77,7 +78,7 @@ public class LoginDao {
 
             List<User> userList = new ArrayList<>();
             while(resultSet.next()){
-                userList.add(new User(resultSet.getString("username"), resultSet.getString("password")));
+                userList.add(new User(resultSet.getString("userID"), resultSet.getString("username"), resultSet.getString("password")));
             }
 
             return userList;

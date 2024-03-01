@@ -4,6 +4,8 @@ import edu.cmich.oldworldauction.modules.data.LoginDao;
 import edu.cmich.oldworldauction.modules.models.User;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class AccountService {
 
@@ -11,7 +13,7 @@ public class AccountService {
 
     public User createAccount(String username, String password) throws Exception {
 
-        User newUser = new User(username, password);
+        User newUser = new User(UUID.randomUUID().toString(),username, password);
         if (loginDao.isLoginInfoValid(newUser)) {
             //Database storage
              loginDao.insertUser(newUser);
