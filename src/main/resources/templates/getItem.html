@@ -46,11 +46,13 @@
         <h3 th:text="'Auction End Time: ' + ${item.auctionEndTime}"></h3>
         <h3 th:if="${item.auctionComplete}">Auction Status: Complete</h3>
         <h3 th:unaless="${item.auctionComplete}">Auction Status: Incomplete</h3>
-<!--        <h3 th:text="'Seller: ' + ${item.sellerUser != null ? item.sellerUser : 'N/A'}"></h3>-->
-<!--        <h3 th:text="'Bidder: ' + ${item.bidderUser != null ? item.bidderUser : 'N/A'}"></h3>-->
-        <form th:action="${'/updateBid/' + item.name}" method="post">
+        <h3 th:text="'Seller: ' + ${item.sellerID != null ? item.sellerID : 'N/A'}"></h3>
+
+
+        <form th:action="@{/updateBid(name=${item.name})}" method="post">
             <input type="hidden" name="name" th:value="${item.name}" />
-            <input type="hidden" name="bidderUser" th:value="${loggedInUser}" />
+            <label for="bidderUser">Enter Your Username:</label>
+            <input type="text" name="bidderUser" id="bidderUser" th:placeholder="${loggedInUser}" required />
             <label for="bidAmount">Enter Bid Amount:</label>
             <input type="number" name="bidAmount" id="bidAmount" required />
             <button type="submit">Place Bid</button>

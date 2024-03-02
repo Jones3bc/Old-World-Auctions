@@ -225,15 +225,15 @@ public class ItemDao {
      * Updates the bid amount and the user who bid for an {@link AuctionItemInsert}.
      *
      * @param itemName The name of the {@link AuctionItemInsert}.
-     * @param bidderUser The user who bid on the {@link AuctionItemInsert}.
+     * @param bidderID The user who bid on the {@link AuctionItemInsert}.
      * @param bidAmount The new bid amount for the {@link AuctionItemInsert}.
      */
-    public void updateBid(String itemName, String bidderUser, BigDecimal bidAmount) {
+    public void updateBid(String itemName, String bidderID, BigDecimal bidAmount) {
         String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
         String sql = """
                 UPDATE AUCTION_ITEMS
                 SET currentBid = ?,
-                    bidderUser = ?
+                    bidderID = ?
                 WHERE name = ?;             \s
                 """.trim();
 
@@ -241,7 +241,7 @@ public class ItemDao {
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setBigDecimal(1, bidAmount);
-            preparedStatement.setString(2, bidderUser);
+            preparedStatement.setString(2, bidderID);
             preparedStatement.setString(3, itemName);
             preparedStatement.executeUpdate();
 
