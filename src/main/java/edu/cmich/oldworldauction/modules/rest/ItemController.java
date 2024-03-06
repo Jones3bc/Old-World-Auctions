@@ -186,11 +186,11 @@ public class ItemController {
         this.itemDao.updateItem(auctionItemInsert, originalName);
     }
 
-    @PostMapping("/updateBid")
-    public String updateBid(@PathVariable String name, @RequestParam String bidderId, @RequestParam BigDecimal bidAmount) {
+    @PostMapping("/updateBid/{name}/{bidderId}/{bidAmount}")
+    public void updateBid(@PathVariable String name, @PathVariable String bidderId, @PathVariable BigDecimal bidAmount) {
         this.itemDao.updateBid(name, bidderId, bidAmount);
-        return "redirect:/itemDetails/" + name;
     }
+
 
     @GetMapping("/deleteItem")
     public String deleteItem(@RequestParam String name) {

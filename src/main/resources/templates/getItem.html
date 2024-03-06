@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <script src="https://js.stripe.com/v3/"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <link th:href="@{/common.css}" rel="stylesheet"/>
 <style>
     body {
@@ -48,15 +50,59 @@
         <h3 th:unaless="${item.auctionComplete}">Auction Status: Incomplete</h3>
         <h3 th:text="'Seller: ' + ${item.sellerID != null ? item.sellerID : 'N/A'}"></h3>
 
-
-        <form th:action="@{/updateBid(name=${item.name})}" method="post">
+        <form id="bidForm" th:action="@{/updateBid/{name}/{bidderId}/{bidAmount}(name=${item.name}, bidderId=${userId}, bidAmount=${item.currentBid})}" method="post">
             <input type="hidden" name="name" th:value="${item.name}" />
-            <label for="bidderUser">Enter Your Username:</label>
-            <input type="text" name="bidderUser" id="bidderUser" th:placeholder="${loggedInUser}" required />
-            <label for="bidAmount">Enter Bid Amount:</label>
-            <input type="number" name="bidAmount" id="bidAmount" required />
+            <input type="hidden" name="bidderId" th:value="${userId}" />
+            <!-- Hidden input field to send the current bid amount -->
+            <input type="hidden" name="currentBid" th:value="${item.currentBid}" />
+            <label for="bidAmountInput">Enter Bid Amount:</label>
+            <!-- Input field to enter the new bid amount -->
+            <input type="number" name="newBidAmount" id="bidAmountInput" th:value="${item.currentBid}" required />
             <button type="submit">Place Bid</button>
         </form>
+
+
+
+        <script>
+            $(document).ready(function() {
+          // Check if the user is logged in
+          $.ajax({
+              url: '/loggedUser',
+              type: 'GET',
+              success: function(response) {
+                  if (response.loggedIn) {
+                      // If logged in, update the bidderId value
+                      $('#bidderId').val(response.username);
+                  } else {
+                      // If not logged in, handle it accordingly
+                      // For example, you can prompt the user to log in or register
+                      // You can also disable the form submission or hide the bid button
+                      // This example shows an alert message
+                      alert('You need to log in or register to place a bid.');
+                      // You can redirect the user to the login page or any other page
+                      // window.location.href = '/login-page';
+                  }
+              },
+              error: function() {
+                  // Handle error scenario
+                  console.error('Error checking logged-in status.');
+              }
+          });
+
+          $('#bidForm').submit(function(e) {
+              // If the user is not logged in, prevent form submission
+              if ($('#bidderId').val() === '') {
+                  e.preventDefault();
+                  // Handle the scenario where the user is not logged in
+                  alert('You need to log in or register to place a bid.');
+                  // You can redirect the user to the login page or any other page
+                  // window.location.href = '/login-page';
+              }
+              // If the user is logged in, proceed with form submission
+          });
+      });
+
+        </script>
     </div>
 </section>
 </body>
