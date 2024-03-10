@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
 <link th:href="@{/common.css}" rel="stylesheet"/>
 <style>
@@ -43,24 +44,61 @@
         <h3 th:text="'Description: ' + ${item.description}"></h3>
         <h3 th:text="'Current Bid: $' + ${item.currentBid}"></h3>
         <h3 th:text="'Color: ' + ${item.color}"></h3>
-        <h3 th:text="'Manufactured Year: ' + ${item.manufacturedYear}"></h3>
         <h3 th:text="'Auction Start Time: ' + ${item.auctionStartTime}"></h3>
         <h3 th:text="'Auction End Time: ' + ${item.auctionEndTime}"></h3>
         <h3 th:if="${item.auctionComplete}">Auction Status: Complete</h3>
         <h3 th:unaless="${item.auctionComplete}">Auction Status: Incomplete</h3>
         <h3 th:text="'Seller: ' + ${item.sellerID != null ? item.sellerID : 'N/A'}"></h3>
+        <div id="auctionStartTimer"></div>
+        <div id="auctionEndTimer"></div>
 
         <form id="bidForm" th:action="@{/updateBid/{name}/{bidderId}/{bidAmount}(name=${item.name}, bidderId=${userId}, bidAmount=${item.currentBid})}" method="post">
             <input type="hidden" name="name" th:value="${item.name}" />
-            <input type="hidden" name="bidderId" th:value="${userId}" />
-            <!-- Hidden input field to send the current bid amount -->
+            <input type="hidden" id="bidderId" name="bidderId" th:value="${userId}" />
             <input type="hidden" name="currentBid" th:value="${item.currentBid}" />
             <label for="bidAmountInput">Enter Bid Amount:</label>
-            <!-- Input field to enter the new bid amount -->
             <input type="number" name="newBidAmount" id="bidAmountInput" th:value="${item.currentBid}" required />
             <button type="submit">Place Bid</button>
         </form>
+        <p id="demo"></p>
+    </div>
 
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+
+        // Get the auction end time from Thymeleaf expression
+        var auctionEndTimeString = /*[[${item.auctionEndTime}]]*/ ''; // Assuming item.auctionEndTime is in a valid date format
+        console.log("Auction End Time String:", auctionEndTimeString);
+        var auctionEndTime = new Date(auctionEndTimeString).getTime();
+        console.log("Auction End Time (Milliseconds):", auctionEndTime);
+
+        // Update the countdown every second
+        var x = setInterval(function() {
+
+            // Get the current time
+            var now = new Date().getTime();
+
+            // Calculate the distance between now and the auction end time
+            var distance = auctionEndTime - now;
+
+            // Calculate days, hours, minutes, and seconds
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Display the countdown in the HTML element with id="auctionEndTimer"
+            document.getElementById("auctionEndTimer").innerHTML = "Time Remaining: " + days + "d " + hours + "h " + minutes + "m " + seconds + "s";
+
+            // If the auction is over, display a message
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("auctionEndTimer").innerHTML = "Auction Ended";
+            }
+        }, 1000);
+
+        /*]]>*/
+    </script>
 
 
         <script>
