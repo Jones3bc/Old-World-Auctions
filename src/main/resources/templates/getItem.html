@@ -112,13 +112,9 @@
                       // If logged in, update the bidderId value
                       $('#bidderId').val(response.username);
                   } else {
-                      // If not logged in, handle it accordingly
-                      // For example, you can prompt the user to log in or register
-                      // You can also disable the form submission or hide the bid button
-                      // This example shows an alert message
+
                       alert('You need to log in or register to place a bid.');
-                      // You can redirect the user to the login page or any other page
-                      // window.location.href = '/login-page';
+
                   }
               },
               error: function() {
@@ -128,15 +124,14 @@
           });
 
           $('#bidForm').submit(function(e) {
-              // If the user is not logged in, prevent form submission
+
               if ($('#bidderId').val() === '') {
                   e.preventDefault();
-                  // Handle the scenario where the user is not logged in
+
                   alert('You need to log in or register to place a bid.');
-                  // You can redirect the user to the login page or any other page
-                  // window.location.href = '/login-page';
+
               }
-              // If the user is logged in, proceed with form submission
+
           });
       });
 
