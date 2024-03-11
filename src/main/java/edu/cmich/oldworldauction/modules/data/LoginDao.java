@@ -89,4 +89,28 @@ public class LoginDao {
 
         return Collections.emptyList();
     }
+
+    /**
+     * Updates a {@link User} in our database with the given {@link User} information.
+     *
+     * @param updatedUser {@link User} that holds updated user information.
+     */
+    public void updateUser(User updatedUser) {
+        String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
+        String sql = "UPDATE USERS SET username = ?, password = ? WHERE userID = ?;";
+
+        try {
+            Connection connection = DriverManager.getConnection(sqlConnection);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1, updatedUser.getUsername());
+            preparedStatement.setString(2, updatedUser.getPassword());
+            preparedStatement.setString(3, updatedUser.getUserID());
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException ex) {
+            System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
+        }
+    }
 }

@@ -5,11 +5,9 @@ import edu.cmich.oldworldauction.modules.models.PaymentMethod;
 import edu.cmich.oldworldauction.modules.services.AccountService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import edu.cmich.oldworldauction.modules.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -24,6 +22,16 @@ public class AccountController {
 
     @Autowired
     AccountDao accountDao;
+
+    /**
+     * Reroutes the user to the account management page.
+     *
+     * @return The account management page.
+     */
+    @GetMapping("/account-page")
+    public String getAccountPage() {
+        return "account";
+    }
 
     /**
      * Creates a new payment method.
@@ -55,21 +63,6 @@ public class AccountController {
     @GetMapping("/retrieve-payment-methods/{username}")
     public List<PaymentMethod> retrieveUserPaymentMethods(@PathVariable String username){
         return this.accountDao.retrieveAllPaymentMethodsForUser(username);
-    }
-
-    @GetMapping("/create")
-    public String auctionPage(){
-        return "Account";
-    }
-
-    @PostMapping("/create")
-    public User createAccount(@RequestParam String username, @RequestParam String password) {
-        try {
-            return accountService.createAccount(username, password);
-        } catch (Exception e) {
-
-            return null;
-        }
     }
 
 }

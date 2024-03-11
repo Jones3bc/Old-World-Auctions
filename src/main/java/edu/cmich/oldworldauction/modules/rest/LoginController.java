@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Handles requests and responses having to do with logging in and our home page.
@@ -78,7 +75,6 @@ public class LoginController {
     @PostMapping("/login")
     public String logIn(@ModelAttribute User user, Model model) {
         List<User> currentUsers = loginDao.retrieveUsers();
-        System.out.println(currentUsers);
 
         for (User retrievedUser : currentUsers) {
             if (retrievedUser.getUsername().equals(user.getUsername()) && retrievedUser.getPassword().equals(user.getPassword())) {
@@ -104,5 +100,36 @@ public class LoginController {
         loginDao.insertUser(user);
 
         return "registrationConfirmation";
+    }
+
+    /**
+     * Represents the request given from the user update form from the account.html page.
+     *
+     * @param username {@link String} The updated username of the user. Or Blank if the username is not being updated.
+     * @param password {@link String} The updated password of the user. Or Blank if the password is not being updated.
+     * @param originalPassword {@link String} The original password of the user. Used for validation before updating.
+     */
+    private record UserUpdateRequest(String username, String password, String originalPassword){}
+
+    /**
+     * Updates a user given updated user information and the original password.
+     * @param userUpdateRequest {@link UserUpdateRequest} That represents updated user information and the original password.
+     * @return The home page of the website (update this to go to a confirmation page).
+     */
+    @PostMapping("/update-user-info")
+    public String updateUserInfo(@ModelAttribute UserUpdateRequest userUpdateRequest) {
+        List<User> currentUsers = loginDao.retrieveUsers();
+        for (User retrievedUser : currentUsers) {
+            if (retrievedUser.getUsername().equals(this.loggedInUser) && retrievedUser.getPassword().equals(userUpdateRequest.originalPassword)) {
+                User updatedUser = new User(retrievedUser.getUserID(), userUpdateRequest.username, userUpdateRequest.password);
+
+                this.loginDao.updateUser(updatedUser);
+
+                this.loggedInUser = "";
+                this.loggedInUserID = "";
+            }
+        }
+
+        return "index"; //Create a confirmation page and replace index here.
     }
 }
