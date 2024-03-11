@@ -42,3 +42,7 @@ span {
     border-radius: 1em;
     background-color: limegreen;
 }
+
+select {
+    display: table-cell;
+}

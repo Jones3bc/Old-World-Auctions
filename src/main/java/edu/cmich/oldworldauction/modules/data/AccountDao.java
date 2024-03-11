@@ -47,32 +47,32 @@ public class AccountDao {
     }
 
     /**
-     * Retrieves all payment methods for a given user.
+     * Retrieves all payment methods for a given user ID.
      *
-     * @param usersUsername - The user's username.
+     * @param userID - The user's ID.
      * @return A {@link List} of {@link PaymentMethod}s that are associated with the user.
      */
-    public List<PaymentMethod> retrieveAllPaymentMethodsForUser (String usersUsername){
+    public List<PaymentMethod> retrieveAllPaymentMethodsForUser (String userID){
         String sqlConnection = "jdbc:sqlite:/F:\\SqlLite\\usersdb.db";
-        String sql = "SELECT * from paymentMethods where usersUsername = ?;";
+        String sql = "SELECT * from PAYMENT_METHODS where userID = ?;";
         List<PaymentMethod> paymentMethods = new ArrayList<>();
 
         try {
             Connection connection = DriverManager.getConnection(sqlConnection);
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, usersUsername);
+            preparedStatement.setString(1, userID);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while(resultSet.next()){
                 PaymentMethod paymentMethod =
                         new PaymentMethod(
-                                resultSet.getInt("id"),
+                                resultSet.getInt("paymentID"),
                                 resultSet.getBoolean("credit"),
                                 resultSet.getString("cardNumber"),
                                 resultSet.getInt("expirationMonth"),
                                 resultSet.getInt("expirationYear"),
                                 resultSet.getInt("cvv"),
-                                resultSet.getString("usersUsername")
+                                resultSet.getString("userID")
                         );
 
                 paymentMethods.add(paymentMethod);
@@ -92,7 +92,7 @@ public class AccountDao {
      */
     public PaymentMethod retrievePaymentMethod(int id){
         String sqlConnection = "jdbc:sqlite:/F:\\SqlLite\\usersdb.db";
-        String sql = "SELECT * from paymentMethods where id = ?;";
+        String sql = "SELECT * from PAYMENT_METHODS where paymentID = ?;";
 
         try {
             Connection connection = DriverManager.getConnection(sqlConnection);
@@ -102,13 +102,13 @@ public class AccountDao {
 
             if (resultSet.next()){
                 return new PaymentMethod(
-                                resultSet.getInt("id"),
+                                resultSet.getInt("paymentID"),
                                 resultSet.getBoolean("credit"),
                                 resultSet.getString("cardNumber"),
                                 resultSet.getInt("expirationMonth"),
                                 resultSet.getInt("expirationYear"),
                                 resultSet.getInt("cvv"),
-                                resultSet.getString("usersUsername")
+                                resultSet.getString("userID")
                         );
             }
         } catch (SQLException ex){
@@ -125,7 +125,7 @@ public class AccountDao {
      */
     public void insertPaymentMethod (PaymentMethod paymentMethod){
         String sqlConnection = "jdbc:sqlite:/F:\\SqlLite\\usersdb.db";
-        String sql = "INSERT INTO paymentMethods VALUES (?, ?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO PAYMENT_METHODS VALUES (?, ?, ?, ?, ?, ?, ?);";
 
         try (Connection connection = DriverManager.getConnection(sqlConnection);
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
