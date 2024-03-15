@@ -79,7 +79,7 @@ public class LoginController {
         for (User retrievedUser : currentUsers) {
             if (retrievedUser.getUsername().equals(user.getUsername()) && retrievedUser.getPassword().equals(user.getPassword())) {
                 this.loggedInUser = user.getUsername();
-                this.loggedInUserID = user.getUserID();
+                this.loggedInUserID = retrievedUser.getUserID();
                 break;
             }
         }
