@@ -54,44 +54,43 @@
 
         <form id="bidForm" th:action="@{/updateBid/{name}/{bidderId}/{bidAmount}(name=${item.name}, bidderId=${userId}, bidAmount=${item.currentBid})}" method="post">
             <input type="hidden" name="name" th:value="${item.name}" />
-            <input type="hidden" id="bidderId" name="bidderId" th:value="${userId}" />
-            <input type="hidden" name="currentBid" th:value="${item.currentBid}" />
+            <input type="hidden" name="bidderId" th:value="${userId}" />
+            <input type="hidden" name="bidAmount" th:value="${item.currentBid}" />
             <label for="bidAmountInput">Enter Bid Amount:</label>
             <input type="number" name="newBidAmount" id="bidAmountInput" th:value="${item.currentBid}" required />
             <button type="submit">Place Bid</button>
         </form>
+
         <p id="demo"></p>
     </div>
 
     <script th:inline="javascript">
         /*<![CDATA[*/
 
-        // Get the auction end time from Thymeleaf expression
+
         var auctionEndTimeString = /*[[${item.auctionEndTime}]]*/ ''; // Assuming item.auctionEndTime is in a valid date format
         console.log("Auction End Time String:", auctionEndTimeString);
         var auctionEndTime = new Date(auctionEndTimeString).getTime();
         console.log("Auction End Time (Milliseconds):", auctionEndTime);
+ 
 
-        // Update the countdown every second
         var x = setInterval(function() {
 
-            // Get the current time
+
             var now = new Date().getTime();
 
-            // Calculate the distance between now and the auction end time
+
             var distance = auctionEndTime - now;
 
-            // Calculate days, hours, minutes, and seconds
+
             var days = Math.floor(distance / (1000 * 60 * 60 * 24));
             var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            // Display the countdown in the HTML element with id="auctionEndTimer"
-            document.getElementById("auctionEndTimer").innerHTML = "Time Remaining: " + days + "d " + hours + "h " + minutes + "m " + seconds + "s";
+            document.getElementById("auctionEndTimer").innerHTML = "Time Remaining to make a bid: " + days + "d " + hours + "h " + minutes + "m " + seconds + "s";
 
-            // If the auction is over, display a message
-            if (distance < 0) {
+           if (distance < 0) {
                 clearInterval(x);
                 document.getElementById("auctionEndTimer").innerHTML = "Auction Ended";
             }
@@ -103,38 +102,32 @@
 
         <script>
             $(document).ready(function() {
-          // Check if the user is logged in
+
           $.ajax({
-              url: '/loggedUser',
+              url: '/loggedUserID',
               type: 'GET',
               success: function(response) {
-                  if (response.loggedIn) {
-                      // If logged in, update the bidderId value
-                      $('#bidderId').val(response.username);
+                  console.log(response);
+                  if (response.userId !== '') { // Check if userId is not empty
+                      $('#bidderId').val(response.userId);
                   } else {
-
                       alert('You need to log in or register to place a bid.');
-
                   }
               },
               error: function() {
-                  // Handle error scenario
+
                   console.error('Error checking logged-in status.');
               }
           });
 
-          $('#bidForm').submit(function(e) {
 
+          $('#bidForm').submit(function(e) {
               if ($('#bidderId').val() === '') {
                   e.preventDefault();
-
                   alert('You need to log in or register to place a bid.');
-
               }
-
           });
       });
-
         </script>
     </div>
 </section>
