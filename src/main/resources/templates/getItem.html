@@ -52,83 +52,91 @@
         <div id="auctionStartTimer"></div>
         <div id="auctionEndTimer"></div>
 
-        <form id="bidForm" th:action="@{/updateBid/{name}/{bidderId}/{bidAmount}(name=${item.name}, bidderId=${userId}, bidAmount=${item.currentBid})}" method="post">
+        <form id="bidForm" th:action="@{'/updateBid/' + ${item.name} + '/' + ${userId} + '/' + ${item.currentBid}}" method="post">
             <input type="hidden" name="name" th:value="${item.name}" />
-            <input type="hidden" name="bidderId" th:value="${userId}" />
-            <input type="hidden" name="bidAmount" th:value="${item.currentBid}" />
-            <label for="bidAmountInput">Enter Bid Amount:</label>
-            <input type="number" name="newBidAmount" id="bidAmountInput" th:value="${item.currentBid}" required />
+            <input type="hidden" name="bidAmount" id="bidAmountInput" th:value="${item.currentBid}" />
+            <input type="hidden" name="userId" th:value="${userId}" />
+
+            <!-- Display the URL -->
+            <label>URL: <span th:text="@{'/updateBid/' + ${item.name} + '/' + ${userId} + '/' + ${item.currentBid}}"></span></label><br/>
+
+            <label for="newBidAmountInput">Enter Bid Amount:</label>
+            <input type="number" name="newBidAmount" id="newBidAmountInput" required />
             <button type="submit">Place Bid</button>
         </form>
+
 
         <p id="demo"></p>
     </div>
 
     <script th:inline="javascript">
         /*<![CDATA[*/
-
-
-        var auctionEndTimeString = /*[[${item.auctionEndTime}]]*/ ''; // Assuming item.auctionEndTime is in a valid date format
-        console.log("Auction End Time String:", auctionEndTimeString);
-        var auctionEndTime = new Date(auctionEndTimeString).getTime();
-        console.log("Auction End Time (Milliseconds):", auctionEndTime);
- 
-
-        var x = setInterval(function() {
-
-
-            var now = new Date().getTime();
-
-
-            var distance = auctionEndTime - now;
-
-
-            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById("auctionEndTimer").innerHTML = "Time Remaining to make a bid: " + days + "d " + hours + "h " + minutes + "m " + seconds + "s";
-
-           if (distance < 0) {
-                clearInterval(x);
-                document.getElementById("auctionEndTimer").innerHTML = "Auction Ended";
-            }
-        }, 1000);
-
+        var itemName = /*[[${item.name}]]*/ '';
+        var auctionEndTimeString = /*[[${item.auctionEndTime}]]*/ '';
         /*]]>*/
     </script>
 
 
-        <script>
-            $(document).ready(function() {
+    <script>
+        $(document).ready(function() {
 
-          $.ajax({
-              url: '/loggedUserID',
-              type: 'GET',
-              success: function(response) {
-                  console.log(response);
-                  if (response.userId !== '') { // Check if userId is not empty
-                      $('#bidderId').val(response.userId);
-                  } else {
-                      alert('You need to log in or register to place a bid.');
-                  }
-              },
-              error: function() {
+            $.ajax({
+                url: '/loggedUserID',
+                type: 'GET',
+                success: function(response) {
+                    console.log(response);
+                    if (response.userId !== '') {
 
-                  console.error('Error checking logged-in status.');
-              }
-          });
+                        $('input[name="userId"]').val(response.userId);
+                        console.log(response.userId);
+                    } else {
+                        alert('You need to log in or register to place a bid.');
+                    }
+                },
+                error: function() {
+                    console.error('Error checking logged-in status.');
+                }
+            });
 
 
-          $('#bidForm').submit(function(e) {
-              if ($('#bidderId').val() === '') {
-                  e.preventDefault();
-                  alert('You need to log in or register to place a bid.');
-              }
-          });
-      });
-        </script>
+            $('#bidForm').submit(function(e) {
+
+                if ($('input[name="userId"]').val() === '') {
+                    e.preventDefault(); // Prevent form submission
+                    alert('You need to log in or register to place a bid.');
+                } else {
+
+                    var userId = $('input[name="userId"]').val();
+                    var actionUrl = '/updateBid/' + itemName + '/' + userId + '/' + $('input[name="bidAmount"]').val();
+                    $('#bidForm').attr('action', actionUrl);
+                }
+            });
+        });
+    </script>
+
+
+    <script>
+        $(document).ready(function() {
+            var auctionEndTime = new Date(auctionEndTimeString).getTime();
+
+            var x = setInterval(function() {
+                var now = new Date().getTime();
+                var distance = auctionEndTime - now;
+                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById("auctionEndTimer").innerHTML = "Time Remaining to make a bid: " + days + "d " + hours + "h " + minutes + "m " + seconds + "s";
+
+                if (distance < 0) {
+                    clearInterval(x);
+                    document.getElementById("auctionEndTimer").innerHTML = "Auction Ended";
+                }
+            }, 1000);
+        });
+    </script>
+
     </div>
 </section>
 </body>

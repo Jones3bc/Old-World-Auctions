@@ -187,10 +187,12 @@ public class ItemController {
     }
 
     @PostMapping("/updateBid/{name}/{bidderId}/{bidAmount}")
-    public void updateBid(@PathVariable String name, @PathVariable String bidderId, @PathVariable BigDecimal bidAmount) {
-        this.itemDao.updateBid(name, bidderId, bidAmount);
-    }
+    public String updateBid(@PathVariable String name, @PathVariable String bidderId, @PathVariable BigDecimal bidAmount) {
 
+        this.itemDao.updateBid(name, bidderId, bidAmount);
+
+        return "updateBid";
+    }
 
     @GetMapping("/deleteItem")
     public String deleteItem(@RequestParam String name) {
