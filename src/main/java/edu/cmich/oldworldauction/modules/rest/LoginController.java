@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.util.StringUtils;
+
 import java.util.List;
 
 /**
@@ -121,7 +123,20 @@ public class LoginController {
         List<User> currentUsers = loginDao.retrieveUsers();
         for (User retrievedUser : currentUsers) {
             if (retrievedUser.getUsername().equals(this.loggedInUser) && retrievedUser.getPassword().equals(userUpdateRequest.originalPassword)) {
-                User updatedUser = new User(retrievedUser.getUserID(), userUpdateRequest.username, userUpdateRequest.password);
+                String updatedUsername;
+                String updatedPassword;
+                if(StringUtils.isEmptyOrWhitespace(userUpdateRequest.username)) {
+                    updatedUsername = retrievedUser.getUsername();
+                } else {
+                    updatedUsername = userUpdateRequest.username;
+                }
+
+                if(StringUtils.isEmptyOrWhitespace(userUpdateRequest.password)) {
+                    updatedPassword = retrievedUser.getPassword();
+                } else {
+                    updatedPassword = userUpdateRequest.password;
+                }
+                User updatedUser = new User(retrievedUser.getUserID(), updatedUsername, updatedPassword);
 
                 this.loginDao.updateUser(updatedUser);
 

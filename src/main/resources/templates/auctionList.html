@@ -8,17 +8,9 @@
     <link href="/login.css" rel="stylesheet"/>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://js.stripe.com/v3/"></script>
-
+    <script type="text/javascript" th:src="@{/login.js}"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            fetch("/loggedUser")
-                .then(response => response.json())
-                .then(data => {
-                    displayUser(data);
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                });
 
             fetch("/allItemsJson")
                 .then(response => response.json())
@@ -30,26 +22,6 @@
                     console.error('Error fetching items:', error);
                 });
         });
-
-        function displayUser(user){
-            const userDiv = document.getElementById("user");
-            userDiv.innerHTML = "";
-            if(user.username !== "") {
-                userDiv.innerHTML = `
-                  <button class="dropbtn">Welcome, ${user.username}</button>
-                  <div class="dropdown-content">
-                    <a href="#">Manage Account</a>
-                    <a href="#">Manage Items</a>
-                    <a href="/logout">Log Out</a>
-                  </div>
-                `;
-            } else {
-                let loginButton = document.createElement("a");
-                loginButton.setAttribute("href", "/login-page");
-                loginButton.textContent = "Login";
-                userDiv.appendChild(loginButton);
-            }
-        }
 
         function displayAuctionItems(items) {
             const auctionListDiv = document.getElementById("gallery");
