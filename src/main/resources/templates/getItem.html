@@ -48,7 +48,6 @@
         <h3 th:text="'Auction End Time: ' + ${item.auctionEndTime}"></h3>
         <h3 th:if="${item.auctionComplete}">Auction Status: Complete</h3>
         <h3 th:unaless="${item.auctionComplete}">Auction Status: Incomplete</h3>
-        <h3 th:text="'Seller: ' + ${item.sellerID != null ? item.sellerID : 'N/A'}"></h3>
         <div id="auctionStartTimer"></div>
         <div id="auctionEndTimer"></div>
 
@@ -57,10 +56,7 @@
             <input type="hidden" name="bidAmount" id="bidAmountInput" th:value="${item.currentBid}" />
             <input type="hidden" name="userId" th:value="${userId}" />
 
-            <!-- Display the URL -->
-            <label>URL: <span th:text="@{'/updateBid/' + ${item.name} + '/' + ${userId} + '/' + ${item.currentBid}}"></span></label><br/>
-
-            <label for="newBidAmountInput">Enter Bid Amount:</label>
+         <label for="newBidAmountInput">Enter Bid Amount:</label>
             <input type="number" name="newBidAmount" id="newBidAmountInput" required />
             <button type="submit">Place Bid</button>
         </form>
