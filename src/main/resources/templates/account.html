@@ -44,11 +44,46 @@
         </p>
     </form>
 
-    <button id="submit" form="accountUpdateForm" type="submit">Update Info</button>
+    <button class="submit" form="accountUpdateForm" type="submit">Update Info</button>
 
     <h3>Add/Manage Payment Methods</h3>
 
+    <form id="paymentMethodAddForm" action="/add-payment-method" method="post">
+        <p>
+            <label for="cardNumber">Card Number: </label>
+            <input id= "cardNumber" type="text" name="cardNumber" required/> <br/>
+            <span class="required">*</span>
+        </p>
 
+        <p>
+            <label for="expirationMonth">Expiration Month: </label>
+            <input id= "expirationMonth" type="text" name="expirationMonth" required/> <br/>
+            <span class="required">*</span>
+        </p>
+
+        <p>
+            <label for="expirationYear">Expiration Year: </label>
+            <input id= "expirationYear" type="text" name="expirationYear" required/> <br/>
+            <span class="required">*</span>
+        </p>
+
+        <p>
+            <label for="cvv">CVV: </label>
+            <input id= "cvv" type="text" name="cvv" required/> <br/>
+            <span class="required">*</span>
+        </p>
+
+        <p>
+            <label for="credit">Is This a credit card?</label>
+            <select id="credit" name="credit">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
+            <span class="required">*</span>
+        </p>
+    </form>
+
+    <button class="submit" form="paymentMethodAddForm" type="submit">Add</button>
 </div>
 
 </body>
