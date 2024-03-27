@@ -92,6 +92,7 @@ public class LoginController {
 
     private record CheckPasswordResponse(String isValid){}
     @GetMapping("/check-password")
+    @ResponseBody
     public CheckPasswordResponse checkPassword(@RequestParam String password) {
         List<User> currentUsers = loginDao.retrieveUsers();
 

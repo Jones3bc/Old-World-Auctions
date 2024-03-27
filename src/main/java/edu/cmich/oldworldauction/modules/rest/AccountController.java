@@ -82,6 +82,7 @@ public class AccountController {
      * @return A {@link List} of the retrieved {@link PaymentMethod}s.
      */
     @GetMapping("/retrieve-payment-methods")
+    @ResponseBody
     public List<PaymentMethod> retrieveUserPaymentMethods(@RequestParam String userId) {
         return this.accountDao.retrieveAllPaymentMethodsForUser(userId);
     }

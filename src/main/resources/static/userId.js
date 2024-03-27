@@ -17,6 +17,5 @@ function holdUser(user){
     } else {
         const userInput = document.getElementById("userId");
         userInput.value = user.userId;
-        console.log(userInput.value);
     }
 }
