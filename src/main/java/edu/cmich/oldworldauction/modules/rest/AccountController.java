@@ -33,14 +33,35 @@ public class AccountController {
         return "account";
     }
 
+    private record PaymentMethodCreateRequest(
+            String cardNumber,
+            int expirationMonth,
+            int expirationYear,
+            int cvv,
+            String credit,
+            String userId
+    ) {
+    }
+
     /**
      * Creates a new payment method.
      *
-     * @param paymentMethod The {@link PaymentMethod} to create.
+     * @param request The {@link PaymentMethodCreateRequest} that holds {@link PaymentMethod} information.
      */
     @PostMapping("/create-payment-method")
-    public void createPaymentMethod(@RequestBody PaymentMethod paymentMethod){
+    public String createPaymentMethod(@ModelAttribute PaymentMethodCreateRequest request) {
+        boolean credit = request.credit.equals("Yes");
+        PaymentMethod paymentMethod = new PaymentMethod(
+                null,
+                credit,
+                request.cardNumber(),
+                request.expirationMonth(),
+                request.expirationYear(),
+                request.cvv(),
+                request.userId()
+        );
         this.accountDao.insertPaymentMethod(paymentMethod);
+        return "account";
     }
 
     /**
@@ -57,12 +78,12 @@ public class AccountController {
     /**
      * Retrieves all {@link PaymentMethod}s that belong to a specified user.
      *
-     * @param username The username of the user.
+     * @param userId The user ID of the user.
      * @return A {@link List} of the retrieved {@link PaymentMethod}s.
      */
-    @GetMapping("/retrieve-payment-methods/{username}")
-    public List<PaymentMethod> retrieveUserPaymentMethods(@PathVariable String username){
-        return this.accountDao.retrieveAllPaymentMethodsForUser(username);
+    @GetMapping("/retrieve-payment-methods")
+    public List<PaymentMethod> retrieveUserPaymentMethods(@RequestParam String userId) {
+        return this.accountDao.retrieveAllPaymentMethodsForUser(userId);
     }
 
 }

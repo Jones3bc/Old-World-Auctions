@@ -7,6 +7,7 @@ import org.thymeleaf.util.StringUtils;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Interacts with the database to retrieve, update, and store {@link PaymentMethod}s.
@@ -30,7 +31,7 @@ public class AccountDao {
 
         if (StringUtils.isEmptyOrWhitespace(paymentMethod.getCardNumber())) {
             throw new IllegalArgumentException("Card number field for a payment method cannot be null or contain only whitespace.");
-        } else if (paymentMethod.getId() <= 0) {
+        } else if (StringUtils.isEmptyOrWhitespace(paymentMethod.getPaymentId())) {
             throw new IllegalArgumentException("ID field for a payment method must be > 0");
         } else if (!(paymentMethod.getCardNumber().matches("^[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}$"))) {
             throw new IllegalArgumentException("Card number field for a payment method must be in the format"
@@ -53,8 +54,8 @@ public class AccountDao {
      * @return A {@link List} of {@link PaymentMethod}s that are associated with the user.
      */
     public List<PaymentMethod> retrieveAllPaymentMethodsForUser (String userID){
-        String sqlConnection = "jdbc:sqlite:/F:\\SqlLite\\usersdb.db";
-        String sql = "SELECT * from PAYMENT_METHODS where userID = ?;";
+        String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
+        String sql = "SELECT * from PAYMENT_METHODS WHERE userId = ?;";
         List<PaymentMethod> paymentMethods = new ArrayList<>();
 
         try {
@@ -64,9 +65,10 @@ public class AccountDao {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while(resultSet.next()){
+                System.out.println("Payment method");
                 PaymentMethod paymentMethod =
                         new PaymentMethod(
-                                resultSet.getInt("paymentID"),
+                                resultSet.getString("paymentID"),
                                 resultSet.getBoolean("credit"),
                                 resultSet.getString("cardNumber"),
                                 resultSet.getInt("expirationMonth"),
@@ -74,7 +76,7 @@ public class AccountDao {
                                 resultSet.getInt("cvv"),
                                 resultSet.getString("userID")
                         );
-
+                System.out.println(paymentMethod);
                 paymentMethods.add(paymentMethod);
             }
         } catch (SQLException ex){
@@ -91,7 +93,7 @@ public class AccountDao {
      * @return The retrieved {@link PaymentMethod}.
      */
     public PaymentMethod retrievePaymentMethod(int id){
-        String sqlConnection = "jdbc:sqlite:/F:\\SqlLite\\usersdb.db";
+        String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
         String sql = "SELECT * from PAYMENT_METHODS where paymentID = ?;";
 
         try {
@@ -102,7 +104,7 @@ public class AccountDao {
 
             if (resultSet.next()){
                 return new PaymentMethod(
-                                resultSet.getInt("paymentID"),
+                                resultSet.getString("paymentID"),
                                 resultSet.getBoolean("credit"),
                                 resultSet.getString("cardNumber"),
                                 resultSet.getInt("expirationMonth"),
@@ -123,25 +125,25 @@ public class AccountDao {
      *
      * @param paymentMethod The {@link PaymentMethod} to add to the table.
      */
-    public void insertPaymentMethod (PaymentMethod paymentMethod){
-        String sqlConnection = "jdbc:sqlite:/F:\\SqlLite\\usersdb.db";
+    public void insertPaymentMethod (PaymentMethod paymentMethod)  {
+        String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
         String sql = "INSERT INTO PAYMENT_METHODS VALUES (?, ?, ?, ?, ?, ?, ?);";
 
-        try (Connection connection = DriverManager.getConnection(sqlConnection);
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-            preparedStatement.setInt(1, paymentMethod.getId());
+        try {
+            Connection connection = DriverManager.getConnection(sqlConnection);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, UUID.randomUUID().toString());
             preparedStatement.setBoolean(2, paymentMethod.isCredit());
             preparedStatement.setString(3, paymentMethod.getCardNumber());
             preparedStatement.setInt(4, paymentMethod.getExpirationMonth());
             preparedStatement.setInt(5, paymentMethod.getExpirationYear());
             preparedStatement.setInt(6, paymentMethod.getCvv());
-            preparedStatement.setString(7, paymentMethod.getUserUsername());
+            preparedStatement.setString(7, paymentMethod.getUserId());
 
             preparedStatement.executeUpdate();
 
         } catch (SQLException ex) {
-            System.out.println("Failed to establish and use SQL connection.");
+            System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
         }
     }
 }

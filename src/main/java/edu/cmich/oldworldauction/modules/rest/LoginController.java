@@ -18,9 +18,9 @@ import java.util.List;
 @Controller
 public class LoginController {
 
-    private String loggedInUser = "";
+    public String loggedInUser = "";
 
-    private String loggedInUserID = "";
+    public String loggedInUserID = "";
 
     @Autowired
     LoginDao loginDao;
@@ -79,6 +79,7 @@ public class LoginController {
         List<User> currentUsers = loginDao.retrieveUsers();
 
         for (User retrievedUser : currentUsers) {
+            System.out.println(retrievedUser);
             if (retrievedUser.getUsername().equals(user.getUsername()) && retrievedUser.getPassword().equals(user.getPassword())) {
                 this.loggedInUser = user.getUsername();
                 this.loggedInUserID = retrievedUser.getUserID();
@@ -87,6 +88,20 @@ public class LoginController {
         }
 
         return "index";
+    }
+
+    private record CheckPasswordResponse(String isValid){}
+    @GetMapping("/check-password")
+    public CheckPasswordResponse checkPassword(@RequestParam String password) {
+        List<User> currentUsers = loginDao.retrieveUsers();
+
+        for (User retrievedUser : currentUsers) {
+            if (retrievedUser.getUsername().equals(this.loggedInUser) && retrievedUser.getPassword().equals(password)) {
+                return new CheckPasswordResponse("true");
+            }
+        }
+
+        return new CheckPasswordResponse("false");
     }
 
     @GetMapping("/logout")
