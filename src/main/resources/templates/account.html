@@ -8,6 +8,8 @@
     <link th:href="@{/account.css}" rel="stylesheet"/>
     <link th:href="@{/styling.css}" rel="stylesheet"/>
     <script type="text/javascript" th:src="@{/login.js}"></script>
+    <script type="text/javascript" th:src="@{/userId.js}"></script>
+    <script type="text/javascript" th:src="@{/paymentMethods.js}"></script>
 </head>
 <body>
 <header>
@@ -27,28 +29,30 @@
     <h1>Manage Account</h1>
 
     <h3>Update Account Info</h3>
+    <div>Leaving a field empty will retain the original username/password.</div>
     <form id="accountUpdateForm" action="/update-user-info" method="post">
         <p>
-            <label for="username">Username: </label>
+            <label for="username">New Username: </label>
             <input id= "username" type="text" name="username"/> <br/>
         </p>
 
         <p>
-            <label for="password">Password: </label>
-            <input id= "password" type="text" name="password"/> <br/>
+            <label for="password">New Password: </label>
+            <input id= "password" type="password" name="password"/> <br/>
         </p>
 
         <p>
             <label for="originalPassword">Original Password: </label>
-            <input id= "originalPassword" type="text" name="originalPassword"/> <br/>
+            <input id= "originalPassword" type="password" name="originalPassword"/> <br/>
+            <span class="required">*</span>
         </p>
     </form>
 
     <button class="submit" form="accountUpdateForm" type="submit">Update Info</button>
 
-    <h3>Add/Manage Payment Methods</h3>
+    <h3>Add Payment Method</h3>
 
-    <form id="paymentMethodAddForm" action="/add-payment-method" method="post">
+    <form id="paymentMethodAddForm" action="/create-payment-method" method="post">
         <p>
             <label for="cardNumber">Card Number: </label>
             <input id= "cardNumber" type="text" name="cardNumber" required/> <br/>
@@ -57,19 +61,19 @@
 
         <p>
             <label for="expirationMonth">Expiration Month: </label>
-            <input id= "expirationMonth" type="text" name="expirationMonth" required/> <br/>
+            <input id= "expirationMonth" type="number" name="expirationMonth" required/> <br/>
             <span class="required">*</span>
         </p>
 
         <p>
             <label for="expirationYear">Expiration Year: </label>
-            <input id= "expirationYear" type="text" name="expirationYear" required/> <br/>
+            <input id= "expirationYear" type="number" name="expirationYear" required/> <br/>
             <span class="required">*</span>
         </p>
 
         <p>
             <label for="cvv">CVV: </label>
-            <input id= "cvv" type="text" name="cvv" required/> <br/>
+            <input id= "cvv" type="number" name="cvv" required/> <br/>
             <span class="required">*</span>
         </p>
 
@@ -81,9 +85,23 @@
             </select>
             <span class="required">*</span>
         </p>
+
+
+        <input style="display: none;" id="userId" type="text" name="userId"/>
+
+
     </form>
 
     <button class="submit" form="paymentMethodAddForm" type="submit">Add</button>
+
+    <h3>View/Manage Payment Methods</h3>
+
+    <div id="paymentMethods" style="padding-bottom: 20px">
+        Enter Password:
+        <input id="paymentMethodPassword" type="password" name="paymentMethodPassword"/>
+        <button id="checkPassword" class="submit">View Payment Methods</button>
+    </div>
+
 </div>
 
 </body>

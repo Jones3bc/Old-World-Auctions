@@ -1,95 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Old World Auction</title>
     <link href="/auctionList.css" rel="stylesheet"/>
     <link href="/common.css" rel="stylesheet"/>
     <link href="/login.css" rel="stylesheet"/>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://js.stripe.com/v3/"></script>
-    <script type="text/javascript" th:src="@{/login.js}"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
+    <script type="text/javascript" th:src="@{/AuctionList.js}"></script>
 
-            fetch("/allItemsJson")
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Retrieved items:', data);
-                    displayAuctionItems(data);
-                })
-                .catch(error => {
-                    console.error('Error fetching items:', error);
-                });
-        });
+    <style>
 
-        function displayAuctionItems(items) {
-            const auctionListDiv = document.getElementById("gallery");
-            auctionListDiv.innerHTML = ''; // Clear previous content
-
-            // Group items by category
-            const groupedItems = groupItemsByCategory(items);
-
-            // Iterate through each category and display items
-            for (const category in groupedItems) {
-                const categoryHeader = document.createElement("h2");
-                categoryHeader.textContent = category;
-                auctionListDiv.appendChild(categoryHeader);
-
-                const categoryItems = groupedItems[category];
-                const categoryItemsDiv = document.createElement("div");
-                categoryItemsDiv.classList.add("category-items");
-
-                categoryItems.forEach(item => {
-                    const contentDiv = document.createElement("div");
-                    contentDiv.classList.add("content");
-
-                    if (item.image !== null) {
-                        // Convert Base64-encoded image data to an actual image
-                        const imageData = atob(item.image);
-                        const imageDataUrl = `data:image/jpeg;base64,${imageData}`;
-
-                        const imageElement = document.createElement("img");
-                        imageElement.src = imageDataUrl;
-                        contentDiv.appendChild(imageElement);
-                    } else {
-                        // Handle case where image data is null
-                        const noImageElement = document.createElement("p");
-                        noImageElement.textContent = "No image available";
-                        contentDiv.appendChild(noImageElement);
-                    }
-
-                    contentDiv.innerHTML += `
-                        <h3>${item.name}</h3>
-                        <p>$${item.currentBid}</p>
-                        <h6>${item.description}</h6>
-                        <button class="buy-1" onclick="buyNow('${item.name}')">Buy Now</button>
-                        <button class="save" onclick="saveItem('${item.name}')">Save</button>
-                    `;
-
-                    categoryItemsDiv.appendChild(contentDiv);
-                });
-
-                auctionListDiv.appendChild(categoryItemsDiv);
-            }
+        h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #fffffff;
+        }
+        .category-items {
+            display: flex;
+            flex-wrap: wrap;
         }
 
-        function groupItemsByCategory(items) {
-            const groupedItems = {};
-            items.forEach(item => {
-                if (!groupedItems[item.category]) {
-                    groupedItems[item.category] = [];
-                }
-                groupedItems[item.category].push(item);
-            });
-            return groupedItems;
+
+        .content {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            width: calc(33.333% - 10px);
+            box-sizing: border-box;
         }
 
-        function buyNow(itemName) {
-            const url = `/getItem?name=${encodeURIComponent(itemName)}`;
-            window.location.href = url;
+        .content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
         }
-    </script>
+
+        .content h3 {
+            font-size: 20px;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        /* Style for item price */
+        .content p {
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: #777;
+        }
+
+        .content h6 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #999;
+        }
+
+        .content button {
+            font-size: 16px;
+            padding: 5px 10px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .content .buy-1 {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .content .save {
+            background-color: #2196F3;
+            color: white;
+        }
+    </style>
 </head>
 <body>
 <header>
