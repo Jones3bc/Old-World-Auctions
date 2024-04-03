@@ -13,12 +13,17 @@ function checkPassword() {
         .then(response => response.json())
         .then(data => {
         console.log(data.isValid);
-        if(data.isValid === "true") {
+        console.log(data.isValid == "true");
+        console.log(data.isValid == true);
+        console.log(data.isValid === "true");
+        console.log(data.isValid === true);
+        if(data.isValid == "true") {
             const paymentMethodDiv = document.getElementById("paymentMethods");
             paymentMethodDiv.innerHTML = "";
             fetch("/loggedUserID")
                 .then(response => response.json())
                 .then(dataTwo => {
+                console.log("Hello");
                 fetch("/retrieve-payment-methods?userId=" + dataTwo.userId)
                     .then(response => response.json())
                     .then(dataThree => {
@@ -29,15 +34,19 @@ function checkPassword() {
 
                         const paymentMethodNumber = document.createElement("input");
                         paymentMethodNumber.setAttribute("type", "text");
+                        paymentMethodNumber.value = paymentMethod.cardNumber;
 
                         const paymentMethodExpMonth = document.createElement("input");
                         paymentMethodExpMonth.setAttribute("type", "number");
+                        paymentMethodExpMonth.value = paymentMethod.expirationMonth;
 
                         const paymentMethodExpYear = document.createElement("input");
                         paymentMethodExpYear.setAttribute("type", "number");
+                        paymentMethodExpYear.value = paymentMethod.expirationYear;
 
                         const paymentMethodCvv = document.createElement("input");
                         paymentMethodCvv.setAttribute("type", "number");
+                        paymentMethodCvv.value = paymentMethod.cvv;
 
                         const paymentMethodIsCredit = document.createElement("select");
 
@@ -51,6 +60,14 @@ function checkPassword() {
 
                         paymentMethodIsCredit.appendChild(paymentMethodYes);
                         paymentMethodIsCredit.appendChild(paymentMethodNo);
+
+                        console.log(paymentMethod.credit);
+                        if(paymentMethod.credit == true) {
+                            paymentMethodIsCredit.value = "Yes";
+                        } else {
+                            paymentMethodIsCredit.value = "No";
+                        }
+
 
                         paymentMethodParagraph.appendChild(paymentMethodNumber);
                         paymentMethodParagraph.appendChild(paymentMethodExpMonth);
