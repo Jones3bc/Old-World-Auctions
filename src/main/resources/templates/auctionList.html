@@ -9,87 +9,108 @@
     <script type="text/javascript" th:src="@{/AuctionList.js}"></script>
 
 </head>
-<script>
- "https://code.jquery.com/jquery-3.6.4.min.js"
-"https://js.stripe.com/v3/"
-
-    document.addEventListener("DOMContentLoaded", function() {
-
-            fetch("/allItemsJson")
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Retrieved items:', data);
-                    displayAuctionItems(data);
-                })
-                .catch(error => {
-                    console.error('Error fetching items:', error);
-                });
-        });
-
-    function displayAuctionItems(items) {
-        const auctionListDiv = document.getElementById("gallery");
-        auctionListDiv.innerHTML = '';
-
-        const groupedItems = groupItemsByCategory(items);
-
-        for (const category in groupedItems) {
-            const categoryHeader = document.createElement("h2");
-            categoryHeader.textContent = category;
-            auctionListDiv.appendChild(categoryHeader);
-
-            const categoryItems = groupedItems[category];
-            const categoryItemsDiv = document.createElement("div");
-            categoryItemsDiv.classList.add("category-items");
-
-            categoryItems.forEach(item => {
-                const contentDiv = document.createElement("div");
-                contentDiv.classList.add("content");
-
-                if (item.image !== null) {
-
-                    const imageData = atob(item.image);
-                    const imageDataUrl = `data:image/jpeg;base64,${imageData}`;
-
-                    const imageElement = document.createElement("img");
-                    imageElement.src = imageDataUrl;
-                    contentDiv.appendChild(imageElement);
-                } else {
-
-                    const noImageElement = document.createElement("p");
-                    noImageElement.textContent = "No image available";
-                    contentDiv.appendChild(noImageElement);
-                }
-
-                contentDiv.innerHTML += `
-                    <h3>${item.name}</h3>
-                    <p>$${item.currentBid}</p>
-                    <h6>${item.description}</h6>
-                    <button class="buy-1" onclick="buyNow('${item.name}')">Make A Bid</button>
-                    <button class="save" onclick="saveItem('${item.name}')">Save</button>
-                `;
-
-                categoryItemsDiv.appendChild(contentDiv);
-            });
-
-            auctionListDiv.appendChild(categoryItemsDiv);
-        }
+<style>
+    body {
+        margin: 0;
+        background: #f8f9fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #495057;
     }
 
-    function groupItemsByCategory(items) {
-        const groupedItems = {};
-        items.forEach(item => {
-            if (!groupedItems[item.category]) {
-                groupedItems[item.category] = [];
-            }
-            groupedItems[item.category].push(item);
-        });
-        return groupedItems;
+    h1 {
+        text-align: center;
+        font-size: 40px;
+        margin: 20px 0;
     }
 
-    function buyNow(itemName) {
-        const url = `/getItem?name=${encodeURIComponent(itemName)}`;
-        window.location.href = url;
-    }</script>
+    h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+        color: #343a40;
+    }
+
+    h3 {
+        text-align: center;
+        font-size: 30px;
+        margin: 20px 0;
+    }
+
+    a {
+        text-decoration: none;
+        color: #007bff;
+        transition: color 0.3s;
+    }
+
+    a:hover {
+        color: #0056b3;
+    }
+
+    .gallery {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: flex-start;
+        margin-top: 30px;
+        padding: 0 20px;
+    }
+
+    .content {
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+        margin: 15px;
+        padding: 20px;
+        width: calc(25% - 30px);
+        box-sizing: border-box;
+        text-align: center;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .content:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .content img {
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 15px;
+    }
+
+    .content h3 {
+        font-size: 22px;
+        margin-bottom: 10px;
+        color: #212529;
+    }
+
+    .content p {
+        font-size: 18px;
+        margin-bottom: 15px;
+        color: #6c757d;
+    }
+
+    .content h6 {
+        font-size: 16px;
+        margin-bottom: 15px;
+        color: #6c757d;
+    }
+
+    .content button {
+        font-size: 16px;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        background-color: #007bff;
+        color: #fff;
+        transition: background-color 0.3s;
+    }
+
+    .content button:hover {
+        background-color: #0056b3;
+    }
+
+</style>
 <body>
 <header>
     <div class="nav">

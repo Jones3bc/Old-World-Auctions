@@ -5,102 +5,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
 <link th:href="@{/common.css}" rel="stylesheet"/>
-<style>
+<link th:href="@{/getItem.css}" rel="stylesheet"/>
 
-    * {
-          box-sizing: border-box;
-      }
-
-      body {
-          font-family: Arial, sans-serif;
-          background-color: #f4f4f4;
-          margin: 0;
-      }
-
-      #item-details {
-          max-width: 600px;
-          margin: 0 auto;
-          padding: 20px;
-          background-color: #fff;
-          border-radius: 10px;
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      }
-
-      h1 {
-          text-align: center;
-      }
-
-      label {
-          display: block;
-          margin-bottom: 5px;
-      }
-
-      input[type="text"],
-      input[type="number"] {
-          width: 100%;
-          padding: 10px;
-          margin-bottom: 10px;
-          border: 1px solid #ccc;
-          border-radius: 5px;
-          font-size: 16px;
-      }
-
-      input[type="submit"],
-      button {
-          background-color: #555;
-          color: #fff;
-          padding: 10px 20px;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-          font-size: 16px;
-          transition: background-color 0.3s ease;
-      }
-
-      input[type="submit"]:hover,
-      button:hover {
-          background-color: #333;
-      }
-
-      .modal {
-          display: none;
-          position: fixed;
-          z-index: 1;
-          left: 0;
-          top: 0;
-          width: 100%;
-          height: 100%;
-          overflow: auto;
-          background-color: rgba(0,0,0,0.4);
-          padding-top: 60px;
-      }
-
-      .modal-content {
-          background-color: #fefefe;
-          margin: 5% auto;
-          padding: 20px;
-          border-radius: 10px;
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-          width: 80%;
-          max-width: 500px;
-      }
-
-      .close {
-          color: #aaa;
-          float: right;
-          font-size: 28px;
-          font-weight: bold;
-      }
-
-      .close:hover,
-      .close:focus {
-          color: #000;
-          text-decoration: none;
-          cursor: pointer;
-      }
-
-
-</style>
 <head>
     <meta charset="UTF-8">
     <title>Item Details</title>
@@ -130,7 +36,7 @@
         <h3 th:unless="${item.auctionComplete}">Auction Status: Incomplete</h3>
         <h3 th:text="'Auction Start Time: ' + auctionStartTimeFormatted"></h3>
         <h3 th:text="'Auction End Time: ' + auctionEndTimeFormatted"></h3>
-
+        <p id="demo"></p>
         <button id="bidButton">Place Bid</button>
 
         <div id="bidModal" class="modal">
@@ -159,7 +65,7 @@
             </div>
         </div>
 
-        <p id="demo"></p>
+
     </div>
 
     <script th:inline="javascript">
@@ -167,7 +73,6 @@
         var itemName = /*[[${item.name}]]*/ '';
         var auctionStartTimeString = /*[[${item.auctionStartTime}]]*/ '';
         var auctionEndTimeString = /*[[${item.auctionEndTime}]]*/ '';
-
         var auctionStartTimeFormatted = moment(auctionStartTimeString).format('YYYY-MM-DD HH:mm');
         var auctionEndTimeFormatted = moment(auctionEndTimeString).format('YYYY-MM-DD HH:mm');
         /*]]>*/
@@ -189,8 +94,6 @@
                     $('#bidModal').css("display", "none");
                 }
             });
-
-
         });
     </script>
 
@@ -264,27 +167,26 @@
 
     <script>
         $(document).ready(function() {
-            var auctionEndTime = new Date(auctionEndTimeString).getTime();
+          var auctionEndTime = new Date(auctionEndTimeString).getTime();
 
-            var x = setInterval(function() {
-                var now = new Date().getTime();
-                var distance = auctionEndTime - now;
-<!--                var days = Math.floor(distance / (1000 * 60 * 60 * 24));-->
-                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+          var x = setInterval(function() {
+              var now = new Date().getTime();
+              var distance = auctionEndTime - now;
+              var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+              var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+              var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+              var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                document.getElementById("auctionEndTimer").innerHTML = "Time Remaining to make a bid: " + days + "d " + hours + "h " + minutes + "m " + seconds + "s";
+              document.getElementById("demo").innerHTML = "Time Remaining to make a bid: " + days + "d " + hours + "h " + minutes + "m " + seconds + "s";
 
-                if (distance < 0) {
-                    clearInterval(x);
-                    document.getElementById("auctionEndTimer").innerHTML = "Auction Ended";
-                }
-            }, 1000);
-        });
+              if (distance < 0) {
+                  clearInterval(x);
+                  document.getElementById("demo").innerHTML = "Auction Ended";
+              }
+          }, 1000);
+      });
     </script>
 
-    </div>
 </section>
 </body>
 </html>
