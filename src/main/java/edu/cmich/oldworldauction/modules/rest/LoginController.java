@@ -105,6 +105,16 @@ public class LoginController {
         return new CheckPasswordResponse("false");
     }
 
+    /**
+     * Supplies the contact page to the user in the browser.
+     *
+     * @return The contact HTML page.
+     */
+    @GetMapping("/contact")
+    public String contactPage(){
+        return "contact";
+    }
+
     @GetMapping("/logout")
     public String logout() {
         this.loggedInUser = "";
