@@ -44,9 +44,11 @@ desc PAYMENT_METHODS;
 
 create table WISHLIST(
       itemID varchar(40),
-      userID varchar(30),
-      currentBid number,
-      FOREIGN KEY (itemID) REFERENCES AUCTION_ITEMS(itemID)
+      userID varchar(40),
+      currentBid varchar(30),
+      reason varchar(128),
+      FOREIGN KEY (itemID) REFERENCES AUCTION_ITEMS(itemID),
+      FOREIGN KEY (userID) REFERENCES USERS(userID)
 );
 
 commit;
