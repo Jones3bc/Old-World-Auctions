@@ -33,6 +33,9 @@ public class AccountController {
         return "account";
     }
 
+    /**
+     * Represents the request for creating a payment method.
+     */
     private record PaymentMethodCreateRequest(
             String cardNumber,
             int expirationMonth,
@@ -85,6 +88,44 @@ public class AccountController {
     @ResponseBody
     public List<PaymentMethod> retrieveUserPaymentMethods(@RequestParam String userId) {
         return this.accountDao.retrieveAllPaymentMethodsForUser(userId);
+    }
+
+    /**
+     * Represents the request needed to update a payment method.
+     */
+    private record UpdatePaymentMethodRequest(
+            String cardNumber,
+            int expirationMonth,
+            int expirationYear,
+            int cvv,
+            String credit,
+            String userId,
+            String paymentMethodId
+    ) {
+    }
+
+    /**
+     * Updates a given {@link PaymentMethod} for a user.
+     *
+     * @param request The updated {@link PaymentMethod} information
+     * @return The account HTML page
+     */
+    @GetMapping("/update-payment-method")
+    public String updatePaymentMethod(@ModelAttribute UpdatePaymentMethodRequest request) {
+        boolean credit = request.credit.equals("Yes");
+        PaymentMethod updatedPaymentMethod = new PaymentMethod(
+                request.paymentMethodId(),
+                credit,
+                request.cardNumber(),
+                request.expirationMonth(),
+                request.expirationYear(),
+                request.cvv(),
+                request.userId()
+        );
+
+        //Call Dao method for updating the payment method
+
+        return "account";
     }
 
 }
