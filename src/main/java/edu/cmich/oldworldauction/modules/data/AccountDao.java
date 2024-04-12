@@ -146,4 +146,35 @@ public class AccountDao {
             System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
         }
     }
+
+    public void updatePaymentMethod(PaymentMethod paymentMethod) {
+        String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
+        String sql = """
+            UPDATE PAYMENT_METHODS
+            SET credit = ?,
+                cardNumber = ?,
+                expirationMonth = ?,
+                expirationYear = ?,
+                cvv = ?
+            WHERE paymentID = ?
+            AND   userID = ?;
+        """;
+
+        try {
+            Connection connection = DriverManager.getConnection(sqlConnection);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setBoolean(1, paymentMethod.isCredit());
+            preparedStatement.setString(2, paymentMethod.getCardNumber());
+            preparedStatement.setInt(3, paymentMethod.getExpirationMonth());
+            preparedStatement.setInt(4, paymentMethod.getExpirationYear());
+            preparedStatement.setInt(5, paymentMethod.getCvv());
+            preparedStatement.setInt(6, paymentMethod.getCvv());
+            preparedStatement.setString(7, paymentMethod.getUserId());
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException ex) {
+            System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
+        }
+    }
 }
