@@ -110,9 +110,10 @@ public class AccountController {
      * @param request The updated {@link PaymentMethod} information
      * @return The account HTML page
      */
-    @GetMapping("/update-payment-method")
+    @PostMapping("/update-payment-method")
     public String updatePaymentMethod(@ModelAttribute UpdatePaymentMethodRequest request) {
         boolean credit = request.credit.equals("Yes");
+        System.out.println(request);
         PaymentMethod updatedPaymentMethod = new PaymentMethod(
                 request.paymentMethodId(),
                 credit,
@@ -122,8 +123,9 @@ public class AccountController {
                 request.cvv(),
                 request.userId()
         );
+        System.out.println(updatedPaymentMethod);
 
-        //Call Dao method for updating the payment method
+        this.accountDao.updatePaymentMethod(updatedPaymentMethod);
 
         return "account";
     }
