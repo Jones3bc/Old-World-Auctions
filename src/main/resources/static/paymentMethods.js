@@ -151,26 +151,84 @@ function isPaymentMethodValid(
     cvvField
 ){
     let valid = true;
+
+    if(!cardNumberField.value.match(new RegExp("^[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}$"))) {
+        cardNumberField.style.borderColor = "red";
+        let sibling = cardNumberField.nextElementSibling;
+        sibling.innerHTML = "Must be in the format ####-####-####-####";
+        valid = false;
+    } else {
+        cardNumberField.style.borderColor = "black";
+        let sibling = cardNumberField.nextElementSibling;
+        sibling.innerHTML = "*";
+    }
+
     fetch("/check-card-number?cardNumber=" + cardNumberField.value + "&userId=" +userIdField.value)
         .then(response => response.json())
         .then(results => {
-            if(results.isValid = false) {
+            console.log(results.isValid);
+            if(results.isValid == false) {
                 cardNumberField.style.borderColor = "red";
-                cardNumberField.nextElementSibling.innerHTML = "This card is already registered for this user.";
+                let sibling = cardNumberField.nextElementSibling;
+                sibling.innerHTML = "This card is already registered to this user."
                 valid = false;
             } else {
-                cardNumberField.style.borderColor = "black";
-                cardNumberField.nextElementSibling.innerHTML = "*";
+                let sibling = cardNumberField.nextElementSibling;
+                if(sibling.innerHTML == "This card is already registered to this user.") {
+                    cardNumberField.style.borderColor = "black";
+                    sibling.innerHTML = "*";
+                }
             }
         });
 
+    let date = new Date();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear() % 100;
     if(expirationMonthField.value < 0 || expirationMonthField.value > 12) {
         expirationMonthField.style.borderColor = "red";
-        expirationMonthField.nextElementSibling.innerHTML = "Must be between 1-12";
+        let sibling = expirationMonthField.nextElementSibling;
+        sibling.innerHTML = "Must be between 1 and 12";
         valid = false;
     } else {
         expirationMonthField.style.borderColor = "black";
-        expirationMonthField.nextElementSibling.innerHTML = "*";
+        let sibling = expirationMonthField.nextElementSibling;
+        sibling.innerHTML = "*";
+    }
+
+    if(expirationYearField.value < year || expirationYearField.value > 99) {
+        expirationYearField.style.borderColor = "red";
+        let sibling = expirationYearField.nextElementSibling;
+        sibling.innerHTML = "Must be between " + year + " and 99";
+        valid = false;
+    } else {
+        expirationYearField.style.borderColor = "black";
+        let sibling = expirationYearField.nextElementSibling;
+        sibling.innerHTML = "*";
+    }
+
+    if(expirationMonthField.value < month && expirationYearField.value == year) {
+        expirationMonthField.style.borderColor = "red";
+        let sibling = expirationMonthField.nextElementSibling;
+        sibling.innerHTML = "This month has already passed within the current year.";
+        valid = false;
+    } else {
+        let sibling = expirationMonthField.nextElementSibling;
+        if(sibling.innerHTML == "This month has already passed within the current year.") {
+            expirationMonthField.style.borderColor = "black";
+            sibling.innerHTML = "*";
+        }
+    }
+    console.log(valid);
+
+    if(!cvvField.value.match(new RegExp("^[0-9]{3}$"))) {
+        cvvField.style.borderColor = "red";
+        let sibling = cvvField.nextElementSibling;
+        sibling.innerHTML = "Must be 3 digits between 000 and 999";
+        valid = false;
+    } else {
+        cvvField.style.borderColor = "black";
+        let sibling = cvvField.nextElementSibling;
+        sibling.innerHTML = "*";
     }
 
     if(!valid) {
