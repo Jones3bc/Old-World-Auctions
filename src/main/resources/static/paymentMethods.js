@@ -3,6 +3,18 @@
 document.addEventListener("DOMContentLoaded", function() {
     const userInput = document.getElementById("checkPassword");
     userInput.addEventListener("click", checkPassword, false);
+
+    const addPaymentMethodForm = document.getElementById("paymentMethodAddForm");
+    addPaymentMethodForm.addEventListener("submit", function(evt) {
+        isPaymentMethodValid(
+            evt,
+            document.getElementById("cardNumber"),
+            document.getElementById("userId"),
+            document.getElementById("expirationMonth"),
+            document.getElementById("expirationYear"),
+            document.getElementById("cvv")
+        )
+    });
 });
 
 function checkPassword() {
@@ -128,4 +140,40 @@ function checkPassword() {
     .catch(error => {
         console.error('Error fetching data:', error);
     });
+}
+
+function isPaymentMethodValid(
+    evt,
+    cardNumberField,
+    userIdField,
+    expirationMonthField,
+    expirationYearField,
+    cvvField
+){
+    let valid = true;
+    fetch("/check-card-number?cardNumber=" + cardNumberField.value + "&userId=" +userIdField.value)
+        .then(response => response.json())
+        .then(results => {
+            if(results.isValid = false) {
+                cardNumberField.style.borderColor = "red";
+                cardNumberField.nextElementSibling.innerHTML = "This card is already registered for this user.";
+                valid = false;
+            } else {
+                cardNumberField.style.borderColor = "black";
+                cardNumberField.nextElementSibling.innerHTML = "*";
+            }
+        });
+
+    if(expirationMonthField.value < 0 || expirationMonthField.value > 12) {
+        expirationMonthField.style.borderColor = "red";
+        expirationMonthField.nextElementSibling.innerHTML = "Must be between 1-12";
+        valid = false;
+    } else {
+        expirationMonthField.style.borderColor = "black";
+        expirationMonthField.nextElementSibling.innerHTML = "*";
+    }
+
+    if(!valid) {
+        evt.preventDefault();
+    }
 }
