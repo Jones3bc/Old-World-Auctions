@@ -40,6 +40,16 @@ function checkPassword() {
 
                         const paymentMethodParagraph = document.createElement("p");
 
+                        const paymentMethodId = document.createElement("input");
+                        paymentMethodId.setAttribute("type", "hidden");
+                        paymentMethodId.setAttribute("name", "paymentMethodId");
+                        paymentMethodId.value = paymentMethod.paymentId;
+
+                        const userIdField = document.createElement("input");
+                        userIdField.setAttribute("type", "hidden");
+                        userIdField.setAttribute("name", "userId");
+                        userIdField.value = paymentMethod.userId;
+
                         const paymentMethodNumber = document.createElement("input");
                         paymentMethodNumber.setAttribute("type", "text");
                         paymentMethodNumber.setAttribute("name", "cardNumber")
@@ -90,6 +100,8 @@ function checkPassword() {
                         paymentMethodButton.setAttribute("type", "submit");
                         paymentMethodButton.className = "submit";
 
+                        paymentMethodParagraph.appendChild(paymentMethodId);
+                        paymentMethodParagraph.appendChild(userIdField);
                         paymentMethodParagraph.appendChild(paymentMethodNumber);
                         paymentMethodParagraph.appendChild(paymentMethodExpMonth);
                         paymentMethodParagraph.appendChild(paymentMethodExpYear);

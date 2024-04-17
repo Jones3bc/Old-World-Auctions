@@ -84,6 +84,7 @@ public class ItemController {
     @PostMapping("/add")
     public String addItem(@ModelAttribute AuctionItemInsert auctionItemInsert, Model model){
         model.addAllAttributes(auctionItemInsert.attributes());
+        System.out.println(auctionItemInsert);
         this.itemDao.addAuctionItem(auctionItemInsert);
         return "confirmation";
     }

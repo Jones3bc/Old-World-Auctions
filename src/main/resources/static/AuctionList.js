@@ -2,17 +2,16 @@
 "https://js.stripe.com/v3/"
 
 document.addEventListener("DOMContentLoaded", function() {
-
-        fetch("/allItemsJson")
-            .then(response => response.json())
-            .then(data => {
-                console.log('Retrieved items:', data);
-                displayAuctionItems(data);
-            })
-            .catch(error => {
-                console.error('Error fetching items:', error);
-            });
-    });
+    fetch("/allItemsJson")
+        .then(response => response.json())
+        .then(data => {
+            console.log('Retrieved items:', data);
+            displayAuctionItems(data);
+        })
+        .catch(error => {
+            console.error('Error fetching items:', error);
+        });
+});
 
 function displayAuctionItems(items) {
     const auctionListDiv = document.getElementById("gallery");
@@ -34,7 +33,6 @@ function displayAuctionItems(items) {
             contentDiv.classList.add("content");
 
             if (item.image !== null) {
-
                 const imageData = atob(item.image);
                 const imageDataUrl = `data:image/jpeg;base64,${imageData}`;
 
@@ -42,7 +40,6 @@ function displayAuctionItems(items) {
                 imageElement.src = imageDataUrl;
                 contentDiv.appendChild(imageElement);
             } else {
-
                 const noImageElement = document.createElement("p");
                 noImageElement.textContent = "No image available";
                 contentDiv.appendChild(noImageElement);
@@ -55,6 +52,8 @@ function displayAuctionItems(items) {
                 <button class="buy-1" onclick="buyNow('${item.name}')">Make A Bid</button>
                 <button class="save" onclick="saveItem('${item.name}')">Save</button>
             `;
+
+
 
             categoryItemsDiv.appendChild(contentDiv);
         });

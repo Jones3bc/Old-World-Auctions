@@ -147,6 +147,11 @@ public class AccountDao {
         }
     }
 
+    /**
+     * Updates a given {@link PaymentMethod} in the database.
+     *
+     * @param paymentMethod The updated payment method.
+     */
     public void updatePaymentMethod(PaymentMethod paymentMethod) {
         String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
         String sql = """
@@ -168,7 +173,7 @@ public class AccountDao {
             preparedStatement.setInt(3, paymentMethod.getExpirationMonth());
             preparedStatement.setInt(4, paymentMethod.getExpirationYear());
             preparedStatement.setInt(5, paymentMethod.getCvv());
-            preparedStatement.setInt(6, paymentMethod.getCvv());
+            preparedStatement.setString(6, paymentMethod.getPaymentId());
             preparedStatement.setString(7, paymentMethod.getUserId());
 
             preparedStatement.executeUpdate();

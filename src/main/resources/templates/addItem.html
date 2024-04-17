@@ -7,6 +7,7 @@
     <link th:href="@{/common.css}" rel="stylesheet"/>
     <link th:href="@{/login.css}" rel="stylesheet"/>
     <script type="text/javascript" th:src="@{/login.js}"></script>
+    <script type="text/javascript" th:src="@{/userId.js}"></script>
 </head>
 <body>
 <header>
@@ -23,6 +24,8 @@
 </header>
     <h1>Add Auction Item</h1>
     <form id="itemAddForm" action="/add" method="post" enctype="multipart/form-data">
+        <input id="userId" type="hidden" name="sellerID"/>
+
         <p>
             <label for="name">Item Name: </label>
             <input id= "name" type="text" name="name" required/> <br/>

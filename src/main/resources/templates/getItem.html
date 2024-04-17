@@ -46,7 +46,6 @@
                     <label for="newBidAmountInput">Enter Bid Amount:</label>
                     <input type="number" name="newBidAmount" id="newBidAmountInput" required />
 
-                    <!-- Replace card details inputs with dropdown menus -->
                     <label for="paymentMethod">Select Card:</label>
                     <select name="paymentMethod" id="paymentMethod" required>
                     </select>
@@ -118,11 +117,9 @@
             imageElement.style.maxWidth = "100%"; // Adjust this value as needed
             imageElement.style.maxHeight = "400px"; // Adjust this value as needed
 
-            // Center the image
             imageElement.style.display = "block";
             imageElement.style.margin = "auto";
 
-            // Prepend the image element to the contentDiv
             contentDiv.insertBefore(imageElement, contentDiv.firstChild);
         } else {
             const noImageElement = document.createElement("p");
