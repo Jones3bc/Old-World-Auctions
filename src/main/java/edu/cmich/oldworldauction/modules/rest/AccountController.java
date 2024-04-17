@@ -130,4 +130,13 @@ public class AccountController {
         return "account";
     }
 
+    private record CheckCardNumberResponse(boolean isValid) {}
+
+    @GetMapping("/check-card-number")
+    @ResponseBody
+    public CheckCardNumberResponse checkCardNumber(@RequestParam String cardNumber, @RequestParam String userId){
+        boolean isPresent = this.accountDao.isCardNumberPresentForUser(cardNumber, userId);
+        return new CheckCardNumberResponse(!isPresent);
+    }
+
 }

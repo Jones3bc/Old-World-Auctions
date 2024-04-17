@@ -182,4 +182,38 @@ public class AccountDao {
             System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
         }
     }
+
+    /**
+     * Checks if a card number is present in the database for a given user.
+     *
+     * @param cardNumber The card number to check for
+     * @param userId The user to check for
+     * @return true if the card is present for the user, false otherwise
+     */
+    public boolean isCardNumberPresentForUser(String cardNumber, String userId) {
+        String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
+        String sql = """
+            SELECT
+                COUNT(*) AS METHOD_COUNT
+            FROM
+                PAYMENT_METHODS
+            WHERE
+                cardNumber = ?
+            AND userId = ?;
+        """;
+
+        try {
+            Connection connection = DriverManager.getConnection(sqlConnection);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, cardNumber);
+            preparedStatement.setString(2, userId);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            return resultSet.getInt("METHOD_COUNT") > 0;
+        } catch (SQLException ex) {
+            System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
+        }
+        return true;
+    }
 }
