@@ -2,3 +2,10 @@
     text-align: center;
     font-family: sans-serif;
 }
+
+.update {
+    height: 50px;
+    width: 100px;
+    border-radius: 1em;
+    background-color: limegreen;
+}
