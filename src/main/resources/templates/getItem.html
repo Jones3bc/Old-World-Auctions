@@ -71,6 +71,7 @@
     var auctionEndTimeFormatted = moment(auctionEndTimeString).format('YYYY-MM-DD');
         /*]]>*/
     </script>
+
     <script>
         $(document).ready(function() {
             // Display formatted auction start time and end time
@@ -78,8 +79,8 @@
             $('#auctionEndTimeFormatted').text(auctionEndTimeFormatted);
         });
     </script>
-    <script>
 
+    <script>
         $(document).ready(function() {
             $('#bidButton').click(function() {
                 $('#bidModal').css("display", "block");
@@ -129,66 +130,76 @@
         /*]]>*/
     </script>
 
-    <script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+            var currentBidAmount = /*[[${item.currentBid}]]*/;
+        /*]]>*/
+     $(document).ready(function() {
+         // Function to populate payment methods dropdown
+         function populatePaymentMethods(userId) {
+             // Populate payment methods dropdown
+             fetch('/retrieve-payment-methods?userId=' + userId)
+                 .then(response => {
+                     if (!response.ok) {
+                         throw new Error('Failed to retrieve payment methods');
+                     }
+                     return response.json();
+                 })
+                 .then(data => {
+                     const paymentMethodSelect = $('#paymentMethod');
+                     data.forEach(paymentMethod => {
+                         const option = $('<option></option>').text('Card ending with ' + paymentMethod.cardNumber.slice(-4));
+                         paymentMethodSelect.append(option);
+                     });
+                 })
+                 .catch(error => {
+                     console.error('Error fetching payment methods:', error);
+                 });
+         }
 
-          $(document).ready(function() {
-              // Function to populate payment methods dropdown
-              function populatePaymentMethods(userId) {
-                  // Populate payment methods dropdown
-                  fetch('/retrieve-payment-methods?userId=' + userId)
-                      .then(response => {
-                          if (!response.ok) {
-                              throw new Error('Failed to retrieve payment methods');
-                          }
-                          return response.json();
-                      })
-                      .then(data => {
-                          const paymentMethodSelect = $('#paymentMethod');
-                          data.forEach(paymentMethod => {
-                              const option = $('<option></option>').text('Card ending with ' + paymentMethod.cardNumber.slice(-4));
-                              paymentMethodSelect.append(option);
-                          });
-                      })
-                      .catch(error => {
-                          console.error('Error fetching payment methods:', error);
-                      });
-              }
+         // Fetch user ID and populate bid form and payment methods dropdown
+         $.ajax({
+             url: '/loggedUserID',
+             type: 'GET',
+             success: function(response) {
+                 console.log(response);
+                 if (response.userId !== '') {
+                     const userId = response.userId;
 
-              // Fetch user ID and populate bid form and payment methods dropdown
-              $.ajax({
-                  url: '/loggedUserID',
-                  type: 'GET',
-                  success: function(response) {
-                      console.log(response);
-                      if (response.userId !== '') {
-                          const userId = response.userId;
+                     // Set the userId value in the hidden input field
+                     $('#userId').val(userId);
 
-                          // Set the userId value in the hidden input field
-                          $('#userId').val(userId);
+                     // Populate payment methods dropdown
+                     populatePaymentMethods(userId);
+                 } else {
+                     alert('You need to log in or register to place a bid.');
+                 }
+             },
+             error: function() {
+                 console.error('Error checking logged-in status.');
+             }
+         });
 
-                          // Populate payment methods dropdown
-                          populatePaymentMethods(userId);
-                      } else {
-                          alert('You need to log in or register to place a bid.');
-                      }
-                  },
-                  error: function() {
-                      console.error('Error checking logged-in status.');
-                  }
-              });
-
-              // Handle bid form submission
-              $('#bidForm').submit(function(e) {
-                  if ($('#userId').val() === '') {
-                      e.preventDefault(); // Prevent form submission
-                      alert('You need to log in or register to place a bid.');
-                  } else {
-                      var userId = $('#userId').val();
-                      var actionUrl = '/updateBid/' + itemName + '/' + userId + '/' + $('#newBidAmountInput').val(); // Use newBidAmount input field
-                      $('#bidForm').attr('action', actionUrl);
-                  }
-              });
-          });
+           $('#bidForm').submit(function(e) {
+           if ($('#userId').val() === '') {
+               e.preventDefault(); // Prevent form submission
+               alert('You need to log in or register to place a bid.');
+           } else {
+             var userId = $('#userId').val();
+           var newBidAmount = parseFloat($('#newBidAmountInput').val()); // Convert input to float
+          
+           console.log('New Bid Amount:', newBidAmount);
+           console.log('Current Bid Amount:', currentBidAmount);
+               if (newBidAmount <= currentBidAmount) { // Check if new bid amount is lower or equal to current bid amount
+                   e.preventDefault(); // Prevent form submission
+                   alert('Bid amount must be higher than the current bid amount.'); // Display error message
+               } else {
+                   var actionUrl = '/updateBid/' + itemName + '/' + userId + '/' + newBidAmount; // Use newBidAmount input field
+                   $('#bidForm').attr('action', actionUrl);
+               }
+           }
+       });
+     });
     </script>
 
     <script>
