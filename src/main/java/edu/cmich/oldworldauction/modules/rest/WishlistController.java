@@ -37,7 +37,7 @@ public class WishlistController {
         return this.wishlistDao.retrieveAllItems();
     }
 
-    @GetMapping("retrieve-all-wishlist-items-for-user")
+    @GetMapping("/retrieve-all-wishlist-items-for-user")
     public List<WishlistItem> getAllWishlistItemsForUser(@RequestParam String userId) {
         return this.wishlistDao.retrieveAllItems(userId);
     }
