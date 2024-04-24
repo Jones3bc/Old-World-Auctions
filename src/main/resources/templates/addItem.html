@@ -8,6 +8,7 @@
     <link th:href="@{/login.css}" rel="stylesheet"/>
     <script type="text/javascript" th:src="@{/login.js}"></script>
     <script type="text/javascript" th:src="@{/userId.js}"></script>
+    <script type="text/javascript" th:src="@{/addItem.js}"></script>
 </head>
 <body>
 <header>
@@ -28,7 +29,7 @@
 
         <p>
             <label for="name">Item Name: </label>
-            <input id= "name" type="text" name="name" required/> <br/>
+            <input id= "name" type="text" name="name" required/>
             <span class="required">*</span>
         </p>
 
@@ -44,20 +45,20 @@
 
         <p>
             <label for="description">Description: </label>
-            <input id="description" type="text" name="description" required/> <br/>
+            <input id="description" type="text" name="description" required/>
             <span class="required">*</span>
         </p>
 
         <p>
             <label for="currentBid">Starting Bid: </label>
-            <input id="currentBid" type="text" name="currentBid" required pattern="[0-9]{1,5}\.[0-9]{2}"/> <br/>
+            <input id="currentBid" type="text" name="currentBid" required/>
             <span class="required">*</span>
         </p>
 
         <p>
             <label for="image">Picture (JPG, PNG, JPEG)</label>
-            <input type="file" id="image" name="image">
-            <span></span>
+            <input type="file" id="image" name="image" required>
+            <span class="required">*</span>
         </p>
 
         <p>
