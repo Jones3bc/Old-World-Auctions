@@ -111,4 +111,35 @@ public class WishlistDao {
 
         return Collections.emptyList();
     }
+
+    public List<WishlistItem> retrieveAllItems(String userId) {
+        String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
+        String sql = "SELECT * from WISHLIST WHERE userID = ?;";
+
+        try {
+            Connection connection = DriverManager.getConnection(sqlConnection);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            List<WishlistItem> wishlistItems = new ArrayList<>();
+            while (resultSet.next()) {
+                wishlistItems.add(
+                        new WishlistItem(
+                                resultSet.getString("itemID"),
+                                resultSet.getString("userID"),
+                                resultSet.getBigDecimal("currentBid"),
+                                resultSet.getString("reason")
+                        )
+                );
+            }
+
+            return wishlistItems;
+
+        } catch (SQLException ex) {
+            System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
+        }
+
+        return Collections.emptyList();
+    }
 }
