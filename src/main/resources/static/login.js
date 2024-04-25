@@ -19,7 +19,7 @@ function displayUser(user){
             <button class="dropbtn">Welcome, ` + user.username + `</button>
             <div class="dropdown-content">
             <a href="/account-page">Manage Account</a>
-            <a href="#">Manage Items</a>
+            <a href="/manage-items">Manage Items</a>
             <a href="/logout">Log Out</a>
             </div>
         `;

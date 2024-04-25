@@ -83,14 +83,29 @@ public class LoginController {
             if (retrievedUser.getUsername().equals(user.getUsername()) && retrievedUser.getPassword().equals(user.getPassword())) {
                 this.loggedInUser = user.getUsername();
                 this.loggedInUserID = retrievedUser.getUserID();
-                break;
+                return "index";
             }
         }
 
-        return "index";
+        return "logInErred";
     }
 
     private record CheckPasswordResponse(String isValid){}
+
+    @GetMapping("/check-login")
+    @ResponseBody
+    public CheckPasswordResponse checkLogin(@RequestParam String username, @RequestParam String password) {
+        List<User> currentUsers = loginDao.retrieveUsers();
+
+        for (User retrievedUser : currentUsers) {
+            if (retrievedUser.getUsername().equals(username) && retrievedUser.getPassword().equals(password)) {
+                return new CheckPasswordResponse("true");
+            }
+        }
+
+        return new CheckPasswordResponse("false");
+    }
+
     @GetMapping("/check-password")
     @ResponseBody
     public CheckPasswordResponse checkPassword(@RequestParam String password) {
@@ -145,7 +160,7 @@ public class LoginController {
      * @return The home page of the website (update this to go to a confirmation page).
      */
     @PostMapping("/update-user-info")
-    public String updateUserInfo(@ModelAttribute UserUpdateRequest userUpdateRequest) {
+    public String updateUserInfo(@ModelAttribute UserUpdateRequest userUpdateRequest, Model model) {
         List<User> currentUsers = loginDao.retrieveUsers();
         for (User retrievedUser : currentUsers) {
             if (retrievedUser.getUsername().equals(this.loggedInUser) && retrievedUser.getPassword().equals(userUpdateRequest.originalPassword)) {
@@ -168,9 +183,12 @@ public class LoginController {
 
                 this.loggedInUser = "";
                 this.loggedInUserID = "";
+
+                return "index";
             }
         }
 
-        return "index"; //Create a confirmation page and replace index here.
+        model.addAttribute("erredMessage", "Incorrect original password.");
+        return "account";
     }
 }

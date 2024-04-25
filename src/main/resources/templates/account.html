@@ -7,9 +7,6 @@
     <link th:href="@{/login.css}" rel="stylesheet"/>
     <link th:href="@{/account.css}" rel="stylesheet"/>
     <link th:href="@{/styling.css}" rel="stylesheet"/>
-    <script type="text/javascript" th:src="@{/login.js}"></script>
-    <script type="text/javascript" th:src="@{/userId.js}"></script>
-    <script type="text/javascript" th:src="@{/paymentMethods.js}"></script>
 </head>
 <body>
 <header>
@@ -29,21 +26,22 @@
     <h1>Manage Account</h1>
 
     <h3>Update Account Info</h3>
-    <div>Leaving a field empty will retain the original username/password.</div>
+    <div>Leaving a field blank will retain the original username/password.</div>
+    <div id="error" style="color: red;" th:text="${erredMessage}"></div>
     <form id="accountUpdateForm" action="/update-user-info" method="post">
         <p>
             <label for="username">New Username: </label>
-            <input id= "username" type="text" name="username"/> <br/>
+            <input id= "username" type="text" name="username" placeholder="Enter New Username"/>
         </p>
 
         <p>
             <label for="password">New Password: </label>
-            <input id= "password" type="password" name="password"/> <br/>
+            <input id= "password" type="password" name="password" placeholder="Enter New Password"/>
         </p>
 
         <p>
             <label for="originalPassword">Original Password: </label>
-            <input id= "originalPassword" type="password" name="originalPassword"/> <br/>
+            <input id= "originalPassword" type="password" name="originalPassword" placeholder="Enter Old Password" required/>
             <span class="required">*</span>
         </p>
     </form>
@@ -55,25 +53,25 @@
     <form id="paymentMethodAddForm" action="/create-payment-method" method="post">
         <p>
             <label for="cardNumber">Card Number: </label>
-            <input id= "cardNumber" type="text" name="cardNumber" required/> <br/>
+            <input id= "cardNumber" type="text" name="cardNumber" required placeholder="####-####-####-####"/>
             <span class="required">*</span>
         </p>
 
         <p>
             <label for="expirationMonth">Expiration Month: </label>
-            <input id= "expirationMonth" type="number" name="expirationMonth" required/> <br/>
+            <input id= "expirationMonth" type="number" step="1" name="expirationMonth" required placeholder="1-12"/>
             <span class="required">*</span>
         </p>
 
         <p>
             <label for="expirationYear">Expiration Year: </label>
-            <input id= "expirationYear" type="number" name="expirationYear" required/> <br/>
+            <input id= "expirationYear" type="number" step="1" name="expirationYear" required placeholder="24-99"/>
             <span class="required">*</span>
         </p>
 
         <p>
             <label for="cvv">CVV: </label>
-            <input id= "cvv" type="number" name="cvv" required/> <br/>
+            <input id= "cvv" type="text" name="cvv" required placeholder="###"/>
             <span class="required">*</span>
         </p>
 
@@ -87,7 +85,7 @@
         </p>
 
 
-        <input style="display: none;" id="userId" type="text" name="userId"/>
+        <input style="display: none;" id="userId" type="hidden" name="userId"/>
 
 
     </form>
@@ -103,5 +101,9 @@
     </div>
 
 </div>
-
+<script type="text/javascript" th:src="@{/login.js}"></script>
+<script type="text/javascript" th:src="@{/userId.js}"></script>
+<script type="text/javascript" th:src="@{/paymentMethods.js}"></script>
 </body>
+
+</html>

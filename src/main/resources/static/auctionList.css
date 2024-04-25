@@ -1,0 +1,105 @@
+  body {
+        background: #f8f9fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        color: #495057;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 40px;
+        margin: 20px 0;
+    }
+
+    h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+        color: #343a40;
+    }
+
+    h3 {
+        text-align: center;
+        font-size: 30px;
+        margin: 20px 0;
+    }
+
+    a {
+        text-decoration: none;
+        color: #007bff;
+        transition: color 0.3s;
+    }
+
+    a:hover {
+        color: #0056b3;
+    }
+
+   .gallery {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        margin-top: 30px;
+        padding: 0 20px;
+        flex-wrap: wrap;
+    }
+
+    .content {
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+        margin: 15px;
+        padding: 20px;
+        width: calc(20% - 30px);
+        box-sizing: border-box;
+        text-align: center;
+        transition: transform 0.3s, box-shadow 0.3s;
+        margin-right: 20px;
+        display: inline-block; /* Changed to inline-block */
+    }
+
+    .content:last-child {
+        margin-right: 0;
+    }
+
+    .content:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .content img {
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 15px;
+    }
+
+    .content h3 {
+        font-size: 22px;
+        margin-bottom: 10px;
+        color: #212529;
+    }
+
+    .content p {
+        font-size: 18px;
+        margin-bottom: 15px;
+        color: #6c757d;
+    }
+
+    .content h6 {
+        font-size: 16px;
+        margin-bottom: 15px;
+        color: #6c757d;
+    }
+
+    .content button {
+        font-size: 16px;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        background-color: #007bff;
+        color: #fff;
+        transition: background-color 0.3s;
+    }
+
+    .content button:hover {
+        background-color: #0056b3;
+    }

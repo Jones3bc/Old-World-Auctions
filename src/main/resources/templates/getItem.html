@@ -30,12 +30,8 @@
         <h3 th:text="'Name: ' + ${item.name}"></h3>
         <h3 th:text="'Description: ' + ${item.description}"></h3>
         <h3 th:text="'Current Bid: $' + ${item.currentBid}"></h3>
-        <h3 th:text="'Auction Start Time: ' + ${auctionStartTimeFormatted}"></h3>
-        <h3 th:text="'Auction End Time: ' + ${auctionEndTimeFormatted}"></h3>
-        <h3 th:if="${item.auctionComplete}">Auction Status: Complete</h3>
-        <h3 th:unless="${item.auctionComplete}">Auction Status: Incomplete</h3>
-        <h3 th:text="'Auction Start Time: ' + auctionStartTimeFormatted"></h3>
-        <h3 th:text="'Auction End Time: ' + auctionEndTimeFormatted"></h3>
+        <h3>Auction Start Time: <span id="auctionStartTimeFormatted"></span></h3>
+        <h3>Auction End Time: <span id="auctionEndTimeFormatted"></span></h3>
         <p id="demo"></p>
         <button id="bidButton">Place Bid</button>
 
@@ -44,24 +40,21 @@
             <div class="modal-content">
                 <span class="close">&times;</span>
                 <h2>Bid Form</h2>
+
                 <form id="bidForm" th:action="@{'/updateBid/' + ${item.name} + '/' + ${userId} + '/' + ${item.currentBid}}" method="post">
+                    <input type="hidden" name="userId" id="userId" />
                     <label for="newBidAmountInput">Enter Bid Amount:</label>
                     <input type="number" name="newBidAmount" id="newBidAmountInput" required />
 
-                    <label for="cardholderName">Cardholder Name:</label>
-                    <input type="text" name="cardholderName" id="cardholderName" required />
-
-                    <label for="cardNumber">Card Number:</label>
-                    <input type="text" name="cardNumber" id="cardNumber" required />
-
-                    <label for="expiryDate">Expiry Date:</label>
-                    <input type="text" name="expiryDate" id="expiryDate" required />
-
+                    <label for="paymentMethod">Select Card:</label>
+                    <select name="paymentMethod" id="paymentMethod" required>
+                    </select>
                     <label for="cvv">CVV:</label>
                     <input type="text" name="cvv" id="cvv" required />
 
                     <button type="submit">Place Bid</button>
                 </form>
+
             </div>
         </div>
 
@@ -71,15 +64,23 @@
     <script th:inline="javascript">
         /*<![CDATA[*/
         var itemName = /*[[${item.name}]]*/ '';
+        var itemName = /*[[${item.name}]]*/ '';
         var auctionStartTimeString = /*[[${item.auctionStartTime}]]*/ '';
         var auctionEndTimeString = /*[[${item.auctionEndTime}]]*/ '';
-        var auctionStartTimeFormatted = moment(auctionStartTimeString).format('YYYY-MM-DD HH:mm');
-        var auctionEndTimeFormatted = moment(auctionEndTimeString).format('YYYY-MM-DD HH:mm');
+       var auctionStartTimeFormatted = moment(auctionStartTimeString).format('YYYY-MM-DD');
+    var auctionEndTimeFormatted = moment(auctionEndTimeString).format('YYYY-MM-DD');
         /*]]>*/
     </script>
 
     <script>
+        $(document).ready(function() {
+            // Display formatted auction start time and end time
+            $('#auctionStartTimeFormatted').text(auctionStartTimeFormatted);
+            $('#auctionEndTimeFormatted').text(auctionEndTimeFormatted);
+        });
+    </script>
 
+    <script>
         $(document).ready(function() {
             $('#bidButton').click(function() {
                 $('#bidModal').css("display", "block");
@@ -117,11 +118,9 @@
             imageElement.style.maxWidth = "100%"; // Adjust this value as needed
             imageElement.style.maxHeight = "400px"; // Adjust this value as needed
 
-            // Center the image
             imageElement.style.display = "block";
             imageElement.style.margin = "auto";
 
-            // Prepend the image element to the contentDiv
             contentDiv.insertBefore(imageElement, contentDiv.firstChild);
         } else {
             const noImageElement = document.createElement("p");
@@ -131,38 +130,76 @@
         /*]]>*/
     </script>
 
-    <script>
-        $(document).ready(function() {
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+            var currentBidAmount = /*[[${item.currentBid}]]*/;
+        /*]]>*/
+     $(document).ready(function() {
+         // Function to populate payment methods dropdown
+         function populatePaymentMethods(userId) {
+             // Populate payment methods dropdown
+             fetch('/retrieve-payment-methods?userId=' + userId)
+                 .then(response => {
+                     if (!response.ok) {
+                         throw new Error('Failed to retrieve payment methods');
+                     }
+                     return response.json();
+                 })
+                 .then(data => {
+                     const paymentMethodSelect = $('#paymentMethod');
+                     data.forEach(paymentMethod => {
+                         const option = $('<option></option>').text('Card ending with ' + paymentMethod.cardNumber.slice(-4));
+                         paymentMethodSelect.append(option);
+                     });
+                 })
+                 .catch(error => {
+                     console.error('Error fetching payment methods:', error);
+                 });
+         }
 
-            $.ajax({
-                url: '/loggedUserID',
-                type: 'GET',
-                success: function(response) {
-                    console.log(response);
-                    if (response.userId !== '') {
+         // Fetch user ID and populate bid form and payment methods dropdown
+         $.ajax({
+             url: '/loggedUserID',
+             type: 'GET',
+             success: function(response) {
+                 console.log(response);
+                 if (response.userId !== '') {
+                     const userId = response.userId;
 
-                        $('input[name="userId"]').val(response.userId);
-                        console.log(response.userId);
-                    } else {
-                        alert('You need to log in or register to place a bid.');
-                    }
-                },
-                error: function() {
-                    console.error('Error checking logged-in status.');
-                }
-            });
+                     // Set the userId value in the hidden input field
+                     $('#userId').val(userId);
 
-            $('#bidForm').submit(function(e) {
-                if ($('input[name="userId"]').val() === '') {
-                    e.preventDefault(); // Prevent form submission
-                    alert('You need to log in or register to place a bid.');
-                } else {
-                    var userId = $('input[name="userId"]').val();
-                    var actionUrl = '/updateBid/' + itemName + '/' + userId + '/' + $('input[name="newBidAmount"]').val(); // Use newBidAmount input field
-                    $('#bidForm').attr('action', actionUrl);
-                }
-            });
-        });
+                     // Populate payment methods dropdown
+                     populatePaymentMethods(userId);
+                 } else {
+                     alert('You need to log in or register to place a bid.');
+                 }
+             },
+             error: function() {
+                 console.error('Error checking logged-in status.');
+             }
+         });
+
+           $('#bidForm').submit(function(e) {
+           if ($('#userId').val() === '') {
+               e.preventDefault(); // Prevent form submission
+               alert('You need to log in or register to place a bid.');
+           } else {
+             var userId = $('#userId').val();
+           var newBidAmount = parseFloat($('#newBidAmountInput').val()); // Convert input to float
+          
+           console.log('New Bid Amount:', newBidAmount);
+           console.log('Current Bid Amount:', currentBidAmount);
+               if (newBidAmount <= currentBidAmount) { // Check if new bid amount is lower or equal to current bid amount
+                   e.preventDefault(); // Prevent form submission
+                   alert('Bid amount must be higher than the current bid amount.'); // Display error message
+               } else {
+                   var actionUrl = '/updateBid/' + itemName + '/' + userId + '/' + newBidAmount; // Use newBidAmount input field
+                   $('#bidForm').attr('action', actionUrl);
+               }
+           }
+       });
+     });
     </script>
 
     <script>

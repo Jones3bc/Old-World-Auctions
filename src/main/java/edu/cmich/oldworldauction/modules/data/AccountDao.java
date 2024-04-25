@@ -146,4 +146,93 @@ public class AccountDao {
             System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
         }
     }
+
+    /**
+     * Updates a given {@link PaymentMethod} in the database.
+     *
+     * @param paymentMethod The updated payment method.
+     */
+    public void updatePaymentMethod(PaymentMethod paymentMethod) {
+        String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
+        String sql = """
+            UPDATE PAYMENT_METHODS
+            SET credit = ?,
+                cardNumber = ?,
+                expirationMonth = ?,
+                expirationYear = ?,
+                cvv = ?
+            WHERE paymentID = ?
+            AND   userID = ?;
+        """;
+
+        try {
+            Connection connection = DriverManager.getConnection(sqlConnection);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setBoolean(1, paymentMethod.isCredit());
+            preparedStatement.setString(2, paymentMethod.getCardNumber());
+            preparedStatement.setInt(3, paymentMethod.getExpirationMonth());
+            preparedStatement.setInt(4, paymentMethod.getExpirationYear());
+            preparedStatement.setInt(5, paymentMethod.getCvv());
+            preparedStatement.setString(6, paymentMethod.getPaymentId());
+            preparedStatement.setString(7, paymentMethod.getUserId());
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException ex) {
+            System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
+        }
+    }
+
+    /**
+     * Checks if a card number is present in the database for a given user.
+     *
+     * @param cardNumber The card number to check for
+     * @param userId The user to check for
+     * @return true if the card is present for the user, false otherwise
+     */
+    public boolean isCardNumberPresentForUser(String cardNumber, String userId) {
+        String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
+        String sql = """
+            SELECT
+                COUNT(*) AS METHOD_COUNT
+            FROM
+                PAYMENT_METHODS
+            WHERE
+                cardNumber = ?
+            AND userId = ?;
+        """;
+
+        try {
+            Connection connection = DriverManager.getConnection(sqlConnection);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, cardNumber);
+            preparedStatement.setString(2, userId);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            return resultSet.getInt("METHOD_COUNT") > 0;
+        } catch (SQLException ex) {
+            System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
+        }
+        return true;
+    }
+
+    public void deletePaymentMethod(String paymentMethodId) {
+        String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
+        String sql = """
+            DELETE FROM PAYMENT_METHODS
+            WHERE paymentID = ?
+        """;
+
+        try {
+            Connection connection = DriverManager.getConnection(sqlConnection);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, paymentMethodId);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException ex) {
+            System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
+        }
+    }
 }

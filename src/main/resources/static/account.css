@@ -2,3 +2,17 @@
     text-align: center;
     font-family: sans-serif;
 }
+
+.update {
+    height: 40px;
+    width: 50px;
+    border-radius: 1em;
+    background-color: limegreen;
+}
+
+.remove {
+    height: 40px;
+        width: 50px;
+        border-radius: 1em;
+        background-color: red;
+}

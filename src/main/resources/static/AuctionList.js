@@ -2,26 +2,23 @@
 "https://js.stripe.com/v3/"
 
 document.addEventListener("DOMContentLoaded", function() {
-
-        fetch("/allItemsJson")
-            .then(response => response.json())
-            .then(data => {
-                console.log('Retrieved items:', data);
-                displayAuctionItems(data);
-            })
-            .catch(error => {
-                console.error('Error fetching items:', error);
-            });
-    });
+    fetch("/allItemsJson")
+        .then(response => response.json())
+        .then(data => {
+            console.log('Retrieved items:', data);
+            displayAuctionItems(data);
+        })
+        .catch(error => {
+            console.error('Error fetching items:', error);
+        });
+});
 
 function displayAuctionItems(items) {
     const auctionListDiv = document.getElementById("gallery");
-    auctionListDiv.innerHTML = ''; // Clear previous content
+    auctionListDiv.innerHTML = '';
 
-    // Group items by category
     const groupedItems = groupItemsByCategory(items);
 
-    // Iterate through each category and display items
     for (const category in groupedItems) {
         const categoryHeader = document.createElement("h2");
         categoryHeader.textContent = category;
@@ -36,7 +33,6 @@ function displayAuctionItems(items) {
             contentDiv.classList.add("content");
 
             if (item.image !== null) {
-                // Convert Base64-encoded image data to an actual image
                 const imageData = atob(item.image);
                 const imageDataUrl = `data:image/jpeg;base64,${imageData}`;
 
@@ -44,7 +40,6 @@ function displayAuctionItems(items) {
                 imageElement.src = imageDataUrl;
                 contentDiv.appendChild(imageElement);
             } else {
-                // Handle case where image data is null
                 const noImageElement = document.createElement("p");
                 noImageElement.textContent = "No image available";
                 contentDiv.appendChild(noImageElement);
@@ -54,9 +49,11 @@ function displayAuctionItems(items) {
                 <h3>${item.name}</h3>
                 <p>$${item.currentBid}</p>
                 <h6>${item.description}</h6>
-                <button class="buy-1" onclick="buyNow('${item.name}')">Buy Now</button>
+                <button class="buy-1" onclick="buyNow('${item.name}')">Make A Bid</button>
                 <button class="save" onclick="saveItem('${item.name}')">Save</button>
             `;
+
+
 
             categoryItemsDiv.appendChild(contentDiv);
         });
