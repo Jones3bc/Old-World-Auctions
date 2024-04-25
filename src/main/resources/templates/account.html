@@ -27,6 +27,7 @@
 
     <h3>Update Account Info</h3>
     <div>Leaving a field blank will retain the original username/password.</div>
+    <div id="error" style="color: red;" th:text="${erredMessage}"></div>
     <form id="accountUpdateForm" action="/update-user-info" method="post">
         <p>
             <label for="username">New Username: </label>

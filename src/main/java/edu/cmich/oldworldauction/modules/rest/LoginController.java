@@ -160,7 +160,7 @@ public class LoginController {
      * @return The home page of the website (update this to go to a confirmation page).
      */
     @PostMapping("/update-user-info")
-    public String updateUserInfo(@ModelAttribute UserUpdateRequest userUpdateRequest) {
+    public String updateUserInfo(@ModelAttribute UserUpdateRequest userUpdateRequest, Model model) {
         List<User> currentUsers = loginDao.retrieveUsers();
         for (User retrievedUser : currentUsers) {
             if (retrievedUser.getUsername().equals(this.loggedInUser) && retrievedUser.getPassword().equals(userUpdateRequest.originalPassword)) {
@@ -183,9 +183,12 @@ public class LoginController {
 
                 this.loggedInUser = "";
                 this.loggedInUserID = "";
+
+                return "index";
             }
         }
 
-        return "index"; //Create a confirmation page and replace index here.
+        model.addAttribute("erredMessage", "Incorrect original password.");
+        return "account";
     }
 }
