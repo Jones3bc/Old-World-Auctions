@@ -10,6 +10,18 @@
     <script type="text/javascript" th:src="@{/login.js}"></script>
 </head>
 <body>
+
+<div th:class="background-image"></div>
+<style>
+    .background-image {
+        background-image: url("/static/img/bg.png");
+        background-size: contain;
+        background-repeat: no-repeat;
+        text-align: center;
+        width: 200px;
+        height: 200px;
+    }
+</style>
 <header>
     <div class="nav">
         <ul>
@@ -22,29 +34,42 @@
         </ul>
     </div>
 </header>
-
+<div style="text-align: center;">
     <h1> MEET THE TEAM </h1>
 
 <p>
+    <img src="/static/img/Brock.jpg" alt="Headshot of Brock Jones"  width="170" height="150"/>
+</p><p>
     Brock Jones: Frontend, Backend, and some Database development
+
+</p><p>
+    <img src="/static/img/Akram.jpg" alt="Headshot of Akram Moustafa"  width="170" height="150"/>
 </p><p>
     Akram Moustafa: Frontend and Backend developer
 </p><p>
+    <img src="/static/img/Simdi.JPG" alt="Headshot of Chisimdi Agomoh"  width="170" height="150"/>
+</p><p>
     Chisimdi Agomoh: Backend and database developer
+</p><p>
+    <img src="/static/img/Jovane.jpg" alt="Headshot of Jovane Samuel"  width="170" height="150"/>
 </p><p>
     Jovane Samuel: Frontend developer
 </p><p>
+    <img src="/static/img/Samuel.jpg" alt="Headshot of Samuel Tabaczynski"  width="170" height="150"/>
+</p><p>
     Samuel Tabaczynski: Frontend developer
+</p><p>
+    <img src="/static/img/Marcus.JPG" alt="Headshot of Marcus Williams"  width="170" height="150"/>
 </p><p>
     Marcus Williams: Frontend developer
 </p>
-<pre>
 
+<pre>
 
 
     Contact us at oldworldhelp@outlook.com
 </pre>
-
+</div>
 
 </body>
 </html>
