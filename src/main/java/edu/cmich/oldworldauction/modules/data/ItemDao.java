@@ -138,6 +138,49 @@ public class ItemDao {
     }
 
     /**
+     * Retrieves all auction items from the database given the seller's ID.
+     *
+     * @return A {@link List} of {@link AuctionItemRetrieve}s.
+     */
+    public List<AuctionItemRetrieve> getAllItems(String sellerId) {
+
+        String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
+        String sql = "SELECT * FROM AUCTION_ITEMS WHERE sellerID = ?;";
+
+        try {
+            Connection connection = DriverManager.getConnection(sqlConnection);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, sellerId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            List<AuctionItemRetrieve> auctionItemInserts = new ArrayList<>();
+
+            while (resultSet.next()) {
+                AuctionItemRetrieve auctionItemRetrieve = new AuctionItemRetrieve(
+                        resultSet.getString("itemID"),
+                        resultSet.getString("name"),
+                        resultSet.getString("description"),
+                        resultSet.getString("category"),
+                        resultSet.getBigDecimal("currentBid"),
+                        resultSet.getBytes("image"),
+                        LocalDateTime.parse(this.javaReformattedDate(resultSet.getString("aucStartTime"))),
+                        LocalDateTime.parse(this.javaReformattedDate(resultSet.getString("aucEndTime"))),
+                        resultSet.getString("sellerID"),
+                        resultSet.getString("bidderID")
+                );
+
+                auctionItemInserts.add(auctionItemRetrieve);
+                System.out.println(auctionItemRetrieve);
+            }
+
+            return auctionItemInserts;
+        } catch (SQLException ex) {
+            System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    /**
      * Retrieves an {@link AuctionItemInsert} given its name.
      *
      * @param name The name of the auction item.

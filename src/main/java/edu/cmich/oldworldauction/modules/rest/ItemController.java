@@ -74,6 +74,17 @@ public class ItemController {
         return this.itemDao.getAllItems();
     }
 
+    @GetMapping("/all-items-for-user")
+    @ResponseBody
+    public List<AuctionItemRetrieve> getItemsForSellerId(@RequestParam String userId) {
+        return this.itemDao.getAllItems(userId);
+    }
+
+    @GetMapping("/manage-items")
+    public String manageItems() {
+        return "manageItems";
+    }
+
     /**
      * Submits request to add an auction item.
      *
