@@ -17,21 +17,31 @@ function displayUserListedItems(userListedItems) {
                 .then(dataTwo => {
                     dataTwo.forEach(item => {
                         let itemDiv = document.createElement("div");
+                        itemDiv.className = "item";
 
                         let itemName = document.createElement("span");
-                        itemName.innerHTML = item.name;
+                        itemName.innerHTML = "Name: " + item.name;
 
                         let currentBid = document.createElement("span");
-                        currentBid.innerHTML = item.currentBid;
+                        currentBid.innerHTML = "Current bid: $" + item.currentBid.toFixed(2);
 
                         let endTime = document.createElement("span");
-                        endTime.innerHTML = item.auctionEndTime;
+                        if(new Date(item.auctionEndTime) - new Date() < 0) {
+                            endTime.innerHTML = "End Time: Ended";
+                        } else {
+                            endTime.innerHTML = "End Time: " + item.auctionEndTime.split("T")[0] + " " + item.auctionEndTime.split("T")[1];
+                        }
 
                         itemDiv.appendChild(itemName);
                         itemDiv.appendChild(currentBid);
                         itemDiv.appendChild(endTime);
 
+                        itemDiv.addEventListener("click", function() {
+                            window.location.replace("/update-item-page?itemId=" + item.itemID)
+                        });
+
                         userListedItems.appendChild(itemDiv);
+                        userListedItems.appendChild(document.createElement("br"));
                     });
                 })
                 .catch(error => {

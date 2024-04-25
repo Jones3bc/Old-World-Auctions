@@ -42,12 +42,13 @@ document.addEventListener("DOMContentLoaded", function() {
             sibling.innerHTML = "*";
         }
 
+
         let currentDate = new Date();
 
         let auctionStartTime = document.getElementById("auctionStartTime");
         let auctionStartTimeValue = new Date(auctionStartTime.value);
         let difference = auctionStartTimeValue - currentDate;
-        if(difference < 1 * 60000) {
+        if((difference < (1 * 60000)) && auctionStartTime.readOnly == false) {
             auctionStartTime.style.borderColor = "red";
             let sibling = auctionStartTime.nextElementSibling;
             sibling.innerHTML = "Start time must be at least 60 seconds in the future";
@@ -61,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function() {
         let auctionEndTime = document.getElementById("auctionEndTime");
         let auctionEndTimeValue = new Date(auctionEndTime.value);
         difference = auctionEndTimeValue - currentDate;
-        if(difference < 15 * 60000) {
+        if((difference < (15 * 60000)) && auctionEndTime.readOnly == false) {
             auctionEndTime.style.borderColor = "red";
             let sibling = auctionEndTime.nextElementSibling;
             sibling.innerHTML = "End time must be at least 15 minutes in the future";

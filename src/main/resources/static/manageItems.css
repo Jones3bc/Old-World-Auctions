@@ -1,0 +1,15 @@
+.item {
+    border: solid 1px black;
+    padding: 15px;
+    cursor: pointer;
+    background-color: whitesmoke;
+}
+
+span {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#userListedItems {
+    display: inline-block;
+}

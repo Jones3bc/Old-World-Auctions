@@ -181,6 +181,45 @@ public class ItemDao {
     }
 
     /**
+     * Retrieves an {@link AuctionItemInsert} given its ID.
+     *
+     * @param Id The ID of the auction item.
+     * @return The retrieved {@link AuctionItemInsert}
+     */
+    public AuctionItemRetrieve findItemById(String Id) {
+        String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
+        String sql = "SELECT * FROM AUCTION_ITEMS WHERE itemID = ?";
+
+        try (Connection connection = DriverManager.getConnection(sqlConnection);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, Id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return new AuctionItemRetrieve(
+                        resultSet.getString("itemID"),
+                        resultSet.getString("name"),
+                        resultSet.getString("description"),
+                        resultSet.getString("category"),
+                        resultSet.getBigDecimal("currentBid"),
+                        resultSet.getBytes("image"),
+                        LocalDateTime.parse(this.javaReformattedDate(resultSet.getString("aucStartTime"))),
+                        LocalDateTime.parse(this.javaReformattedDate(resultSet.getString("aucEndTime"))),
+                        resultSet.getString("sellerID"),
+                        resultSet.getString("bidderID")
+                );
+            } else {
+                return null; // Item not found
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
+            return null; // Return null or handle the exception as needed.
+        }
+    }
+
+    /**
      * Retrieves an {@link AuctionItemInsert} given its name.
      *
      * @param name The name of the auction item.
@@ -220,25 +259,18 @@ public class ItemDao {
     }
 
     /**
-     * Updates an {@link AuctionItemInsert}. Requires original auction name to make update on correct item.
+     * Updates an {@link AuctionItemRetrieve}.
      *
      * @param auctionItemInsert The updated {@link AuctionItemInsert}.
-     * @param originalName The original name of the {@link AuctionItemInsert}.
      */
-    public void updateItem(AuctionItemInsert auctionItemInsert, String originalName) {
+    public void updateItem(AuctionItemRetrieve auctionItemInsert) {
         String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
         String sql = """
                 UPDATE AUCTION_ITEMS
                 SET name = ?,
-                    category = ?
-                    description = ?,
-                    currentBid = ?,
-                    image = ?,
-                    aucStartTime = ?,
-                    aucEndTime = ?,
-                    sellerID = ?,
-                    bidderID = ?
-                WHERE name = ?;             \s
+                    category = ?,
+                    description = ?
+                WHERE itemID = ?;
                 """.trim();
 
         try (Connection connection = DriverManager.getConnection(sqlConnection);
@@ -247,20 +279,12 @@ public class ItemDao {
             preparedStatement.setString(1, auctionItemInsert.getName());
             preparedStatement.setString(2, auctionItemInsert.getCategory());
             preparedStatement.setString(3, auctionItemInsert.getDescription());
-            preparedStatement.setBigDecimal(4, auctionItemInsert.getCurrentBid());
-            preparedStatement.setBytes(5, auctionItemInsert.getImage().getBytes());
-            preparedStatement.setString(6, this.sqlFormattedDate(auctionItemInsert.getAuctionStartTime().toString()));
-            preparedStatement.setString(7, this.sqlFormattedDate(auctionItemInsert.getAuctionEndTime().toString()));
-            preparedStatement.setString(8, auctionItemInsert.getSellerId());
-            preparedStatement.setString(9, auctionItemInsert.getBidderId());
-            preparedStatement.setString(10, originalName);
+            preparedStatement.setString(4, auctionItemInsert.getItemID());
 
             preparedStatement.executeUpdate();
 
         } catch (SQLException ex) {
             System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -294,18 +318,18 @@ public class ItemDao {
     }
 
     /**
-     * Deletes an item from the database. For Administrative purposes.
+     * Deletes an item from the database given its ID.
      *
-     * @param name The name of the item to delete.
+     * @param itemId The ID of the item to delete.
      */
-    public void deleteItem(String name) {
+    public void deleteItem(String itemId) {
         String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
-        String sql = "DELETE FROM AUCTION_ITEMS WHERE name = ?";
+        String sql = "DELETE FROM AUCTION_ITEMS WHERE itemID = ?";
 
         try (Connection connection = DriverManager.getConnection(sqlConnection);
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, name);
+            preparedStatement.setString(1, itemId);
             preparedStatement.executeUpdate();
 
         } catch (SQLException ex) {

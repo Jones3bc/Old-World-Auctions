@@ -80,6 +80,18 @@ public class ItemController {
         return this.itemDao.getAllItems(userId);
     }
 
+    @GetMapping("update-item-page")
+    public String updateItemPage(@RequestParam String itemId, Model model) {
+        model.addAttribute("itemId", itemId);
+        return "updateItem";
+    }
+
+    @GetMapping("get-item-by-id")
+    @ResponseBody
+    public AuctionItemRetrieve getItemByItemId(@RequestParam String itemId) {
+        return this.itemDao.findItemById(itemId);
+    }
+
     @GetMapping("/manage-items")
     public String manageItems() {
         return "manageItems";
@@ -193,9 +205,10 @@ public class ItemController {
         }
     }
 
-    @PostMapping("/updateItem/{originalName}")
-    public void updateItem(@ModelAttribute AuctionItemInsert auctionItemInsert, @PathVariable String originalName) {
-        this.itemDao.updateItem(auctionItemInsert, originalName);
+    @PostMapping("/updateItem")
+    public String updateItem(@ModelAttribute AuctionItemRetrieve auctionItem) {
+        this.itemDao.updateItem(auctionItem);
+        return "manageItems";
     }
 
     @PostMapping("/updateBid/{name}/{bidderId}/{bidAmount}")
@@ -206,10 +219,10 @@ public class ItemController {
         return "updateBid";
     }
 
-    @GetMapping("/deleteItem")
-    public String deleteItem(@RequestParam String name) {
-        this.itemDao.deleteItem(name);
-        return "index";
+    @PostMapping("/deleteItem")
+    public String deleteItem(@RequestParam String itemId) {
+        this.itemDao.deleteItem(itemId);
+        return "manageItems";
     }
 }
 
