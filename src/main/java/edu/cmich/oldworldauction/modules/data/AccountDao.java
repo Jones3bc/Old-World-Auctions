@@ -216,4 +216,23 @@ public class AccountDao {
         }
         return true;
     }
+
+    public void deletePaymentMethod(String paymentMethodId) {
+        String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
+        String sql = """
+            DELETE FROM PAYMENT_METHODS
+            WHERE paymentID = ?
+        """;
+
+        try {
+            Connection connection = DriverManager.getConnection(sqlConnection);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, paymentMethodId);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException ex) {
+            System.out.println("Failed to establish and use SQL connection. " + ex.getMessage());
+        }
+    }
 }

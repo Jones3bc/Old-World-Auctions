@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -62,12 +62,14 @@
           background-color: #0056b3;
         }
     </style>
+    <script type="text/javascript" th:src="@{/registrationValidation.js}"></script>
 </head>
 
 <body>
 <div class="register-container">
     <h2>Register to Old World Auction</h2>
-    <form action="/registration" method="post">
+    <p style="color: red;" id="error"></p>
+    <form id="registrationForm" action="/registration" method="post">
         <div class="form-group">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>

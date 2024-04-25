@@ -110,9 +110,21 @@ function checkPassword() {
                         }
 
                         const paymentMethodButton = document.createElement("button");
-                        paymentMethodButton.innerHTML = "Update";
+                        paymentMethodButton.innerHTML = "Save";
                         paymentMethodButton.setAttribute("type", "submit");
                         paymentMethodButton.className = "update";
+
+                        let deleteButton = document.createElement("button");
+                        deleteButton.innerHTML = "X";
+                        deleteButton.setAttribute("type", "button");
+                        deleteButton.className = "remove";
+                        deleteButton.addEventListener("click", function() {
+                           if(confirm("Are you sure you want to delete this payment method?")) {
+                               fetch("/delete-payment-method?paymentMethodId=" + paymentMethod.paymentId, { method: "POST" });
+                               alert("Payment method deleted.");
+                               window.location.replace("/account-page");
+                           }
+                        });
 
                         paymentMethodParagraph.appendChild(paymentMethodId);
                         paymentMethodParagraph.appendChild(userIdField);
@@ -122,6 +134,7 @@ function checkPassword() {
                         paymentMethodParagraph.appendChild(paymentMethodCvv);
                         paymentMethodParagraph.appendChild(paymentMethodIsCredit);
                         paymentMethodParagraph.appendChild(paymentMethodButton);
+                        paymentMethodParagraph.appendChild(deleteButton);
 
                         paymentMethodForm.appendChild(paymentMethodParagraph);
                         paymentMethodForm.addEventListener("submit", function(evt) {
@@ -137,7 +150,7 @@ function checkPassword() {
                          );
                          });
 
-                        paymentMethodDiv.appendChild(paymentMethodForm);
+                         paymentMethodDiv.appendChild(paymentMethodForm);
                     });
                 })
                 .catch(error => {

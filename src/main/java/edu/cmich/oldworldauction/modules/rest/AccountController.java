@@ -3,6 +3,7 @@ package edu.cmich.oldworldauction.modules.rest;
 import edu.cmich.oldworldauction.modules.data.AccountDao;
 import edu.cmich.oldworldauction.modules.models.PaymentMethod;
 import edu.cmich.oldworldauction.modules.services.AccountService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,6 +138,12 @@ public class AccountController {
     public CheckCardNumberResponse checkCardNumber(@RequestParam String cardNumber, @RequestParam String userId){
         boolean isPresent = this.accountDao.isCardNumberPresentForUser(cardNumber, userId);
         return new CheckCardNumberResponse(!isPresent);
+    }
+
+    @PostMapping("/delete-payment-method")
+    public String deletePaymentMethod(@RequestParam String paymentMethodId) {
+        this.accountDao.deletePaymentMethod(paymentMethodId);
+        return "account";
     }
 
 }
