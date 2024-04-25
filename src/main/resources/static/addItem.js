@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         let description = document.getElementById("description");
-        if(!description.value.match(new RegExp("^[a-zA-Z0-9\\.\\s,!?]+$"))) {
+        if(!description.value.match(new RegExp("^[a-zA-Z0-9\\.\\s,!?\\(\\)]+$"))) {
             description.style.borderColor = "red";
             let sibling = description.nextElementSibling;
             sibling.innerHTML = "Item description must have only letters, numbers, and punctuation (. , ? !)";
@@ -42,9 +42,49 @@ document.addEventListener("DOMContentLoaded", function() {
             sibling.innerHTML = "*";
         }
 
-        let image = document.getElementById("image");
+        let currentDate = new Date();
+
         let auctionStartTime = document.getElementById("auctionStartTime");
+        let auctionStartTimeValue = new Date(auctionStartTime.value);
+        let difference = auctionStartTimeValue - currentDate;
+        if(difference < 1 * 60000) {
+            auctionStartTime.style.borderColor = "red";
+            let sibling = auctionStartTime.nextElementSibling;
+            sibling.innerHTML = "Start time must be at least 60 seconds in the future";
+            valid = false;
+        } else {
+            auctionStartTime.style.borderColor = "black";
+            let sibling = auctionStartTime.nextElementSibling;
+            sibling.innerHTML = "*";
+        }
+
         let auctionEndTime = document.getElementById("auctionEndTime");
+        let auctionEndTimeValue = new Date(auctionEndTime.value);
+        difference = auctionEndTimeValue - currentDate;
+        if(difference < 15 * 60000) {
+            auctionEndTime.style.borderColor = "red";
+            let sibling = auctionEndTime.nextElementSibling;
+            sibling.innerHTML = "End time must be at least 15 minutes in the future";
+            valid = false;
+        } else {
+            auctionEndTime.style.borderColor = "black";
+            let sibling = auctionEndTime.nextElementSibling;
+            sibling.innerHTML = "*";
+        }
+
+        difference = auctionEndTimeValue - auctionStartTimeValue;
+        if(difference < 10 * 60000) {
+            auctionEndTime.style.borderColor = "red";
+            let sibling = auctionEndTime.nextElementSibling;
+            sibling.innerHTML = "End time must be at least 10 minutes after the start time";
+            valid = false;
+        } else {
+            let sibling = auctionEndTime.nextElementSibling;
+            if(sibling.innerHTML != "End time must be at least 15 minutes in the future") {
+                auctionEndTime.style.borderColor = "black";
+                sibling.innerHTML = "*";
+            }
+        }
 
         if(!valid) {
             evt.preventDefault();
