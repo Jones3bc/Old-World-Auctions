@@ -63,6 +63,26 @@ public class ItemController {
         }
     }
 
+    @GetMapping("/getItemById")
+    public String getItemById(
+            @RequestParam String itemId,
+            Model model
+    ) {
+        try {
+            AuctionItemRetrieve auctionItemRetrieve = this.itemDao.findItemById(itemId);
+
+            if (auctionItemRetrieve != null) {
+                model.addAttribute("item", auctionItemRetrieve);
+                return "getItem"; // Assuming "getItem" is the Thymeleaf template for displaying item details
+            } else {
+                throw new Exception("Item not found");
+            }
+        } catch (Exception e) {
+            // Handle the exception (e.g., log it) and return an error page or redirect
+            return "error"; // Assuming "error" is a Thymeleaf template for displaying errors
+        }
+    }
+
     /**
      * Returns all {@link AuctionItemInsert}s in the Old World Auctions DB.
      *

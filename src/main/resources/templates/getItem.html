@@ -65,6 +65,8 @@
         /*<![CDATA[*/
         var itemName = /*[[${item.name}]]*/ '';
         var itemName = /*[[${item.name}]]*/ '';
+        var currentBid = /*[[${item.currentBid}]]*/ '';
+        var itemId = /*[[${item.itemID}]]*/ '';
         var auctionStartTimeString = /*[[${item.auctionStartTime}]]*/ '';
         var auctionEndTimeString = /*[[${item.auctionEndTime}]]*/ '';
        var auctionStartTimeFormatted = moment(auctionStartTimeString).format('YYYY-MM-DD');
@@ -198,6 +200,16 @@
                    $('#bidForm').attr('action', actionUrl);
                }
            }
+
+           fetch("/loggedUserID")
+            .then(response => response.json())
+            .then(data => {
+                fetch("/save-wishlist-item?itemId=" + itemId + "&userId=" + data.userId + "&currentBid=" + currentBid + "&reason=BID", { method: "POST" });
+                window.location.replace("/auctions-page");
+            })
+            .catch(error => {
+                console.error('Error fetching items:', error);
+            });
        });
      });
     </script>

@@ -13,3 +13,11 @@ span {
 #userListedItems {
     display: inline-block;
 }
+
+#savedItems {
+    display: inline-block;
+}
+
+#previousBids {
+    display: inline-block;
+}

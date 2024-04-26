@@ -74,7 +74,7 @@ function displayAuctionItems(items) {
             const buttonsHTML = auctionStatus === "Auction ended"
                 ? '' // No buttons if auction ended
                 : `<button class="buy-1" onclick="buyNow('${item.name}')">Make A Bid</button>
-                   <button class="save" onclick="saveItem('${item.name}')">Save</button>`;
+                   <button class="save" onclick="saveItem('${item.itemID}', '${item.currentBid}')">Save</button>`;
 
             contentDiv.innerHTML += `
                 <h3>${item.name}</h3>
@@ -105,6 +105,18 @@ function groupItemsByCategory(items) {
 function buyNow(itemName) {
     const url = `/getItem?name=${encodeURIComponent(itemName)}`;
     window.location.href = url;
+}
+
+function saveItem(itemId, currentBid) {
+    fetch("/loggedUserID")
+            .then(response => response.json())
+            .then(data => {
+                fetch("/save-wishlist-item?itemId=" + itemId + "&userId=" + data.userId + "&currentBid=" + currentBid + "&reason=SAVED", { method: "POST" });
+                window.location.replace("/auctions-page");
+            })
+            .catch(error => {
+                console.error('Error fetching items:', error);
+            });
 }
 
 
