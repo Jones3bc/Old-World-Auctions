@@ -8,10 +8,6 @@ document.addEventListener("DOMContentLoaded", function() {
     fetch("/get-item-by-id?itemId=" + params.itemId)
             .then(response => response.json())
             .then(dataTwo => {
-                if(document.getElementById("userId").value != dataTwo.sellerID) {
-                    window.location.replace("/");
-                }
-
                 let itemId = document.getElementById("itemId");
                 itemId.value = params.itemId;
 

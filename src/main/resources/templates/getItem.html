@@ -6,6 +6,7 @@
 
 <link th:href="@{/common.css}" rel="stylesheet"/>
 <link th:href="@{/getItem.css}" rel="stylesheet"/>
+<link th:href="@{/login.css}" rel="stylesheet"/>
 
 <head>
     <meta charset="UTF-8">
@@ -18,9 +19,9 @@
             <a href="/">Home</a>
             <a href="/auctions-page">Auctions</a>
             <a href="/register-page">Register</a>
-            <a href="/login-page">Login</a>
             <a href="/addItem">Create</a>
-            <a href="#contact">Contact</a>
+            <a href="/contact">Contact</a>
+            <div id="user" class="dropdown" style="float:right; color: white"></div>
         </ul>
     </div>
 </header>
@@ -131,7 +132,7 @@
         }
         /*]]>*/
     </script>
-
+    <script type="text/javascript" th:src="@{/login.js}"></script>
     <script th:inline="javascript">
         /*<![CDATA[*/
             var currentBidAmount = /*[[${item.currentBid}]]*/;
