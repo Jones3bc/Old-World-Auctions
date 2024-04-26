@@ -13,9 +13,6 @@ function displaySavedItems(savedItems, bidItems) {
     fetch("/loggedUserID")
             .then(response => response.json())
             .then(data => {
-            if(data.userId === "") {
-                window.location.replace("/login-page");
-            }
         fetch("/retrieve-all-wishlist-items-for-user?userId=" + data.userId)
                 .then(response => response.json())
                 .then(dataTwo => {
@@ -40,13 +37,33 @@ function displaySavedItems(savedItems, bidItems) {
                                     endTime.innerHTML = "End Time: " + item.auctionEndTime.split("T")[0] + " " + item.auctionEndTime.split("T")[1];
                                 }
 
+                                itemName.addEventListener("click", function() {
+                                    window.location.replace("/getItemById?itemId=" + item.itemID);
+                                });
+
+                                currentBid.addEventListener("click", function() {
+                                    window.location.replace("/getItemById?itemId=" + item.itemID);
+                                });
+
+                                endTime.addEventListener("click", function() {
+                                    window.location.replace("/getItemById?itemId=" + item.itemID);
+                                });
+
                                 itemDiv.appendChild(itemName);
                                 itemDiv.appendChild(currentBid);
                                 itemDiv.appendChild(endTime);
 
-                                itemDiv.addEventListener("click", function() {
-                                    window.location.replace("/getItemById?itemId=" + item.itemID);
+                                let deleteSavedItemButton = document.createElement("button");
+                                deleteSavedItemButton.className = "submit";
+                                deleteSavedItemButton.style.backgroundColor = "red";
+                                deleteSavedItemButton.innerHTML = "X";
+                                deleteSavedItemButton.addEventListener("click", function () {
+                                   fetch("/delete-wishlist-item?itemId=" + wishlistItem.itemId + "&userId=" + wishlistItem.userId + "&currentBid=" + wishlistItem.currentBid + "&reason=" + wishlistItem.reason, { method: "POST" });
+                                   window.location.replace("/manage-items");
                                 });
+
+                                itemDiv.appendChild(deleteSavedItemButton);
+
 
                                 if(wishlistItem.reason == "SAVED") {
                                     savedItems.appendChild(itemDiv);

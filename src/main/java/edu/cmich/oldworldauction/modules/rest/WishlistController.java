@@ -24,8 +24,8 @@ public class WishlistController {
 
     @PostMapping("/delete-wishlist-item")
     @ResponseStatus(value = HttpStatus.OK)
-    public void deleteItem(@ModelAttribute WishlistItem item) {
-        this.wishlistDao.deleteItem(item);
+    public void deleteItem(@RequestParam String itemId, @RequestParam String userId, @RequestParam BigDecimal currentBid, @RequestParam String reason) {
+        this.wishlistDao.deleteItem(new WishlistItem(itemId, userId, currentBid, reason));
     }
 
     @GetMapping("/retrieve-wishlist-item")

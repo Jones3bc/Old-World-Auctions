@@ -34,6 +34,7 @@ public class WishlistDao {
                     DELETE FROM WISHLIST
                     WHERE itemID = ?
                     AND userID = ?
+                    AND currentBid = ?
                     AND reason = ?
                 """;
 
@@ -41,7 +42,8 @@ public class WishlistDao {
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, item.itemId());
             preparedStatement.setString(2, item.userId());
-            preparedStatement.setString(3, item.reason());
+            preparedStatement.setBigDecimal(3, item.currentBid());
+            preparedStatement.setString(4, item.reason());
 
             preparedStatement.executeUpdate();
 
