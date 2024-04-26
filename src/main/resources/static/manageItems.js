@@ -26,9 +26,11 @@ function displaySavedItems(savedItems, bidItems) {
 
                                 let itemName = document.createElement("span");
                                 itemName.innerHTML = "Name: " + item.name;
+                                itemName.className = "clickable";
 
                                 let currentBid = document.createElement("span");
                                 currentBid.innerHTML = "Current bid: $" + item.currentBid.toFixed(2);
+                                currentBid.className = "clickable";
 
                                 let endTime = document.createElement("span");
                                 if(new Date(item.auctionEndTime) - new Date() < 0) {
@@ -36,17 +38,18 @@ function displaySavedItems(savedItems, bidItems) {
                                 } else {
                                     endTime.innerHTML = "End Time: " + item.auctionEndTime.split("T")[0] + " " + item.auctionEndTime.split("T")[1];
                                 }
+                                endTime.className = "clickable";
 
                                 itemName.addEventListener("click", function() {
-                                    window.location.replace("/getItemById?itemId=" + item.itemID);
+                                    window.location.href = "/getItemById?itemId=" + item.itemID;
                                 });
 
                                 currentBid.addEventListener("click", function() {
-                                    window.location.replace("/getItemById?itemId=" + item.itemID);
+                                    window.location.href = "/getItemById?itemId=" + item.itemID;
                                 });
 
                                 endTime.addEventListener("click", function() {
-                                    window.location.replace("/getItemById?itemId=" + item.itemID);
+                                    window.location.href = "/getItemById?itemId=" + item.itemID;
                                 });
 
                                 itemDiv.appendChild(itemName);
@@ -54,7 +57,7 @@ function displaySavedItems(savedItems, bidItems) {
                                 itemDiv.appendChild(endTime);
 
                                 let deleteSavedItemButton = document.createElement("button");
-                                deleteSavedItemButton.className = "submit";
+                                deleteSavedItemButton.className = "submit clickable";
                                 deleteSavedItemButton.style.backgroundColor = "red";
                                 deleteSavedItemButton.innerHTML = "X";
                                 deleteSavedItemButton.addEventListener("click", function () {
@@ -104,9 +107,11 @@ function displayUserListedItems(userListedItems) {
 
                         let itemName = document.createElement("span");
                         itemName.innerHTML = "Name: " + item.name;
+                        itemName.className = "clickable";
 
                         let currentBid = document.createElement("span");
                         currentBid.innerHTML = "Current bid: $" + item.currentBid.toFixed(2);
+                        currentBid.className = "clickable";
 
                         let endTime = document.createElement("span");
                         if(new Date(item.auctionEndTime) - new Date() < 0) {
@@ -114,13 +119,14 @@ function displayUserListedItems(userListedItems) {
                         } else {
                             endTime.innerHTML = "End Time: " + item.auctionEndTime.split("T")[0] + " " + item.auctionEndTime.split("T")[1];
                         }
+                        endTime.className = "clickable";
 
                         itemDiv.appendChild(itemName);
                         itemDiv.appendChild(currentBid);
                         itemDiv.appendChild(endTime);
 
                         itemDiv.addEventListener("click", function() {
-                            window.location.replace("/update-item-page?itemId=" + item.itemID)
+                            window.location.href = "/update-item-page?itemId=" + item.itemID
                         });
 
                         userListedItems.appendChild(itemDiv);

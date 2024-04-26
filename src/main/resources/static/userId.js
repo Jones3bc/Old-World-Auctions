@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function holdUser(user){
     if(user.userId === "") {
-        window.location.replace("/login-page");
+        window.location.href = "/login-page";
     } else {
         const userInput = document.getElementById("userId");
         userInput.value = user.userId;

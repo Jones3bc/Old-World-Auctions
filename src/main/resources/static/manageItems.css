@@ -1,8 +1,11 @@
 .item {
     border: solid 1px black;
     padding: 15px;
-    cursor: pointer;
     background-color: whitesmoke;
+}
+
+.clickable {
+    cursor: pointer;
 }
 
 span {
