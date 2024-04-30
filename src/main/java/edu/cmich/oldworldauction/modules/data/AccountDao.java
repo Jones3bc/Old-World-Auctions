@@ -2,7 +2,6 @@ package edu.cmich.oldworldauction.modules.data;
 
 import edu.cmich.oldworldauction.modules.models.PaymentMethod;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.util.StringUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -10,43 +9,10 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Interacts with the database to retrieve, update, and store {@link PaymentMethod}s.
- * Also validates {@link PaymentMethod}s.
+ * Interacts with the database to retrieve, update, delete, and store {@link PaymentMethod}s.
  */
 @Service
 public class AccountDao {
-    /**
-     * Checks the validity of a given {@link PaymentMethod}.
-     * A payment method is valid if its ID > 0, card number is formatted correctly (xxxx-xxxx-xxxx-xxxx),
-     * expiration month/year are valid months/years, and the cvv is exactly 3 or 4 digits.
-     *
-     * @param paymentMethod The {@link PaymentMethod} to check for validity.
-     * @return True if the method is valid. Should throw an {@link IllegalArgumentException} otherwise.
-     * @throws IllegalArgumentException if the method is invalid.
-     */
-    public boolean isMethodValid(PaymentMethod paymentMethod) throws IllegalArgumentException {
-        int cvvLength = String.valueOf(paymentMethod.getCvv()).length();
-        int expirationMonth = paymentMethod.getExpirationMonth();
-        int expirationYear = paymentMethod.getExpirationYear();
-
-        if (StringUtils.isEmptyOrWhitespace(paymentMethod.getCardNumber())) {
-            throw new IllegalArgumentException("Card number field for a payment method cannot be null or contain only whitespace.");
-        } else if (StringUtils.isEmptyOrWhitespace(paymentMethod.getPaymentId())) {
-            throw new IllegalArgumentException("ID field for a payment method must be > 0");
-        } else if (!(paymentMethod.getCardNumber().matches("^[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}$"))) {
-            throw new IllegalArgumentException("Card number field for a payment method must be in the format"
-                    + "'xxxx-xxxx-xxxx-xxxx'.");
-        } else if (expirationMonth <= 0 || expirationMonth > 12) {
-            throw new IllegalArgumentException("Expiration month must be a number between 1-12.");
-        } else if (expirationYear < 0 || expirationYear > 99) {
-            throw new IllegalArgumentException("Expiration year must be a number between 0-99");
-        } else if (paymentMethod.getCvv() <= 0 || cvvLength > 4 || cvvLength < 3) {
-            throw new IllegalArgumentException("CVV number must contain 3 or 4 digits.");
-        }
-
-        return true;
-    }
-
     /**
      * Retrieves all payment methods for a given user ID.
      *
@@ -217,6 +183,11 @@ public class AccountDao {
         return true;
     }
 
+    /**
+     * Deletes a {@link PaymentMethod} given its ID.
+     *
+     * @param paymentMethodId The ID of the {@link PaymentMethod}
+     */
     public void deletePaymentMethod(String paymentMethodId) {
         String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
         String sql = """

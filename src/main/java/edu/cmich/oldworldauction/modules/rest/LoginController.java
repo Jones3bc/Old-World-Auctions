@@ -34,16 +34,32 @@ public class LoginController {
         return "index";
     }
 
+    /**
+     * Represents the response given for the /loggedUser endpoint.
+     */
     private record Username(String username) {}
 
+    /**
+     * Represents the response given for the /loggedUserID endpoint.
+     */
     private record UserId(String userId) {}
 
+    /**
+     * Retrieves the username of the logged-in user.
+     *
+     * @return The username of the user who is currently logged in
+     */
     @ResponseBody
     @GetMapping("/loggedUser")
     public Username getLoggedUser() {
         return new Username(this.loggedInUser);
     }
 
+    /**
+     * Retrieves the user ID for the logged-in user.
+     *
+     * @return The ID of the user who is currently logged in
+     */
     @ResponseBody
     @GetMapping("/loggedUserID")
     public UserId getLoggedUserID() { return new UserId(this.loggedInUserID); }
@@ -90,8 +106,19 @@ public class LoginController {
         return "logInErred";
     }
 
+    /**
+     * The response used for the /check-login and /check-password endpoints. Holds true or
+     * false depending on the validity of the given request.
+     */
     private record CheckPasswordResponse(String isValid){}
 
+    /**
+     * Checks to see if the login is valid. The login is valid if both username and password match the stored user information.
+     *
+     * @param username The username used to login and to check for
+     * @param password The password used to login and to check for
+     * @return A {@link CheckPasswordResponse} that holds true if the information is valid and false otherwise
+     */
     @GetMapping("/check-login")
     @ResponseBody
     public CheckPasswordResponse checkLogin(@RequestParam String username, @RequestParam String password) {
@@ -106,6 +133,12 @@ public class LoginController {
         return new CheckPasswordResponse("false");
     }
 
+    /**
+     * Checks the given password to see if it is the correct password for the logged in user.
+     *
+     * @param password The password to check for
+     * @return A {@link CheckPasswordResponse} that holds true if the password is correct and false otherwise
+     */
     @GetMapping("/check-password")
     @ResponseBody
     public CheckPasswordResponse checkPassword(@RequestParam String password) {
@@ -130,6 +163,11 @@ public class LoginController {
         return "contact";
     }
 
+    /**
+     * Logs the user out of their account.
+     *
+     * @return The website home page to the user
+     */
     @GetMapping("/logout")
     public String logout() {
         this.loggedInUser = "";
@@ -138,6 +176,12 @@ public class LoginController {
         return "index";
     }
 
+    /**
+     * Registers a user.
+     *
+     * @param user The {@link User} to register
+     * @return The registration confirmation page to the user
+     */
     @PostMapping("/registration")
     public String register(@ModelAttribute User user) {
         loginDao.insertUser(user);
@@ -156,6 +200,7 @@ public class LoginController {
 
     /**
      * Updates a user given updated user information and the original password.
+     *
      * @param userUpdateRequest {@link UserUpdateRequest} That represents updated user information and the original password.
      * @return The home page of the website (update this to go to a confirmation page).
      */

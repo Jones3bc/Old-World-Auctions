@@ -2,8 +2,6 @@ package edu.cmich.oldworldauction.modules.rest;
 
 import edu.cmich.oldworldauction.modules.data.AccountDao;
 import edu.cmich.oldworldauction.modules.models.PaymentMethod;
-import edu.cmich.oldworldauction.modules.services.AccountService;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.util.List;
 
 /**
- * Handles all requests and responses having to do with payment method information.
+ * Handles all requests and responses having to do with {@link PaymentMethod}s and the user account page.
  */
 @RequestMapping("/")
 @Controller
 public class AccountController {
-    @Autowired
-    AccountService accountService;
 
     @Autowired
     AccountDao accountDao;
@@ -131,8 +127,18 @@ public class AccountController {
         return "account";
     }
 
+    /**
+     * Models the response given to a request for checking a card number.
+     */
     private record CheckCardNumberResponse(boolean isValid) {}
 
+    /**
+     * Checks to see if a card number already exists for a user. The user should not be able to use this number if so.
+     *
+     * @param cardNumber The card number to check for
+     * @param userId The user ID to check the card number for
+     * @return {@link CheckCardNumberResponse} that holds true if the card is not present and false otherwise
+     */
     @GetMapping("/check-card-number")
     @ResponseBody
     public CheckCardNumberResponse checkCardNumber(@RequestParam String cardNumber, @RequestParam String userId){
@@ -140,6 +146,12 @@ public class AccountController {
         return new CheckCardNumberResponse(!isPresent);
     }
 
+    /**
+     * Allows users to delete {@link PaymentMethod}s.
+     *
+     * @param paymentMethodId The ID of the {@link PaymentMethod} to delete
+     * @return the account page to the user
+     */
     @PostMapping("/delete-payment-method")
     public String deletePaymentMethod(@RequestParam String paymentMethodId) {
         this.accountDao.deletePaymentMethod(paymentMethodId);

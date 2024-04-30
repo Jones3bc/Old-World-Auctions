@@ -43,6 +43,13 @@ public class ItemController {
         return "addItem";
     }
 
+    /**
+     * Displays an item page given the item's name. This page will describe the item and allow users to make bids.
+     *
+     * @param name The name of the item to display on this page
+     * @param model A {@link Model} used to pass item information onto the item page
+     * @return The getItem page for the given name
+     */
     @GetMapping("/getItem")
     public String getItemByName(
             @RequestParam String name,
@@ -63,6 +70,13 @@ public class ItemController {
         }
     }
 
+    /**
+     * Displays an item page given the item's ID. This page will describe the item and allow users to make bids.
+     *
+     * @param itemId The ID of the item to display on this page
+     * @param model A {@link Model} used to pass item information onto the item page
+     * @return The getItem page for the given ID
+     */
     @GetMapping("/getItemById")
     public String getItemById(
             @RequestParam String itemId,
@@ -94,24 +108,48 @@ public class ItemController {
         return this.itemDao.getAllItems();
     }
 
+    /**
+     * Retrieves all listed auction items for a given user.
+     *
+     * @param userId The ID of the user that has listed the items
+     * @return A {@link List} of {@link AuctionItemRetrieve} that were listed by the given user
+     */
     @GetMapping("/all-items-for-user")
     @ResponseBody
     public List<AuctionItemRetrieve> getItemsForSellerId(@RequestParam String userId) {
         return this.itemDao.getAllItems(userId);
     }
 
+    /**
+     * Displays the update item page to the user.
+     *
+     * @param itemId The item ID for the item that this update page is for
+     * @param model A {@link Model} used to pass along the ID
+     * @return The update item page to the user
+     */
     @GetMapping("update-item-page")
     public String updateItemPage(@RequestParam String itemId, Model model) {
         model.addAttribute("itemId", itemId);
         return "updateItem";
     }
 
+    /**
+     * Retrieves an auction item by ID
+     *
+     * @param itemId The ID of the auction item to retrieve
+     * @return The retrieved {@link AuctionItemRetrieve}
+     */
     @GetMapping("get-item-by-id")
     @ResponseBody
     public AuctionItemRetrieve getItemByItemId(@RequestParam String itemId) {
         return this.itemDao.findItemById(itemId);
     }
 
+    /**
+     * Displays the manage items page to the user.
+     *
+     * @return The manage items page
+     */
     @GetMapping("/manage-items")
     public String manageItems() {
         return "manageItems";
@@ -133,104 +171,25 @@ public class ItemController {
     }
 
     /**
-     * Retrieves an {@link AuctionItemInsert} given its name.
+     * Allows the user to update an auction item.
      *
-     * @param auctionItemInsert The {@link AuctionItemInsert} to add.
-     * @return The confirmation HTML page.
+     * @param auctionItem The {@link AuctionItemRetrieve} that holds updated auction item information
+     * @return The manage items page to the user
      */
-    @GetMapping("/GetItem")
-    public AuctionItemInsert getItemByName(AuctionItemInsert auctionItemInsert) throws Exception {
-        if (this.itemDao.isAuctionItemValid(auctionItemInsert)) {
-            return auctionItemInsert;
-        } else {
-            throw new Exception("Item not Found");
-        }
-    }
-
-    /**
-     * Updates the description of an auction item.
-     *
-     * @param auctionItemInsert The {@link AuctionItemInsert} to update.
-     * @param description The new description.
-     * @param model       The Spring MVC model.
-     * @return The confirmation HTML page or an error page if the update fails.
-     */
-    @PostMapping("/changeDescription")
-    public String changeDescription(@ModelAttribute AuctionItemInsert auctionItemInsert, String description, Model model) {
-        try {
-            AuctionItemInsert existingItem = this.getItemByName(auctionItemInsert);
-
-            // Update the description
-            existingItem.setDescription(description);
-
-            // Add the updated item to the model
-            model.addAttribute("description", existingItem);
-
-            // Return the confirmation view
-            return "confirmation";
-        } catch (Exception e) {
-            // Handle the exception appropriately
-            model.addAttribute("error", "Failed to update description");
-            return "error";  // You should have an "error" Thymeleaf template for displaying error messages.
-        }
-    }
-
-    /**
-     * Updates the name of an auction item.
-     *
-     * @param auctionItemInsert The {@link AuctionItemInsert} to update.
-     * @param newName The new name.
-     * @param model       The Spring MVC model.
-     * @return The confirmation HTML page or an error page if the update fails.
-     */
-    @PostMapping("/changeName")
-    public String changeName(@ModelAttribute AuctionItemInsert auctionItemInsert, String newName, Model model) {
-        try {
-            AuctionItemInsert existingItem = this.getItemByName(auctionItemInsert);
-
-            // Update the name
-            existingItem.setName(newName);
-
-            // Add the updated item to the model
-            model.addAttribute("auctionItem", existingItem);
-
-            // Return the confirmation view
-            return "confirmation";
-        } catch (Exception e) {
-            // Handle the exception appropriately
-            model.addAttribute("error", "Failed to update name");
-            return "error";  // You should have an "error" Thymeleaf template for displaying error messages.
-        }
-    }
-
-    /**
-     * Completes the auction of the item.
-     *
-     * @param auctionItemInsert The {@link AuctionItemInsert} to update.
-     * @param model       The Spring MVC model.
-     * @return The confirmation HTML page or an error page if the update fails.
-     */
-    @PostMapping("/completeAuction")
-    public String completeAuction(@ModelAttribute AuctionItemInsert auctionItemInsert, Model model) {
-        try {
-           if(auctionItemInsert.isAuctionComplete()){
-               model.addAttribute("name", auctionItemInsert);
-               auctionItemInsert.setAuctionComplete(true);
-           }
-           return "confirmation";
-        } catch (Exception e) {
-            // Handle the exception appropriately
-            model.addAttribute("error", "Failed to update name");
-            return "error";  // You should have an "error" Thymeleaf template for displaying error messages.
-        }
-    }
-
     @PostMapping("/updateItem")
     public String updateItem(@ModelAttribute AuctionItemRetrieve auctionItem) {
         this.itemDao.updateItem(auctionItem);
         return "manageItems";
     }
 
+    /**
+     * Allows the user to update the bid amount for an auction item
+     *
+     * @param name The name of the auction item
+     * @param bidderId The ID of the user who is bidding on the item
+     * @param bidAmount The updated bid amount
+     * @return The bid update confirmation page to the user
+     */
     @PostMapping("/updateBid/{name}/{bidderId}/{bidAmount}")
     public String updateBid(@PathVariable String name, @PathVariable String bidderId, @PathVariable BigDecimal bidAmount) {
 
@@ -239,6 +198,12 @@ public class ItemController {
         return "updateBid";
     }
 
+    /**
+     * Allows the user to delete an auction item.
+     *
+     * @param itemId The ID of the item to delete
+     * @return The manage items page to the user
+     */
     @PostMapping("/deleteItem")
     public String deleteItem(@RequestParam String itemId) {
         this.itemDao.deleteItem(itemId);

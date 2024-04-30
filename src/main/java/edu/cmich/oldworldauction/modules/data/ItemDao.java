@@ -2,7 +2,6 @@ package edu.cmich.oldworldauction.modules.data;
 import edu.cmich.oldworldauction.modules.models.AuctionItemRetrieve;
 import edu.cmich.oldworldauction.modules.models.AuctionItemInsert;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.util.StringUtils;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -14,33 +13,10 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Interacts with the database to retrieve, store, and {@link AuctionItemInsert}s.
- * Also checks validity of {@link AuctionItemInsert}s.
+ * Interacts with the database to retrieve, store, delete, and update auction items.
  */
 @Service
 public class ItemDao {
-    /**
-     * Checks the validity of a given {@link AuctionItemInsert}.
-     *
-     * @param auctionItemInsert The {@link AuctionItemInsert} to check for validity.
-     * @return True if the item is valid. Should throw an {@link IllegalArgumentException} otherwise.
-     * @throws IllegalArgumentException if the item is invalid.
-     */
-    public boolean isAuctionItemValid(AuctionItemInsert auctionItemInsert) throws IllegalArgumentException {
-        BigDecimal currentBid = auctionItemInsert.getCurrentBid();
-
-        if (StringUtils.isEmptyOrWhitespace(auctionItemInsert.getName())
-                || StringUtils.isEmptyOrWhitespace(auctionItemInsert.getDescription())) {
-            throw new IllegalArgumentException("Name, Description, and Color fields must be non-null and not be only whitespace.");
-        } else if (currentBid == null || currentBid.compareTo(BigDecimal.ZERO) < 0 || currentBid.scale() != 2) {
-            throw new IllegalArgumentException("Current Bid field is invalid. Must be non-null, > 0 and have 2 decimal place values.");
-        } else if (auctionItemInsert.getAuctionStartTime() == null || auctionItemInsert.getAuctionEndTime() == null) {
-            throw new IllegalArgumentException("Auction start/end times cannot be null");
-        }
-
-        return true;
-    }
-
     /**
      * Takes a SQL formatted date and converts it into a Java formatted date.
      * All in String representation.

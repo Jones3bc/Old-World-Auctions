@@ -8,8 +8,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Interacts with the database to store, retrieve, and delete {@link WishlistItem}s.
+ */
 @Service
 public class WishlistDao {
+    /**
+     * Saves/stores a {@link WishlistItem} within the database.
+     *
+     * @param item The {@link WishlistItem} to store
+     */
     public void saveItem(WishlistItem item) {
         String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
         String sql = "INSERT INTO WISHLIST VALUES (?, ?, ?, ?);";
@@ -28,6 +36,11 @@ public class WishlistDao {
         }
     }
 
+    /**
+     * Deletes a given {@link WishlistItem} from the database.
+     *
+     * @param item The {@link WishlistItem} to delete
+     */
     public void deleteItem(WishlistItem item) {
         String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
         String sql = """
@@ -52,6 +65,14 @@ public class WishlistDao {
         }
     }
 
+    /**
+     * Retrieves a {@link WishlistItem} from the database given its itemId, userId, and reason.
+     *
+     * @param itemId The ID of the item that this wishlist item represents
+     * @param userId The ID of the user who saved this wishlist item
+     * @param reason The reason the user saved this wishlist item ("BID" or "SAVED")
+     * @return The retrieved {@link WishlistItem}
+     */
     public WishlistItem retrieveItem(String itemId, String userId, String reason) {
         String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
         String sql = """
@@ -84,6 +105,11 @@ public class WishlistDao {
         return null;
     }
 
+    /**
+     * Retrieves all {@link WishlistItem}s within the database.
+     *
+     * @return A {@link List} of all {@link WishlistItem}s in the database
+     */
     public List<WishlistItem> retrieveAllItems() {
         String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
         String sql = "SELECT * from WISHLIST;";
@@ -114,6 +140,12 @@ public class WishlistDao {
         return Collections.emptyList();
     }
 
+    /**
+     * Retrieves all {@link WishlistItem}s that are associated with a given user.
+     *
+     * @param userId The user ID of the user to retrieve items for
+     * @return A {@link List} of all {@link WishlistItem}s associated with the user
+     */
     public List<WishlistItem> retrieveAllItems(String userId) {
         String sqlConnection = "jdbc:sqlite:src/main/resources/oldWorldAuctionDb.db";
         String sql = "SELECT * from WISHLIST WHERE userID = ?;";
