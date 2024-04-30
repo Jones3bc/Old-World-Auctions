@@ -13,14 +13,26 @@ public class AuctionItemRetrieve {
     private String description;
     private BigDecimal currentBid;
     private byte[] image;
-    private String color;
-    private int manufacturedYear;
     private LocalDateTime auctionStartTime;
     private LocalDateTime auctionEndTime;
     private boolean auctionComplete;
     private String sellerID;
     private String bidderID;
 
+    /**
+     * Primary constructor for this class.
+     *
+     * @param itemID The ID of the auction item
+     * @param name The name of the auction item
+     * @param description The description of the auction item
+     * @param category The category that the auction item belongs to
+     * @param currentBid The current bid amount of the auction item
+     * @param image The image content associated with the auction item
+     * @param auctionStartTime The start time of the auction
+     * @param auctionEndTime The end time of the auction
+     * @param sellerID The ID of the user who listed the auction
+     * @param bidderID The ID of the user who has the highest bid for the auction
+     */
     public AuctionItemRetrieve(
             String itemID,
             String name,
@@ -146,22 +158,6 @@ public class AuctionItemRetrieve {
         this.currentBid = currentBid;
     }
 
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public int getManufacturedYear() {
-        return manufacturedYear;
-    }
-
-    public void setManufacturedYear(int manufacturedYear) {
-        this.manufacturedYear = manufacturedYear;
-    }
-
     @Override
     public String toString() {
         return "AuctionItemRetrieve{" +
@@ -170,9 +166,7 @@ public class AuctionItemRetrieve {
                 ", category='" + category + '\'' +
                 ", description='" + description + '\'' +
                 ", currentBid=" + currentBid +
-                ", image=" + image +
-                ", color='" + color + '\'' +
-                ", manufacturedYear=" + manufacturedYear +
+                ", image=" + image.length +
                 ", auctionStartTime=" + auctionStartTime +
                 ", auctionEndTime=" + auctionEndTime +
                 ", auctionComplete=" + auctionComplete +
@@ -181,13 +175,16 @@ public class AuctionItemRetrieve {
                 '}';
     }
 
+    /**
+     * Gets attributes of the auction item to display to the user.
+     *
+     * @return A {@link Map} of attributes that are associated with the item
+     */
     public Map<String, ?> attributes() {
         Map<String, String> attributes = new HashMap<>();
         attributes.put("name", name);
         attributes.put("description", description);
         attributes.put("currentBid", currentBid.toString());
-        attributes.put("color", color);
-        attributes.put("manufacturedYear", String.valueOf(manufacturedYear));
 
         return attributes;
     }

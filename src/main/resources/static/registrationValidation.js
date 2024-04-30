@@ -1,3 +1,7 @@
+/**
+ * Validates the user registration form. If the form is invalid, display error information to the user and prevent the
+ * registration submission. Let a valid form submission go through.
+ */
 "use strict";
 
 document.addEventListener("DOMContentLoaded", function() {

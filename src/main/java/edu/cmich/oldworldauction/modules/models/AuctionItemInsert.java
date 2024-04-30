@@ -8,9 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents an auction item.
- *
- * @author Brock Jones
+ * Represents an auction item that will be inserted into our database.
  */
 public class AuctionItemInsert {
     private String name;
@@ -24,6 +22,18 @@ public class AuctionItemInsert {
     private String sellerID;
     private String bidderID;
 
+    /**
+     * Primary constructor for this class.
+     *
+     * @param name The name of the auction item
+     * @param category The category the auction item belongs within
+     * @param description The description of the auction item
+     * @param currentBid The current bid price of the auction item
+     * @param image The image associated with the auction item
+     * @param auctionStartTime The start time for the auction item
+     * @param auctionEndTime The end time for the auction item
+     * @param sellerID The seller ID of the user who listed the item
+     */
     public AuctionItemInsert(
             String name,
             String category,
@@ -144,16 +154,17 @@ public class AuctionItemInsert {
 
     @Override
     public String toString() {
-        return "AuctionItem{" +
+        return "AuctionItemInsert{" +
                 "name='" + name + '\'' +
+                ", category='" + category + '\'' +
                 ", description='" + description + '\'' +
                 ", currentBid=" + currentBid +
-                ", image=" + image +
+                ", image=" + image.getName() +
                 ", auctionStartTime=" + auctionStartTime +
                 ", auctionEndTime=" + auctionEndTime +
                 ", auctionComplete=" + auctionComplete +
-                ", sellerUser='" + sellerID + '\'' +
-                ", bidderUser='" + bidderID + '\'' +
+                ", sellerID='" + sellerID + '\'' +
+                ", bidderID='" + bidderID + '\'' +
                 '}';
     }
 

@@ -1,3 +1,10 @@
+/*
+ * Populates the list of updatable and deletable payment methods if the user inputs their password correctly.
+ * Validates new payment method submissions and payment method updates.
+ * Prevents updates and additions if they are invalid and displays errors to the user.
+ * Allows for payment method deletion with confirmation.
+ * Represents all JavaScript having to do with payment methods.
+ */
 "use strict";
 
 document.addEventListener("DOMContentLoaded", function() {

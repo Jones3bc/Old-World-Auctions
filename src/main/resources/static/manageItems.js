@@ -1,3 +1,8 @@
+/*
+ * Populates the manage items page with the user's listed items, their saved items, and their previous bid items.
+ * Allows users to navigate to the item update page for their listed items.
+ * Allows users to navigate to the item page for their saved and previous bid items.
+ */
 "use strict";
 
 document.addEventListener("DOMContentLoaded", function() {

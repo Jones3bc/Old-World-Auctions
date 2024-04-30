@@ -1,3 +1,9 @@
+/*
+ * Populates the login/user account directory in the top right corner of most website pages.
+ * If the user is logged in, display the "welcome, {user}" dropdown that the user can use to navigate to the
+ * manage account page and manage items page. This dropdown also allows the user to log out.
+ * If there is no logged in user, display a button/link that allows users to navigate to the login page.
+ */
 "use strict";
 
 document.addEventListener("DOMContentLoaded", function() {

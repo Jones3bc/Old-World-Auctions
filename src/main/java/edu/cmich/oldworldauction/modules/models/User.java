@@ -8,6 +8,13 @@ public class User {
     private final String username;
     private final String password;
 
+    /**
+     * Primary constructor for this class.
+     *
+     * @param userID The ID of the user
+     * @param username The username of the user
+     * @param password The password of the user
+     */
     public User(String userID, String username, String password) {
         this.userID = userID;
         this.username = username;

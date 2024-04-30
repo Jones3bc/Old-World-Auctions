@@ -12,6 +12,17 @@ public class PaymentMethod {
     private final int cvv;
     private final String userId;
 
+    /**
+     * Primary constructor for this class.
+     *
+     * @param id The ID of the payment method
+     * @param credit If true, this is a credit card. If false, debit
+     * @param cardNumber The number associated with the card/payment method
+     * @param expirationMonth The expiration month of the card/payment method
+     * @param expirationYear The expiration year of the card/payment method
+     * @param cvv The CVV on the back of the card/payment method
+     * @param userID The ID of the user that this payment method is associated with
+     */
     public PaymentMethod(String id, boolean credit, String cardNumber, int expirationMonth, int expirationYear, int cvv, String userID) {
         this.paymentId = id;
         this.credit = credit;

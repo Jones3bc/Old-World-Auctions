@@ -1,3 +1,7 @@
+/*
+ * Validates the submission of an add item form or an update item form.
+ * Prevents form submission if invalid and displays error messages to the user.
+ */
 "use strict";
 
 document.addEventListener("DOMContentLoaded", function() {

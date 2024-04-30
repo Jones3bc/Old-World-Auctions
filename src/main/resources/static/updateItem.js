@@ -1,3 +1,6 @@
+/*
+ * Populates the update auction item page with stored information so that it can be kept or modified by the user.
+ */
 "use strict";
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -8,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
     fetch("/get-item-by-id?itemId=" + params.itemId)
             .then(response => response.json())
             .then(dataTwo => {
+                //Populate form fields with stored information
                 let itemId = document.getElementById("itemId");
                 itemId.value = params.itemId;
 
@@ -33,6 +37,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 if(new Date(auctionEndTime.value) - new Date() < 0) {
                     auctionCancelButton.style = "display: none";
                 } else {
+                    //Cancel auction functionality
                     auctionCancelButton.addEventListener("click", function(){
                         if(confirm("Are you sure you want to cancel this auction?")) {
                             fetch("/deleteItem?itemId=" + params.itemId, { method: "POST" });
